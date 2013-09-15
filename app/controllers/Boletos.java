@@ -92,7 +92,7 @@ public class Boletos extends Controller {
 		}
 		int length = 50;
 		
-		List<Object> parameters = new ArrayList<>();
+		List<Object> parameters = new ArrayList<Object>();
 		if( dataVencimento != null  ) {
 			query += " AND dataVencimento = ?";
 			parameters.add(dataVencimento);

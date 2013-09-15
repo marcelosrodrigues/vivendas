@@ -52,7 +52,7 @@ public class Boleto extends Model implements Serializable {
 	public Date dataGeracao = DateTime.now().toDate();
 	
 	@OneToMany(mappedBy="boleto",cascade={CascadeType.ALL,CascadeType.PERSIST})
-	public Collection<Lancamento> lancamentos = new HashSet<>();
+	public Collection<Lancamento> lancamentos = new HashSet<Lancamento>();
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	public Usuario criadoPor;

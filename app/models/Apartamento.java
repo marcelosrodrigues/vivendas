@@ -61,26 +61,26 @@ public class Apartamento extends Model implements Serializable {
 	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "apartamento", fetch = FetchType.LAZY)
 	@Where(clause = "dataInicioContrato <= CURRENT_DATE() AND COALESCE(dataTerminoContrato,CURRENT_DATE()) >= CURRENT_DATE()")
 	@LazyCollection(LazyCollectionOption.EXTRA)	
-	public Collection<ContratoLocacao> contratosLocacao = new HashSet<>();
+	public Collection<ContratoLocacao> contratosLocacao = new HashSet<ContratoLocacao>();
 
 	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "apartamento", fetch = FetchType.LAZY)
 	@Where(clause = "dataEntrada <= CURRENT_DATE() AND COALESCE(dataSaida,CURRENT_DATE()) >= CURRENT_DATE()")
 	@LazyCollection(LazyCollectionOption.EXTRA)	
-	public Collection<Escritura> escrituras = new HashSet<>();	
+	public Collection<Escritura> escrituras = new HashSet<Escritura>();	
 
 	@OneToMany(orphanRemoval = true, cascade = { CascadeType.ALL }, mappedBy = "apartamento", fetch = FetchType.LAZY)
-	public Collection<Vaga> vagas = new HashSet<>();
+	public Collection<Vaga> vagas = new HashSet<Vaga>();
 
 	@OneToMany(orphanRemoval = true, cascade = { CascadeType.ALL }, mappedBy = "alugadoPara", fetch = FetchType.LAZY)
-	public Collection<Vaga> vagasAlugadas = new HashSet<>();
+	public Collection<Vaga> vagasAlugadas = new HashSet<Vaga>();
 
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "apartamento")
 	@OrderBy("dataLancamento desc")
-	public Collection<Lancamento> lancamento = new HashSet<>();
+	public Collection<Lancamento> lancamento = new HashSet<Lancamento>();
 
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "apartamento")
 	@OrderBy("dataVencimento desc")
-	public Collection<Boleto> boletos = new HashSet<>();
+	public Collection<Boleto> boletos = new HashSet<Boleto>();
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	public Usuario criadoPor;

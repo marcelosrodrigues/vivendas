@@ -58,7 +58,7 @@ public class BoletoService {
 	public Collection<Boleto> gerarBoletos(Date dataVencimento) {
 
 		
-		Collection<Boleto> boletos = new ArrayList<>();
+		Collection<Boleto> boletos = new ArrayList<Boleto>();
 		try {
 
 			LOGGER.info(String.format(

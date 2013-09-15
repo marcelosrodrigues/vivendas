@@ -70,7 +70,7 @@ public class Morador extends Usuario {
 	public ExameMedico exameMedico;
 	
 	@OneToMany(cascade={CascadeType.ALL},orphanRemoval=true,mappedBy="morador",fetch=FetchType.LAZY)
-	public Collection<Dependente> dependentes = new HashSet<>();
+	public Collection<Dependente> dependentes = new HashSet<Dependente>();
 	
 	@ManyToOne(fetch=FetchType.LAZY,optional=true,targetEntity=Arquivo.class)
 	@LazyToOne(LazyToOneOption.PROXY)
