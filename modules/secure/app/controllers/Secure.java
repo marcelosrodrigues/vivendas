@@ -73,7 +73,7 @@ public class Secure extends Controller {
         session.put("username", username);
         // Remember if needed
         if(remember) {
-            response.setCookie("rememberme", Crypto.sign(username) + "-" + username, "30d");
+            response.setCookie("rememberme", Crypto.sign(username) + "-" + username, "10min");
         }
         // Redirect to the original URL (or /)
         redirectToOriginalURL();
