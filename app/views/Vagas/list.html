@@ -1,0 +1,55 @@
+#{extends 'main.html' /}
+#{ set title:'Vagas' /}
+
+<fieldset>
+		<legend>
+			Vagas
+			<div class="voltar"><a href="@{Moradores.index()}" class="btn btn-link">Voltar</a></div>
+		</legend>
+		<div class="row">
+		 	<div class="col-lg-5" id="proprietario.nomeCompleto" >${proprietario.nomeCompleto}</div>
+	</div>
+</fieldset>		
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>Local</th>
+		<th>N&ordm;</th>
+		<th></th>
+		<th></th>
+	</tr>
+</thead>
+<tbody>
+#{if vagas.size() == 0}
+	<tr>
+		<td colspan="5">Nenhum morador foi encontrado.</td>
+	</tr>
+#{/if}
+#{else}
+	#{list items:vagas, as:'vaga'}
+		<tr>
+			<td id="vaga" vaga="${vaga.id}">${vaga.local}</td>
+			<td>${vaga.numeroVaga}</td>
+			
+				#{if vaga.alugadoPara != null }
+					<td id="apartamento" apartamento="${vaga.alugadoPara.id}">
+						Vaga alugada para ${vaga.alugadoPara.bloco.bloco} - ${vaga.alugadoPara.numero}
+					</td>
+				#{/if}
+				#{else}
+					<td>&nbsp;</td>
+				#{/else}
+				<td align="right">
+					#{if vaga.veiculo != null }
+						<a id="open" href="@{Veiculos.show(vaga.veiculo.id)}" class="btn btn-success btn-sm">Ve&iacute;culo</a>
+					#{/if}
+					#{else}
+						<a id="open" href="@{Veiculos.novo(vaga.id)}" class="btn btn-success btn-sm">Ve&iacute;culo</a>
+					#{/else}
+				</td>
+				
+		</tr>
+	#{/list}
+#{/else}
+</tbody>
+</table>

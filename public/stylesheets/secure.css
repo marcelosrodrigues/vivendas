@@ -1,0 +1,21 @@
+
+#login {
+    width: 500px;
+    margin: 50px auto;
+    text-align: left;
+    padding-top: 70px;    
+}
+
+#login h1 {
+    font-weight: bold;
+    color: #111;
+}
+
+
+#login .error {
+    background: #c00 !important;
+}
+
+#login .success {
+    background: #008800 !important;
+}

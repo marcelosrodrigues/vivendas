@@ -1,0 +1,81 @@
+<html lang="pt-BR">
+<head>
+<title>#{get 'title' /}</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" media="screen"
+	href="@{'/public/stylesheets/bootstrap.min.css'}">
+<link rel="stylesheet" href="@{'/public/stylesheets/jquery-ui.css'}">
+<link rel="stylesheet" href="@{'/public/stylesheets/main.css'}">
+#{get 'moreStyles' /}
+<link rel="shortcut icon" type="image/png"
+	href="@{'/public/images/favicon.png'}">
+<script src="@{'/public/javascripts/jquery.min.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery-ui.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery-ui-datepicker-pt.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery-maskinput.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/bootstrap.min.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
+#{get 'moreScripts' /}
+</head>
+<body>
+	<header class="bs-header">
+		<div class="container">
+			<div class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
+				<a class="navbar-brand" href="/">Condom&iacute;nio Vivendas do
+					Bosque</a>
+				<div class="nav-collapse collapse bs-navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="@{Moradores.index()}">Apartamentos</a></li>
+						<li><a href="@{ExameMedicos.list()}">Exames Médico</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Financeiro<b class="caret"></b></a>
+							<ul class="dropdown-menu">
+				                <li><a href="@{Lancamentos.blank()}">Efetuar Lançamento</a></li>
+				                <li><a href="@{Boletos.index()}">Gerar Boletos</a></li>
+				                <li><a href="@{Boletos.pesquisar()}">Pesquisar Boletos</a></li>
+				             </ul>
+              			</li>
+              		</ul>
+				</div>
+				<div class="nav-collapse collapse bs-navbar-collapse" style="float: right;">
+					<a class="navbar-brand" href="@{Secure.logout()}">Sair</a>
+				</div>
+			</div>
+
+		</div>
+	</header>
+	<div class="container bs-docs-container">
+	
+		#{if flash.success}
+            <div class="bs-callout bs-callout-success">
+                ${flash.success}
+            </div>
+		#{/if}
+		#{if flash.error || error}
+		    <div class="bs-callout bs-callout-danger">
+		    	<h4>Ocorreu um erro no salvamento</h4>
+		         <p>${error ?: flash.error}</p>
+		    </div>
+		#{/if}
+	
+		#{doLayout /}
+	</div>
+	<footer class="bs-footer">
+		<div class="container">
+			Condom&iacute;nio Vivendas do Bosque
+		</div>					
+	</footer>
+</body>
+#{include 'includes/apartamento.html' /}
+#{include 'includes/morador.html' /}
+#{include 'includes/dependente.html' /}
+#{include 'includes/vaga.html' /}
+#{include 'includes/foto.html' /}
+<script src="@{'/public/javascripts/bosque.js'}" type="text/javascript"
+	charset="${_response_encoding}"></script>
+</html>

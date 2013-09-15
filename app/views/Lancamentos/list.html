@@ -1,0 +1,62 @@
+#{extends 'main.html' /}
+#{ set title:'Lancamentos' /}
+
+<fieldset>
+		<legend>
+			Lancamentos
+			#{if boleto == null }
+				<div class="voltar"><a href="@{Moradores.index()}" class="btn btn-link">Voltar</a></div>
+			#{/if}
+			#{else}
+				<div class="voltar"><a href="@{Boletos.voltar(boleto.id)}" class="btn btn-link">Voltar</a></div>
+			#{/else}
+		</legend>
+		<div class="row">
+		 	<div class="form-group">
+				<label for="bloco" class="col-lg-2"  style="text-align: right;">Bloco</label>
+				<div class="col-lg-3">${apartamento.bloco.bloco}</div>
+			</div>
+		</div>
+		<div class="row">		
+			<div class="form-group">				
+				<label for="apartamento" class="col-lg-2" style="text-align: right;">Apartamento</label>
+				<div class="col-lg-3">${apartamento.numero}</div>
+			</div>
+		</div>
+</fieldset>		
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>Data do Lan&ccedil;amento</th>
+		<th width="60%">Hist&oacute;rico</th>
+		<th>Valor</th>
+	</tr>
+</thead>
+<tbody>
+#{if lancamentos.size() == 0}
+	<tr>
+		<td colspan="3">Nenhum lan&ccedil;amento foi encontrado</td>
+	</tr>
+#{/if}
+#{else}
+	#{list items:lancamentos, as:'lancamento'}
+		<tr>
+			<td>${lancamento.dataLancamento.format("dd-MM-yyyy")}</td>
+			<td>${lancamento.historico}</td>
+			<td>${lancamento.valor.format("#,##0.00#")}</td>
+		</tr>
+	#{/list}
+#{/else}
+</tbody>
+#{if lancamentos.size() != 0}
+	<tfoot>
+		<tr>
+			<td colspan="2" align="right"><b>Total</b></td>
+			<td>${total.format("#,##0.00#")}</td>
+		</tr>
+	</tfoot>
+#{/if}
+</table>
+#{if boleto == null }
+	<a id="lancamento" href="@{Lancamentos.novo(apartamento.id)}" class="btn btn-primary btn-lg">Novo Lan&ccedil;amento</a>
+#{/if}

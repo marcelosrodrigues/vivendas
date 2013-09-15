@@ -1,0 +1,51 @@
+validation.required=&{%s} é obrigatório
+validation.email=&{%s} é inválido
+crud.hasErrors=Verifique os erros abaixo
+crud.saved=O &{%s} foi salvo com sucesso
+crud.saved.female=A &{%s} foi salva com sucesso
+crud.created=O &{%s} foi salvo com sucesso
+crud.deleted=O &{%s} foi excluído com sucesso
+
+
+object.email=E-mail
+object.nomeCompleto=Nome Completo
+object.dataNascimento=Data de Nascimento
+object.cpf=CPF
+object.identidade=N° Identidade
+object.orgaoEmissor=Orgão Emissor
+object.dataEmissao=Data de Emissão
+object.telefoneComercial=Telefone Comercial
+object.telefoneResidencial=Telefone Residencial
+
+email=E-mail
+nomeCompleto=Nome Completo
+dataNascimento=Data de Nascimento
+cpf=CPF
+identidade=N° Identidade
+orgaoemissor=Orgão Emissor
+dataemissao=Data de Emissão
+telefoneComercial=Telefone Comercial
+telefoneResidencial=Telefone Residencial
+dataEntradaImovel=Data de Entrada
+
+object.area=Área
+object.numero=Numero
+object.bloco=Bloco
+
+object.local=Local
+object.numeroVaga=N° da vaga
+
+bloco=Bloco
+apartamento=Apartamento
+
+object.apartamento=Apartamento
+object.valor=Valor
+object.historico=Histórico
+object.dataLancamento=Data de Lançamento
+
+secure.username=E-mail
+secure.password=Senha
+secure.signin=Logar
+secure.remember=Manter auntenticado
+secure.error=Não foi possível autenticar o usuário. Entre em contato com a Administração
+secure.logout=Você saiu do sistema. Para retornar logue novamente.

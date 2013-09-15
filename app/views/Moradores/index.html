@@ -1,0 +1,32 @@
+#{extends 'main.html' /}
+#{ set title:'Moradores' /}
+
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>Bloco</th>
+		<th>Apartamento</th>
+		<th>Morador</th>
+		<th>Proprietario</th>
+		<th></th>
+	</tr>
+</thead>
+<tbody>
+#{if apartamentos.size() == 0}
+	<tr>
+		<td colspan="5">Nenhum morador foi encontrado.</td>
+	</tr>
+#{/if}
+#{else}
+	#{list items:apartamentos, as:'apartamento'}
+		<tr>
+			<td>${apartamento.bloco.bloco}</td>
+			<td id="apartamento" apartamento="${apartamento.id}">${apartamento.numero}</td>
+			<td id="morador" cpf="${apartamento.getMorador().cpf}">${apartamento.getMorador().nomeCompleto}</td>
+			<td id="morador" cpf="${apartamento.getProprietario().cpf}">${apartamento.getProprietario().nomeCompleto}</td>
+			<td><a id="open" href="@{Moradores.abrir(apartamento.id)}" class="btn btn-success btn-sm">Editar</a></td>	
+	#{/list}
+#{/else}
+</tbody>
+</table>
+<a href="@{Moradores.novo()}" class="btn btn-primary btn-lg">Incluir um novo morador</a>

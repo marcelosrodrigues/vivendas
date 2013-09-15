@@ -1,0 +1,42 @@
+#{extends 'main.html' /}
+#{ set title:'Dependentes' /}
+
+
+<fieldset>
+	<legend>
+		Morador
+		<div class="voltar"><a href="@{Moradores.index()}" class="btn btn-link">Voltar</a></div>
+	</legend>
+	<div class="row">
+		 <div class="col-lg-5" id="parente.nomeCompleto" >${parente.nomeCompleto}</div>
+	</div>
+</fieldset>
+<br/>
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>Nome</th>
+		<th>Grau de Parentesco</th>
+		<th>Data de Nascimento</th>
+		<th></th>
+	</tr>
+</thead>
+<tbody>
+#{if dependentes.size() == 0}
+	<tr>
+		<td colspan="4">Nenhum morador foi encontrado.</td>
+	</tr>
+#{/if}
+#{else}
+	#{list items:dependentes, as:'dependente'}
+	<tr>
+		<td id="dependente" dependente="${dependente.id}">${dependente.nomeCompleto}</td>
+		<td>${dependente.grauParentesco.nome}</td>
+		<td>${dependente.dataNascimento.format('dd-MM-yyyy')}</td>
+		<td></td>
+	</tr>
+	#{/list}
+#{/else}
+</tbody>
+</table>
+<a id="dependente" href="@{Dependentes.add(params.morador)}" class="btn btn-primary btn-lg">Adicionar</a>	

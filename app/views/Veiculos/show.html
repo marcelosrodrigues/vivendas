@@ -1,0 +1,89 @@
+#{extends 'main.html' /}
+#{set title:'Editar Veiculo' /}
+
+ #{form @Veiculos.save(object.id), enctype:'multipart/form-data' , class:'form-horizontal'}
+        <fieldset>
+			<legend>
+				Ve&iacute;culo
+				<div class="voltar"><a href="@{Vagas.list(object.vaga.apartamento.id)}" class="btn btn-link">Voltar</a></div>
+			</legend>
+			
+			<div class="form-group">
+				<label class="col-lg-2">Propriet&aacute;rio</label>
+				<div class="col-lg-3">${object.vaga.apartamento.getProprietario().nomeCompleto}</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-lg-2">Vaga</label>
+				<div class="col-lg-3">${object.vaga.local} - ${object.vaga.numeroVaga}</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-lg-2  control-label">Marca</label>
+				#{field 'object.local'}
+					<div class="col-lg-3">
+						<input type="text" name="object.marca" value="${object.marca}"  class="${field.errorClass} input-lg form-control"/>
+						#{ifError field.name}
+        					<span class="error">${field.error.raw()}</span>
+    					#{/ifError}
+					</div>
+				#{/field}
+			</div>
+			
+			<div class="form-group">
+				<label class="col-lg-2  control-label">Modelo</label>
+				#{field 'object.modelo'}
+					<div class="col-lg-3">
+						<input type="text" name="object.modelo" value="${object.modelo}"  class="${field.errorClass} input-lg form-control"/>
+						#{ifError field.name}
+        					<span class="error">${field.error.raw()}</span>
+    					#{/ifError}
+					</div>
+				#{/field}
+			</div>
+			
+			<div class="form-group">
+				<label class="col-lg-2  control-label">Ano</label>
+				#{field 'object.ano'}
+					<div class="col-lg-3">
+						<input type="text" name="object.ano" value="${object.ano}"  class="${field.errorClass} input-lg form-control"/>
+						#{ifError field.name}
+        					<span class="error">${field.error.raw()}</span>
+    					#{/ifError}
+					</div>
+				#{/field}
+			</div>
+			
+			<div class="form-group">
+				<label class="col-lg-2  control-label">Cor</label>
+				#{field 'object.cor'}
+					<div class="col-lg-3">
+						<input type="text" name="object.cor" value="${object.cor}"  class="${field.errorClass} input-lg form-control"/>
+						#{ifError field.name}
+        					<span class="error">${field.error.raw()}</span>
+    					#{/ifError}
+					</div>
+				#{/field}
+			</div>
+			
+			<div class="form-group">
+				<label class="col-lg-2  control-label">Placa</label>
+				#{field 'object.placa'}
+					<div class="col-lg-3">
+						<input type="text" name="object.placa" value="${object.placa}"  class="${field.errorClass} input-lg form-control"/>
+						#{ifError field.name}
+        					<span class="error">${field.error.raw()}</span>
+    					#{/ifError}
+					</div>
+				#{/field}
+			</div>
+			
+			<div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">
+					<input type="submit" name="_save" value="Salvar" class="btn btn-primary btn-lg" />
+					<input type="submit" name="_saveAndContinue" value="Salvar e Continuar edi&ccedil;&atilde;o" class="btn btn-primary btn-lg" />
+				</div>	
+			</div>
+			
+		</fieldset>
+ #{/form}

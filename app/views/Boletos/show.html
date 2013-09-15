@@ -1,0 +1,57 @@
+#{extends 'main.html' /}
+#{ set title:'Boleto' /}
+
+#{form @Boletos.editar() ,class:'form-horizontal'}
+	<fieldset>
+		<legend>Boleto		
+			<div class="voltar">
+				<a href="@{Boletos.pesquisar(params.dataVencimento,params.bloco,params.apartamento,params.page)}" class="btn btn-link">Voltar</a>				
+			</div>		
+		</legend>
+		
+		<input type="hidden" id="dataVencimento" name="dataVencimento" value="${params.dataVencimento}" />
+		<input type="hidden" id="apartamento" name="apartamento" value="${params.apartamento}" />
+		<input type="hidden" id="bloco" name="bloco" value="${params.bloco}" />
+		<input type="hidden" id="page" name="page" value="${params.page}" />
+		<input type="hidden" id="id" name="id" value="${params.id}" />
+		
+		<div class="form-group">
+				<label for="bloco" class="col-lg-2"  style="text-align: right;">Bloco</label>
+				<div class="col-lg-3">${boleto.apartamento.bloco.bloco}</div>
+			</div>
+			
+			<div class="form-group">				
+				<label for="apartamento" class="col-lg-2" style="text-align: right;">Apartamento</label>
+				<div class="col-lg-3">${boleto.apartamento.numero}</div>
+			</div>
+			
+				<div class="form-group">				
+				<label for="apartamento" class="col-lg-2" style="text-align: right;">Apartamento</label>
+				<div class="col-lg-3">${boleto.apartamento.getProprietario().nomeCompleto}</div>
+			</div>
+		
+		
+		<div class="form-group">
+			<label for="dataVencimento" class="col-lg-2 control-label">Data do Vencimento</label>
+			<div class="col-lg-3">${boleto.dataVencimento.format("dd-MM-yyyy")}</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="dataPagamento" class="col-lg-2 control-label">Data do Pagamento</label>
+			<div class="col-lg-3">
+				<input type="text" name="dataPagamento" id="dataPagamento" value="${params.dataPagamento?.format('dd-MM-yyyy')}" class="input-lg form-control"  />
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-offset-2 col-lg-10">
+				<input type="submit" name="_pagamento" value="Editar" class="btn btn-primary btn-lg" />
+				#{if !boleto.isCancelado() }
+					<a id="cancelar" name="_cancelar" class="btn btn-danger btn-lg" boleto="${params.id}" 
+					   dataVencimento="${params.dataVencimento}" apartamento="${params.apartamento}" bloco="${params.bloco}" page="${params.page}">Cancelar</a>
+				#{/if}
+			</div>	
+		</div>
+		
+	</fieldset>
+#{/form}

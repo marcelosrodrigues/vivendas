@@ -1,0 +1,35 @@
+#{extends 'main.html' /}
+#{ set title:'Exames medicos' /}
+
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>Morador</th>
+		<th>Data do Exame</th>
+		<th></th>
+	</tr>
+</thead>
+<tbody>
+#{if moradores.size() == 0}
+	<tr>
+		<td colspan="5">Nenhum morador foi encontrado.</td>
+	</tr>
+#{/if}
+#{else}
+	#{list items:moradores, as:'morador'}
+		<tr #{if morador.exameMedico?.isVencido() } class="text-danger" title="Exame vencido" #{/if}>
+			#{if morador.isDependente() }
+				<td id="dependente" dependente="${morador.id}">${morador.nomeCompleto}</td>
+			#{/if}
+			#{else}
+				<td id="morador" cpf="${morador.cpf}">${morador.nomeCompleto}</td>
+			#{/else}			
+			<td id="exame" exame="${morador.exameMedico?.id}">${morador.exameMedico?.dataExame?.format("dd-MM-yyyy")}</td>						
+			<td>
+				<a href="@{ExameMedicos.novo(morador.id)}" class="btn btn-success btn-sm">Novo</a>
+			</td>	
+	#{/list}
+#{/else}
+
+</tbody>
+</table>

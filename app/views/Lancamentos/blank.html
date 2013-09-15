@@ -1,0 +1,119 @@
+#{extends 'main.html' /}
+#{ set title:'Novo Lancamento' /}
+
+
+#{form @Lancamentos.create() ,class:'form-horizontal'}
+	<fieldset>
+		<legend>Lan&ccedil;amento		
+			<div class="voltar">
+				#{if params.id == null || params.id == ""}	
+					<a href="/" class="btn btn-link">Voltar</a>
+				#{/if}
+				#{else}
+					<a href="@{Lancamentos.list(params.id)}" class="btn btn-link">Voltar</a>
+				#{/else}
+			</div>		
+		</legend>
+		<input type="hidden" name="id" value="${params.id}" />
+		#{if params.id == null  || params.id == ""}		
+			<div class="form-group">
+				<label for="bloco" class="col-lg-2 control-label">Bloco</label>
+				<div class="col-lg-3">
+					#{field 'bloco' }
+					<select id="bloco" name="bloco" class="${field.errorClass} input-lg form-control">
+						<option value="" />
+						#{list items:blocos, as:'bloco'}
+							#{if bloco.id.toString() == params.bloco}
+								<option value="${bloco.id}" selected="selected">${bloco.bloco}</option>
+							#{/if}
+							#{else}
+								<option value="${bloco.id}">${bloco.bloco}</option>
+							#{/else}
+						#{/list}
+					</select>
+					#{/field}
+				</div>
+			</div>
+			
+			<div class="form-group">				
+				<label for="apartamento" class="col-lg-2 control-label">Apartamento</label>
+				<div class="col-lg-3">
+						#{field 'object.apartamento'}
+						<select id="apartamento" name="object.apartamento.id" class="${field.errorClass} input-lg form-control">
+							<option value="" />
+							#{list items:apartamentos, as:'apartamento'}
+								#{if apartamento.id == object?.apartamento?.id }
+									<option value="${apartamento.id}" selected="selected">${apartamento.numero}</option>
+								#{/if}
+								#{else}
+									<option value="${apartamento.id}">${apartamento.numero}</option>
+								#{/else}
+							#{/list}
+						</select>
+						#{ifError field.name}
+		        			<span class="error">${field.error.raw()}</span>
+		   				#{/ifError}	
+		    		#{/field}
+				</div>
+			</div>
+		#{/if}
+		#{else}
+		
+			<div class="form-group">
+				<label for="bloco" class="col-lg-2"  style="text-align: right;">Bloco</label>
+				<div class="col-lg-3">${object.apartamento.bloco.bloco}</div>
+			</div>
+			
+			<div class="form-group">				
+				<label for="apartamento" class="col-lg-2" style="text-align: right;">Apartamento</label>
+				<div class="col-lg-3">${object.apartamento.numero}</div>
+			</div>
+		
+		
+			<input type="hidden" name="object.apartamento.id" value="${object.apartamento.id}" />
+		#{/else}
+		<div class="form-group">
+			<label for="object.dataLancamento" class="col-lg-2 control-label">Data do Lan&ccedil;amento</label>
+			<div class="col-lg-3">
+				#{field 'object.dataLancamento'}
+					<input type="text" name="object.dataLancamento" id="dataLancamento" value="${object?.dataLancamento?.format('dd-MM-yyyy')}" class="${field.errorClass}  input-lg form-control"  />
+					#{ifError field.name}
+	        			<span class="error">${field.error.raw()}</span>
+	   				#{/ifError}	
+	    		#{/field}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="object.valor" class="col-lg-2 control-label">Valor</label>
+			<div class="col-lg-3">
+				#{field 'object.valor'}
+					<input type="text" name="object.valor" id="valor" value="${object?.valor?.format('#.##')}" class="${field.errorClass}  input-lg form-control"  />
+					#{ifError field.name}
+	        			<span class="error">${field.error.raw()}</span>
+	   				#{/ifError}	
+	    		#{/field}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="object.historico" class="col-lg-2 control-label">Hist&oacute;rico</label>
+			<div class="col-lg-3">
+				#{field 'object.historico'}
+					<textarea rows="10" cols="10" name="object.historico" id="historico" class="${field.errorClass}  input-lg form-control"  />${object.historico}</textarea>
+					#{ifError field.name}
+	        			<span class="error">${field.error.raw()}</span>
+	   				#{/ifError}	
+	    		#{/field}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-offset-2 col-lg-10">
+				<input type="submit" name="_save" value="Salvar" class="btn btn-primary btn-lg" />
+				<input type="submit" name="_saveAndContinue" value="Salvar e Continuar edi&ccedil;&atilde;o" class="btn btn-primary btn-lg" />
+				<input type="submit" name="_saveAndAddAnother" value="Salvar e adicionar um novo" class="btn btn-primary btn-lg" />
+			</div>	
+		</div>	
+	</fieldset>	
+#{/form}
