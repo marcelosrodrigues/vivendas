@@ -12,6 +12,13 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import play.db.jpa.Transactional;
+import br.com.caelum.stella.boleto.Banco;
+import br.com.caelum.stella.boleto.Datas;
+import br.com.caelum.stella.boleto.Emissor;
+import br.com.caelum.stella.boleto.Sacado;
+import br.com.caelum.stella.boleto.bancos.Caixa;
+import br.com.caelum.stella.boleto.bancos.Santander;
+import br.com.caelum.stella.boleto.transformer.GeradorDeBoleto;
 
 
 public class BoletoService {
@@ -119,5 +126,43 @@ public class BoletoService {
 
 		}
 
+	}
+
+	public byte[] imprimirBoleto(Long id) {
+		
+		Boleto boleto = Boleto.findById(id);
+		DateTime dataGeracao = new DateTime(boleto.dataGeracao.getTime());
+		DateTime dataVencimento = new DateTime(boleto.dataVencimento.getTime());
+		
+		Datas datas = Datas.novasDatas().comProcessamento(dataGeracao.getDayOfMonth() , dataGeracao.getMonthOfYear(),dataGeracao.getYear())
+										.comVencimento(dataVencimento.getDayOfMonth() , dataVencimento.getMonthOfYear(),dataVencimento.getYear());
+		
+		Emissor emissor = Emissor.novoEmissor()
+								 .comCedente("Condomínio Vivendas do Parque")
+								 .comCarteira(1)
+								 .comNossoNumero(1234567)
+								 .comDigitoNossoNumero("6")
+								 .comContaCorrente(12345678)
+								 .comDigitoContaCorrente('0');
+		
+		Sacado sacado = Sacado.novoSacado()
+							  .comNome(boleto.apartamento.getMorador().nomeCompleto)
+							  .comCpf(boleto.apartamento.getMorador().cpf);
+		
+							  
+		Banco banco = new Caixa();
+		
+		br.com.caelum.stella.boleto.Boleto pagamento = br.com.caelum.stella.boleto.Boleto.novoBoleto()
+					.comBanco(banco)
+					.comDatas(datas)
+					.comEmissor(emissor)
+					.comSacado(sacado)
+					.comNumeroDoDocumento(boleto.id.toString())
+					.comValorBoleto(boleto.valor);
+		
+		GeradorDeBoleto gerador = new GeradorDeBoleto(pagamento);
+		return gerador.geraPDF();
+					
+		
 	}
 }

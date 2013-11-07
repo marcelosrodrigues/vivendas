@@ -2,12 +2,14 @@ package controllers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import models.Apartamento;
 import models.Bloco;
+import models.Boleto;
 import models.Dependente;
 import models.Documentacao;
 import models.Morador;
@@ -20,6 +22,7 @@ import play.data.binding.As;
 import play.data.validation.Email;
 import play.data.validation.Required;
 import play.mvc.Before;
+import play.mvc.Scope;
 import play.mvc.With;
 import exceptions.DuplicateRegisterException;
 import factory.DocumentacaoFactory;
@@ -29,11 +32,70 @@ import flexjson.transformer.DateTransformer;
 @CRUD.For(Morador.class)
 @With(Secure.class)
 public class Moradores extends CRUD {
+	
+	@Before(only={"index","pesquisar"})
+    static void listBlocos() {
+		List<Bloco> blocos = Bloco.find("order by bloco").fetch();
+		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
+        templateBinding.data.put("blocos", blocos);
+        
+        String id = params.get("apartamento");
+        String bloco_id = params.get("bloco");
+        if( !StringUtils.isBlank(id) ) {
+        	Apartamento apartamento = Apartamento.findById(Long.parseLong(id));
+        	params.put("bloco", apartamento.bloco.id.toString());
+        	templateBinding.data.put("apartamentos", Apartamento.find(" bloco = ? order by numero ", apartamento.bloco).fetch());
+        } else if( !StringUtils.isBlank(bloco_id) ) {
+        	templateBinding.data.put("apartamentos", Apartamento.find(" bloco.id = ? order by numero ", Long.parseLong(bloco_id) ).fetch());
+        }
+    }
 
 	public static void index() {
-		List<Apartamento> apartamentos = Apartamento.find(
-				"order by bloco.bloco ASC, numero ASC").fetch();
-		render(apartamentos);
+		
+		List<Apartamento> moradores = Apartamento.find(
+				"order by bloco.bloco ASC, numero ASC").fetch(0,30);
+		
+		int count = (int) Apartamento.count();
+		count /= 30;
+		int page = 1;
+		if( count % 30 > 0 ) {
+			count++;
+		}
+		render(moradores,count,page);
+	}
+	
+	public static void pesquisar(Long bloco , Long apartamento , int page ) {
+		
+		String query = " 1=1";
+		if(page == 0 ){
+			page = 1;
+		}
+		int length = 50;
+		
+		List<Object> parameters = new ArrayList<Object>();
+		
+		if( bloco!= null && bloco >0 ){
+			query += " AND bloco.id = ?";
+			parameters.add(bloco);
+		}
+		
+		if( apartamento != null && apartamento >0 ){
+			query += " AND id = ?";
+			parameters.add(apartamento);
+		}
+		
+		int count = (int) Apartamento.count(query , parameters.toArray() );
+		count /= length;
+		
+		if( count % length > 0 ) {
+			count++;
+		}
+		
+		List<Apartamento> moradores = Apartamento.find(query + " order by bloco.bloco ASC, numero ASC", parameters.toArray())
+				.fetch(page, length);
+		
+		render("Moradores/index.html",moradores,count,page);
+		
 	}
 	
 	@Before(only={"submit"})

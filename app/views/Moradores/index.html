@@ -1,6 +1,62 @@
 #{extends 'main.html' /}
 #{ set title:'Moradores' /}
 
+#{form @Moradores.pesquisar() ,class:'form-horizontal'}
+	<fieldset>
+		<legend>Moradores		
+			<div class="voltar">
+				<a href="@{Moradores.index()}" class="btn btn-link">Voltar</a>				
+			</div>		
+		</legend>
+		
+		
+							
+			<div class="form-group">
+				<label for="bloco" class="col-lg-2 control-label">Bloco</label>
+				<div class="col-lg-3">
+					#{field 'bloco' }
+					<select id="bloco" name="bloco" class="${field.errorClass} input-lg form-control">
+						<option value="" />
+						#{list items:blocos, as:'bloco'}
+							#{if bloco.id.toString() == params.bloco.toString()}
+								<option value="${bloco.id}" selected="selected">${bloco.bloco}</option>
+							#{/if}
+							#{else}
+								<option value="${bloco.id}">${bloco.bloco}</option>
+							#{/else}
+						#{/list}
+					</select>
+					#{/field}
+				</div>
+			</div>
+			
+			<div class="form-group">				
+				<label for="apartamento" class="col-lg-2 control-label">Apartamento</label>
+				<div class="col-lg-3">
+						<select id="apartamento" name="apartamento" class="input-lg form-control">
+							<option value="" />
+							#{list items:apartamentos, as:'apartamento'}
+								#{if apartamento.id.toString() == params.apartamento.toString() }
+									<option value="${apartamento.id}" selected="selected">${apartamento.numero}</option>
+								#{/if}
+								#{else}
+									<option value="${apartamento.id}">${apartamento.numero}</option>
+								#{/else}
+							#{/list}
+						</select>
+				</div>
+			</div>
+			
+		<div class="form-group">
+			<div class="col-lg-offset-2 col-lg-10">
+				<input type="submit" name="pesquisar" value="Pesquisar" class="btn btn-primary btn-lg" />
+			</div>	
+		</div>
+		
+	</fieldset>
+#{/form}
+
+
 <table class="table table-striped">
 <thead>
 	<tr>
@@ -12,21 +68,33 @@
 	</tr>
 </thead>
 <tbody>
-#{if apartamentos.size() == 0}
+#{if moradores.size() == 0}
 	<tr>
 		<td colspan="5">Nenhum morador foi encontrado.</td>
 	</tr>
 #{/if}
 #{else}
-	#{list items:apartamentos, as:'apartamento'}
+	#{list items:moradores, as:'apartamento'}
 		<tr>
 			<td>${apartamento.bloco.bloco}</td>
 			<td id="apartamento" apartamento="${apartamento.id}">${apartamento.numero}</td>
-			<td id="morador" cpf="${apartamento.getMorador().cpf}">${apartamento.getMorador().nomeCompleto}</td>
-			<td id="morador" cpf="${apartamento.getProprietario().cpf}">${apartamento.getProprietario().nomeCompleto}</td>
+			<td id="morador" #{secure.check "ADMINISTRACAO"}cpf="${apartamento.getMorador().cpf}" #{/secure.check}>${apartamento.getMorador().nomeCompleto}</td>
+			<td id="morador" #{secure.check "ADMINISTRACAO"}cpf="${apartamento.getProprietario().cpf}" #{/secure.check}>${apartamento.getProprietario().nomeCompleto}</td>
 			<td><a id="open" href="@{Moradores.abrir(apartamento.id)}" class="btn btn-success btn-sm">Editar</a></td>	
 	#{/list}
 #{/else}
 </tbody>
+<tfoot>
+		<tr>
+			<td colspan="8">
+				<ul class="pager">
+  					<li class="previous #{if page == null || page <= 1 || count <= 1 } disabled #{/if}"><a href="@{Moradores.pesquisar(params.bloco,params.apartamento,page-1)}">&larr; Anterior</a></li>
+  					<li class="next #{if page !=null && ( page == count || count <= 1 )} disabled #{/if}"><a href="@{Moradores.pesquisar(params.bloco,params.apartamento,page+1)}">Pr&oacute;ximo &rarr;</a></li>
+				</ul>
+			</td>
+		</tr>
+</tfoot>
 </table>
-<a href="@{Moradores.novo()}" class="btn btn-primary btn-lg">Incluir um novo morador</a>
+#{secure.check "ADMINISTRACAO"}
+	<a href="@{Moradores.novo()}" class="btn btn-primary btn-lg">Incluir um novo morador</a>
+#{/secure.check}

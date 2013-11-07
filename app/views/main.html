@@ -7,19 +7,10 @@
 	href="@{'/public/stylesheets/bootstrap.min.css'}">
 <link rel="stylesheet" href="@{'/public/stylesheets/jquery-ui.css'}">
 <link rel="stylesheet" href="@{'/public/stylesheets/main.css'}">
+<link rel="stylesheet" href="@{'/public/stylesheets/jquery.Jcrop.min.css'}">
 #{get 'moreStyles' /}
 <link rel="shortcut icon" type="image/png"
 	href="@{'/public/images/favicon.png'}">
-<script src="@{'/public/javascripts/jquery.min.js'}"
-	type="text/javascript" charset="${_response_encoding}"></script>
-<script src="@{'/public/javascripts/jquery-ui.js'}"
-	type="text/javascript" charset="${_response_encoding}"></script>
-<script src="@{'/public/javascripts/jquery-ui-datepicker-pt.js'}"
-	type="text/javascript" charset="${_response_encoding}"></script>
-<script src="@{'/public/javascripts/jquery-maskinput.js'}"
-	type="text/javascript" charset="${_response_encoding}"></script>
-<script src="@{'/public/javascripts/bootstrap.min.js'}"
-	type="text/javascript" charset="${_response_encoding}"></script>
 #{get 'moreScripts' /}
 </head>
 <body>
@@ -30,16 +21,20 @@
 					Bosque</a>
 				<div class="nav-collapse collapse bs-navbar-collapse">
 					<ul class="nav navbar-nav">
-						<li class="active"><a href="@{Moradores.index()}">Apartamentos</a></li>
-						<li><a href="@{ExameMedicos.list()}">Exames Médico</a></li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Financeiro<b class="caret"></b></a>
-							<ul class="dropdown-menu">
-				                <li><a href="@{Lancamentos.blank()}">Efetuar Lançamento</a></li>
-				                <li><a href="@{Boletos.index()}">Gerar Boletos</a></li>
-				                <li><a href="@{Boletos.pesquisar()}">Pesquisar Boletos</a></li>
-				             </ul>
-              			</li>
+						#{secure.check "ADMINISTRACAO"}
+							<li class="active"><a href="@{Moradores.index()}">Apartamentos</a></li>
+							<li><a href="@{ExameMedicos.list()}">Exames Médico</a></li>
+						#{/secure.check}
+						#{secure.check "FINANCEIRO"}
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Financeiro<b class="caret"></b></a>
+								<ul class="dropdown-menu">
+					                <li><a href="@{Lancamentos.blank()}">Efetuar Lançamento</a></li>
+					                <li><a href="@{Boletos.index()}">Gerar Boletos</a></li>
+					                <li><a href="@{Boletos.pesquisar()}">Pesquisar Boletos</a></li>
+					             </ul>
+	              			</li>
+              			#{/secure.check}
               		</ul>
 				</div>
 				<div class="nav-collapse collapse bs-navbar-collapse" style="float: right;">
@@ -76,6 +71,22 @@
 #{include 'includes/dependente.html' /}
 #{include 'includes/vaga.html' /}
 #{include 'includes/foto.html' /}
+<script src="@{'/public/javascripts/jquery.min.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery-ui.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery-ui-datepicker-pt.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery-maskinput.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/bootstrap.min.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/bootstrap.min.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery.color.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery.Jcrop.min.js'}"
+	type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/bosque.js'}" type="text/javascript"
-	charset="${_response_encoding}"></script>
+	charset="${_response_encoding}"></script>			
 </html>

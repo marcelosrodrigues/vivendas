@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,9 +21,8 @@ import javax.persistence.TemporalType;
 
 import org.joda.time.DateTime;
 
-import controllers.LoginController;
-
 import play.db.jpa.Model;
+import controllers.LoginController;
 
 @Entity
 public class Boleto extends Model implements Serializable {
@@ -123,8 +124,42 @@ public class Boleto extends Model implements Serializable {
 		for(Lancamento lancamento : this.lancamentos ){
 			valor = valor.add(lancamento.getValor());
 		}
-		this.valor = valor;
-		
+		this.valor = valor;		
 	}	
+	
+	public boolean podeImprimir() {
+		DateTime dataVencimento = new DateTime(this.dataVencimento.getTime());
+		return dataVencimento.getYear() > 1997;
+	}
+	
+	public static List<Boleto> findBoletosAbertos(String bloco , String numero) {
+		
+		final String QUERY = "select b from Boleto b " +
+				" join b.apartamento a " +
+				" join a.bloco bl " +
+				" where b.dataPagamento is null " +
+				"   and b.dataCancelamento is null " +
+				"   and a.numero = ?" +
+				"   and bl.bloco = ? " +
+				"   and b.valor > 0 " +
+				" order by b.dataVencimento";
+		
+		return Boleto.find(QUERY, numero , bloco).fetch();
+		
+	}
+	
+	public static List<Map> findInadimplentes() {
+		
+		final String QUERY = "select a.numero , bl.bloco , sum(valor) from boleto b " +
+							 " inner join apartamento a on apartamento_id = a.id " +
+							 " inner join bloco bl on bl.id = a.bloco_id " +
+							 " where dataPagamento is null " +
+							 "   and dataCancelamento is null " +
+							 "   and datediff( current_date , dataVencimento ) > 30 " +
+							 " group by a.numero , bl.bloco  " +
+							 " having sum(valor) > 0 ";	
+		
+		return em().createNativeQuery(QUERY).getResultList();
+	}
 	
 }

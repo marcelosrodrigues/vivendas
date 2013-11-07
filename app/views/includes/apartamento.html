@@ -17,7 +17,9 @@
 			<div class="col-lg-1" id="area"></div>
 		</div>						
 	</fieldset>
-	<a id="edit" href="#" class="btn btn-primary btn-lg">Editar</a>	
+	#{secure.check "SUPERADMIN"}
+		<a id="edit" href="#" class="btn btn-primary btn-lg">Editar</a>
+	#{/secure.check}	
 	<a id="vagas" href="#" class="btn btn-primary btn-lg">Vagas</a>
 	<a id="lancamento" href="#" class="btn btn-primary btn-lg">Lan&ccedil;amentos</a>
 </div>

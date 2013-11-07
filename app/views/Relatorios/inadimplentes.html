@@ -1,0 +1,47 @@
+#{extends 'main.html' /}
+#{ set title:'Relatorios' /}
+
+<fieldset>
+		<legend>Relat&oacute;rios > Inadimplentes		
+			<div class="voltar">
+				<a href="@{Moradores.index()}" class="btn btn-link">Voltar</a>				
+			</div>		
+		</legend>
+</fieldset>
+
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>Bloco</th>
+		<th>Apartamento</th>	
+		<th>Total</th>
+		<th></th>
+	</tr>
+</thead>
+<tbody>
+	#{if inadimplentes.size() == 0}
+	<tr>
+		<td colspan="6">Não existe apartamentos inadimplentes</td>
+	</tr>
+	#{/if}
+	#{else}
+		#{list items:inadimplentes, as:'inadimplente'}
+			<tr>
+				<td>${inadimplente[1]}</td>
+				<td >${inadimplente[0]}</td>
+				<td>${inadimplente[2].format("#,## 0.00")}</td>
+				<td align="right" width="25%">
+					<a href="@{Relatorios.detalharInadimplentes(inadimplente[0],inadimplente[1])}" class="btn btn-success btn-sm">Detalhar</a>
+				</td>	
+			</tr>
+		#{/list}
+	#{/else}
+</tbody>
+<tfoot>
+	<tr>
+		<td colspan="2" align="right"><b>Total</b></td>
+		<td>${total.format("#,## 0.00")}</td>
+		<td></td>
+	</tr>
+</tfoot>
+</table>

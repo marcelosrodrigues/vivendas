@@ -44,12 +44,14 @@ public class Lancamentos extends CRUD {
         }
     }
 	
+	@Check("FINANCEIRO")
 	public static void novo(Long id) {
 		Lancamento object = new Lancamento();
 		object.apartamento = Apartamento.findById(id);
 		render("Lancamentos/blank.html",object);
 	}
 	
+	@Check("FINANCEIRO")
 	public static void create() throws Exception {
         ObjectType type = ObjectType.get(getControllerClass());
         notFoundIfNull(type);
@@ -75,6 +77,7 @@ public class Lancamentos extends CRUD {
         redirect(request.controller + ".show", object._key());
     }
 	
+	@Check("FINANCEIRO")
 	public static void list(Long id) {
 		
 		Apartamento apartamento = Apartamento.findById(id);
@@ -89,6 +92,7 @@ public class Lancamentos extends CRUD {
 		
 	}
 	
+	@Check("FINANCEIRO")
 	public static void detalhar(Long id) {
 		Boleto boleto = Boleto.findById(id);
 		Apartamento apartamento = boleto.apartamento;

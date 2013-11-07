@@ -39,7 +39,7 @@ public class LoginController extends Secure.Security{
 	
 	static boolean check(String profile) {
 
-		List<Grupo> grupos = Grupo.find("SELECT g from Grupo inner join g.membros m WHERE m.email = ? AND nome = ?", LoginController.connected(),profile).fetch();
+		List<Grupo> grupos = Grupo.find("SELECT g from Grupo as g inner join g.usuarios as m WHERE m.email = ? AND nome = ?", LoginController.connected(),profile).fetch();
 		return grupos!=null && !grupos.isEmpty(); 
 		
     }

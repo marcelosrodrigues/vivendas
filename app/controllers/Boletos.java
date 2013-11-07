@@ -1,15 +1,17 @@
 package controllers;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 import models.Apartamento;
 import models.Bloco;
 import models.Boleto;
+
+import org.apache.commons.lang.StringUtils;
+
 import play.data.binding.As;
 import play.data.validation.Required;
 import play.mvc.Before;
@@ -38,10 +40,12 @@ public class Boletos extends Controller {
         }
     }
 	
+	@Check("FINANCEIRO")
 	public static void index() {
 		render("Boletos/index.html");
 	}
 	
+	@Check("FINANCEIRO")
 	public static void gerarBoleto( @As(format = "dd-MM-yyyy") @Required Date dataVencimento) {
 		
 		BoletoService service = new BoletoService();
@@ -51,6 +55,7 @@ public class Boletos extends Controller {
 		
 	}
 	
+	@Check("FINANCEIRO")
 	public static void voltar(Long id) {
 		
 		Boleto boleto = Boleto.findById(id);
@@ -58,11 +63,13 @@ public class Boletos extends Controller {
 		render("Boletos/gerarBoleto.html",boletos);
 	}
 	
+	@Check("FINANCEIRO")
 	public static void show(Long id,@As(format="dd-MM-yyyy") Date dataVencimento , Long bloco , Long apartamento , int page) {
 		Boleto boleto = Boleto.findById(id);
 		render(boleto,dataVencimento,bloco,apartamento,page);
 	}
 	
+	@Check("FINANCEIRO")
 	public static void editar(Long id ,@As(format="dd-MM-yyyy") Date dataVencimento , @As(format="dd-MM-yyyy") @Required Date dataPagamento , Long bloco , Long apartamento , int page) {
 		
 		Boleto boleto = Boleto.findById(id);
@@ -74,6 +81,7 @@ public class Boletos extends Controller {
 		pesquisar(dataVencimento,bloco,apartamento,page);
 	}
 	
+	@Check("FINANCEIRO")
 	public static void cancelar(Long id ,@As(format="dd-MM-yyyy") Date dataVencimento ,  Long bloco , Long apartamento , int page) {
 		Boleto boleto = Boleto.findById(id);
 		boleto.cancela();
@@ -84,6 +92,15 @@ public class Boletos extends Controller {
 		pesquisar(dataVencimento,bloco,apartamento,page);
 	}
 	
+	public static void imprimir(Long id) {
+		
+		BoletoService service = new BoletoService();
+		byte[] boleto = service.imprimirBoleto(id);
+		renderBinary(new ByteArrayInputStream(boleto),"boleto.pdf");
+		
+		
+	}
+	@Check("FINANCEIRO")
 	public static void pesquisar(@As(format="dd-MM-yyyy") Date dataVencimento , Long bloco , Long apartamento , int page) {
 				
 		String query = " 1=1";

@@ -93,9 +93,12 @@
 				<td>${boleto.dataPagamento?.format("dd-MM-yyyy")}</td>
 				<td>${boleto.dataCancelamento?.format("dd-MM-yyyy")}</td>
 				<td>${boleto.valor.format("#,## 0.00")}</td>
-				<td align="right">
-					<a href="@{Lancamentos.detalhar(boleto.id)}" class="btn btn-success btn-sm">Lancamentos</a>
+				<td align="right" width="25%">
+					<a href="@{Lancamentos.detalhar(boleto.id)}" class="btn btn-success btn-sm">Lan&ccedil;amentos</a>
 					<a href="@{Boletos.show(boleto.id,params.dataVencimento,params.bloco,params.apartamento,page)}" class="btn btn-success btn-sm">Editar</a>
+					#{if boleto.podeImprimir()}
+						<a href="@{Boletos.imprimir(boleto.id)}"><img src="@{'/public/images/print.png'}" alt="Imprimir boleto"/></a>
+					#{/if}									
 				</td>
 			</tr>
 		#{/list}

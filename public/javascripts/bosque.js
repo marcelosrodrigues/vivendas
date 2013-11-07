@@ -24,6 +24,9 @@ $("div > div.fechar > img").click(function(){
 	$("div[id='dependente']").hide();
 	$("div[id='vaga']").hide();
 	$("div[id='foto']").hide();
+	$("div[id='webcam'] > #camera-video").remove();
+	$("div[id='webcam'] > #camera-foto").remove();
+	$("div[id='webcam'] > input[type='hidden']").remove();
 	
 	if( localMediaStream != null ){
 		localMediaStream.stop();
@@ -32,7 +35,7 @@ $("div > div.fechar > img").click(function(){
 	
 });
 
-$("#foto").click(function() {
+function salvarFoto() {
 	
 	var offset = $(this).offset();
 	$("#camera-foto").attr("src", "");
@@ -42,7 +45,17 @@ $("#foto").click(function() {
 	$("div[id='morador']").hide();
 	$("div[id='dependente']").hide();
 	$("div[id='vaga']").hide();
+	$("#salvar-foto").hide();
 	
+	$("div[id='webcam']").append("<video id='camera-video' autoplay width='660' height='500' style='display:block;'></video>");
+	$("div[id='webcam']").append("<canvas id='camera-foto' style='display:none;' width='660' height='500'></canvas>");
+	$("div[id='webcam']").append("<input type=\"hidden\" id=\"x\" />");
+	$("div[id='webcam']").append("<input type=\"hidden\" id=\"y\" />");
+	$("div[id='webcam']").append("<input type=\"hidden\" id=\"x2\" />");
+	$("div[id='webcam']").append("<input type=\"hidden\" id=\"y2\" />");
+	$("div[id='webcam']").append("<input type=\"hidden\" id=\"h\" />");
+	$("div[id='webcam']").append("<input type=\"hidden\" id=\"w\" />");
+
 	$("#camera-video").show();
 	$("#camera-foto").hide();
 	
@@ -79,12 +92,52 @@ $("#foto").click(function() {
 			$("#camera-foto").attr("src", canvas.toDataURL("image/webp"));
 			$("#camera-video").hide();
 			$("#camera-foto").show();
-			
+			$("#salvar-foto").show();
+						
 			localMediaStream.stop();
+			
+			$("#camera-foto").Jcrop({
+				onSelect: onSelect,
+				onChange: onSelect
+			});
+			
+			$("#salvar-foto").click( function(){
+				
+				$.ajax({
+					url: '/imagens/salvar',
+					type:'POST',
+					beforeSend: function(xhr){xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');},
+					data: {
+						x: $("#x").val(),
+						y: $("#y").val(),
+						x2: $("#x2").val(),
+				        y2: $("#y2").val(),
+						h: $("#h").val(),
+						w: $("#w").val(),
+						img:canvas.toDataURL("image/png")
+					},
+					complete: function( data ) {
+						$("img#foto").attr("src","/public/images/" + data.responseText);
+						$("div[id='foto']").hide();
+					}
+				});
+			});
+			
 		});
-    	
 	
-});
+}
+
+function onSelect(coords) {	
+	$("#x").val(coords.x);
+	$("#y").val(coords.y);
+	$("#x2").val(coords.x);
+	$("#y2").val(coords.y);
+	$("#h").val(coords.h);
+	$("#w").val(coords.w);
+}
+
+
+$("a#foto").click(salvarFoto);
 
 $('td[id="vaga"]').click(function(e) {
 	
