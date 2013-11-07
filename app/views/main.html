@@ -35,6 +35,14 @@
 					             </ul>
 	              			</li>
               			#{/secure.check}
+              			#{secure.check "FINANCEIRO"}
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Relatórios<b class="caret"></b></a>
+								<ul class="dropdown-menu">
+					                <li><a href="@{Relatorios.inadimplentes()}">Inadimplentes</a></li>					                
+					             </ul>
+	              			</li>
+              			#{/secure.check}
               		</ul>
 				</div>
 				<div class="nav-collapse collapse bs-navbar-collapse" style="float: right;">
