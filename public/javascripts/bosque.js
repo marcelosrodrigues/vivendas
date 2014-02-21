@@ -6,9 +6,15 @@ $('#dataExame').mask("99-99-9999");
 $('#dataLancamento').mask("99-99-9999");
 $('#dataVencimento').mask("99-99-9999");
 $('#dataPagamento').mask("99-99-9999");
+$('#conselho.inicioMandato').mask("99-99-9999");
+$('#conselho.terminoMandato').mask("99-99-9999");
 $('#cpf').mask("999.999.999-99");
 $('#telefoneResidencial').mask("9999-9999");
 $('#telefoneComercial').mask("9999-9999");
+
+$("#despesa").maskMoney({decimal:",",thousands:"."});
+$("#valor").maskMoney({decimal:",",thousands:"."});
+
 
 $("div > div.fechar > img").css('cursor', 'pointer');
 $('td[id="apartamento"]').css('cursor', 'pointer');
@@ -24,6 +30,7 @@ $("div > div.fechar > img").click(function(){
 	$("div[id='dependente']").hide();
 	$("div[id='vaga']").hide();
 	$("div[id='foto']").hide();
+	$("div[id='moradores']").hide();
 	$("div[id='webcam'] > #camera-video").remove();
 	$("div[id='webcam'] > #camera-foto").remove();
 	$("div[id='webcam'] > input[type='hidden']").remove();
@@ -251,6 +258,7 @@ $("div[id='apartamento']").draggable();
 $("div[id='dependente']").draggable();
 $("div[id='vaga']").draggable();
 $("div[id='foto']").draggable();
+$("div[id='moradores']").draggable();
 
 $( "input[id='dataNascimento']" ).datepicker({    	
     	changeMonth: true,
@@ -297,6 +305,20 @@ $( "input[id='dataPagamento']" ).datepicker({
 	dateFormat: "dd-mm-yy"   	
 });
 
+
+$("input[id='conselho.inicioMandato']").datepicker({
+	changeMonth: true,
+    changeYear: true,
+	dateFormat: "dd-mm-yy"   	
+});
+
+$("input[id='conselho.terminoMandato']").datepicker({
+	changeMonth: true,
+    changeYear: true,
+	dateFormat: "dd-mm-yy"   	
+});
+
+
 $('#cpf').blur(function() {
 	$.getJSON('/moradores/buscar?cpf=' + this.value , 
 			  function(data) {
@@ -311,15 +333,15 @@ $('#cpf').blur(function() {
 				$("#telefoneComercial").val(data.telefoneComercial);
 		  	  });
 	});
-$('#bloco').change(function() {							
+$('select#bloco').change(function() {							
 			$.getJSON('/apartamentos/listByBloco?bloco=' + this.value , 
 					function(data){
-							$('#apartamento option').each(function() {
+							$('select#apartamento option').each(function() {
 								$(this).remove();
 							});
-							$('#apartamento').append(new Option());
+							$('select#apartamento').append(new Option());
 							$.each(data , function(i , item){
-								$('#apartamento').append(new Option(item.numero,item.id));
+								$('select#apartamento').append(new Option(item.numero,item.id));
 							});
 					})
 });
@@ -346,6 +368,70 @@ $('input[id="morador_type"]').click(function() {
 	}		
 });
 
+$("#despesa").blur( function() {
+	
+	if( $(this).val().trim() != "" ) {
+		
+		var area = parseFloat($("#areaTotal").text().trim().replace(".","").replace(",","."));		
+		var despesa = parseFloat($(this).val())
+		
+		$("#condominio").text((despesa / area).toFixed(2));
+		$("#fundoreserva").text(((despesa /area)/10).toFixed(2));
+	} else {
+		$("#condominio").text("");
+		$("#fundoreserva").text("");
+	}	
+	
+});
 
+function callbackPesquisarMorador() {
+	$.ajax({
+		url: '/moradores/getJSON',
+		type:'POST',
+		data: { 
+			bloco: $("select#bloco").val(),
+			apartamento: $("select#apartamento").val(),
+			morador: $("input#morador").val()
+		},
+	    cache: false
+	}).done( function(data) {
+		$("div#moradores > table > tbody > tr").remove();
+		$.each(data,function(i,item){
+			$("div#moradores > table > tbody ").append("<tr style=\"cursor:pointer\" onclick=\"javascript:getMorador(" + item.proprietario.id + ",'" + item.proprietario.nomeCompleto + "');\"><td>" + item.apartamento.bloco.bloco + "</td><td>" + item.apartamento.numero + "</td><td>" + item.proprietario.nomeCompleto + "</td></tr>");
+		});					
+	});
+}
 
+function pesquisarMorador(controller,target) {
+	var offset = $(controller).offset();
+	$("div#moradores").offset({top: offset.top , left: offset.left });
+	$("input#target").val(target);
+	$.getJSON('/blocos/list' , 
+			function(data){
+					$('select#bloco option').each(function() {
+						$(this).remove();
+					});
+					$('select#bloco').append(new Option());
+					$.each(data , function(i , item){
+						$('select#bloco').append(new Option(item.bloco,item.id));
+					});
+			});
+	
+	$("select#bloco").change(callbackPesquisarMorador);
+	$("select#apartamento").change(callbackPesquisarMorador);
+	$("input#morador").keydown(callbackPesquisarMorador);
+		
+	callbackPesquisarMorador();
+	
+	$("div#moradores").show();
+	
+	
+}
 
+function getMorador(id,nome) {
+	
+	document.getElementById($("input#target").val() + ".id").value = id;
+	document.getElementById($("input#target").val() + ".nomeCompleto").value = nome;
+	$("div#moradores").hide();
+	
+}

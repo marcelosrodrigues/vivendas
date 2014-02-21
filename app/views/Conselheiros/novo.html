@@ -1,0 +1,72 @@
+#{extends 'main.html' /}
+#{set title:'Conselho' /}
+
+
+#{form @Conselheiros.salvar() ,class:'form-horizontal'}
+	<fieldset>
+			<legend>Conselho		
+				<div class="voltar">	
+						<a href="/" class="btn btn-link">Voltar</a>
+				</div>		
+			</legend>
+			
+			<div class="form-group">
+				<label for="conselho.sindico.nomeCompleto" class="col-lg-3 control-label">S&iacute;ndico</label>
+				<div class="col-lg-3">
+						<input type="hidden" name="conselho.sindico.id" id="conselho.sindico.id" value="" />
+						<input type="text" name="conselho.sindico.nomeCompleto" id="conselho.sindico.nomeCompleto" value="" class="input-lg form-control #{ifError 'conselho.sindico.nomeCompleto'}hasError#{/ifError}" readonly="readonly"  />
+						#{ifError 'conselho.sindico.nomeCompleto'}
+		        			 <span class="error">#{error 'conselho.sindico.nomeCompleto'/}</span>
+		    			#{/ifError}					
+				</div>
+				<a onclick="javascript:pesquisarMorador(this,'conselho.sindico');"><img id="pesquisarmorador" alt="search" src="@{'/public/images/search.png'}" class="search" title="Pesquisar S&iacute;ndico"  /></a>
+			</div>
+			
+			<div class="form-group">
+				<label for="conselho.subsindico.nomeCompleto" class="col-lg-3 control-label">Sub S&iacute;ndico</label>
+				<div class="col-lg-3">
+						<input type="hidden" name="conselho.subsindico.id" id="conselho.subsindico.id" value="" />
+						<input type="text" name="conselho.subsindico.nomeCompleto" id="conselho.subsindico.nomeCompleto" value="" class="input-lg form-control #{ifError 'conselho.subsindico.nomeCompleto'}hasError#{/ifError}"  readonly="readonly"    />						
+						#{ifError 'conselho.subsindico.nomeCompleto'}
+		        			 <span class="error">#{error 'conselho.subsindico.nomeCompleto'/}</span>
+		    			#{/ifError}					
+				</div>
+				<a onclick="javascript:pesquisarMorador(this,'conselho.subsindico');"><img id="pesquisarmorador" alt="search" src="@{'/public/images/search.png'}" class="search" title="Pesquisar Sub S&iacute;ndico" /></a>
+			</div>
+			
+			<div class="form-group">
+				<label for="conselho.inicioMandato" class="col-lg-3 control-label">In&iacute;cio do mandato</label>
+				<div class="col-lg-3">
+						<input type="text" name="conselho.inicioMandato" id="conselho.inicioMandato" value="" class="input-lg form-control #{ifError 'conselho.inicioMandato'}hasError#{/ifError}"  />
+						#{ifError 'conselho.inicioMandato'}
+		        			 <span class="error">#{error 'conselho.inicioMandato'/}</span>
+		    			#{/ifError}					
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="conselho.terminoMandato" class="col-lg-3 control-label">T&eacute;mino do mandato</label>
+				<div class="col-lg-3">
+						<input type="text" name="conselho.terminoMandato" id="conselho.terminoMandato" value="" class="input-lg form-control #{ifError 'conselho.terminoMandato'}hasError#{/ifError}"  />
+						#{ifError 'conselho.terminoMandato'}
+		        			 <span class="error">#{error 'conselho.terminoMandato'/}</span>
+		    			#{/ifError}					
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="conselho.ata"  class="col-lg-3 control-label">Ata da reuni&atilde;o de empossamento</label>
+				<div class="col-lg-3">
+					<input type="file" name="conselho.ata" id="conselho.ata" class="input-lg form-control" />
+				</div>
+			</div>
+			
+	</fieldset>		
+	
+	<div class="form-group">
+		<div class="col-lg-offset-2 col-lg-10">
+			<input type="submit" name="salvar" value="Salvar" class="btn btn-primary btn-lg" />
+		</div>	
+	</div>
+		
+#{/form}

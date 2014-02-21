@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.ByteArrayInputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -11,6 +12,7 @@ import models.Bloco;
 import models.Boleto;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 
 import play.data.binding.As;
 import play.data.validation.Required;
@@ -46,7 +48,8 @@ public class Boletos extends Controller {
 	}
 	
 	@Check("FINANCEIRO")
-	public static void gerarBoleto( @As(format = "dd-MM-yyyy") @Required Date dataVencimento) {
+	public static void gerarBoleto(
+			@As(format = "dd-MM-yyyy") @Required Date dataVencimento) {
 		
 		BoletoService service = new BoletoService();
 		
@@ -63,6 +66,37 @@ public class Boletos extends Controller {
 		render("Boletos/gerarBoleto.html",boletos);
 	}
 	
+	public static void condominio() {
+		BigDecimal areaTotal = (BigDecimal) Apartamento.em()
+				.createQuery("SELECT sum(area) from Apartamento")
+				.getSingleResult();
+		render("Boletos/condominio.html", areaTotal);
+	}
+
+	public static void calcularCondominio(
+			@Required @As(format = "#,## 0.00") BigDecimal despesa) {
+
+		BigDecimal areaTotal = (BigDecimal) Apartamento.em()
+				.createQuery("SELECT sum(area) from Apartamento")
+				.getSingleResult();
+
+		if (despesa == null || despesa.doubleValue() <= 0D) {
+			validation.addError("despesa",
+					"Valor total da despesa é obrigatória");
+			renderArgs
+					.put("error",
+							"Não foi possível calcular o condominio, verifique os erros abaixo");
+		} else {
+
+			BoletoService service = new BoletoService();
+			service.calcularCondominio(DateTime.now().minusMonths(1).toDate(),
+					areaTotal, despesa);
+		}
+
+		render("Boletos/condominio.html", areaTotal);
+
+	}
+
 	@Check("FINANCEIRO")
 	public static void show(Long id,@As(format="dd-MM-yyyy") Date dataVencimento , Long bloco , Long apartamento , int page) {
 		Boleto boleto = Boleto.findById(id);
@@ -94,9 +128,13 @@ public class Boletos extends Controller {
 	
 	public static void imprimir(Long id) {
 		
-		BoletoService service = new BoletoService();
-		byte[] boleto = service.imprimirBoleto(id);
-		renderBinary(new ByteArrayInputStream(boleto),"boleto.pdf");
+		try {
+			BoletoService service = new BoletoService();
+			byte[] boleto = service.imprimirBoleto(id);
+			renderBinary(new ByteArrayInputStream(boleto),"boleto.pdf");
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 		
 		
 	}

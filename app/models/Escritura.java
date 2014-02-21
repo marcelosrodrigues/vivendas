@@ -23,15 +23,13 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.joda.time.DateTime;
 
-import controllers.LoginController;
-
-import exceptions.DuplicateRegisterException;
-
 import play.data.validation.Required;
 import play.db.jpa.Blob;
 import play.db.jpa.Model;
 import play.libs.MimeTypes;
 import services.MoradorService;
+import controllers.LoginController;
+import exceptions.DuplicateRegisterException;
 
 @Entity
 @Table

@@ -9,9 +9,8 @@ import java.util.Locale;
 
 import models.Apartamento;
 import models.Bloco;
-import models.Boleto;
-import models.Dependente;
 import models.Documentacao;
+import models.Escritura;
 import models.Morador;
 import models.Usuario;
 
@@ -24,6 +23,9 @@ import play.data.validation.Required;
 import play.mvc.Before;
 import play.mvc.Scope;
 import play.mvc.With;
+import services.MoradorService;
+import services.UtilitiesService;
+import dto.ResultList;
 import exceptions.DuplicateRegisterException;
 import factory.DocumentacaoFactory;
 import flexjson.JSONSerializer;
@@ -35,7 +37,7 @@ public class Moradores extends CRUD {
 	
 	@Before(only={"index","pesquisar"})
     static void listBlocos() {
-		List<Bloco> blocos = Bloco.find("order by bloco").fetch();
+		List<Bloco> blocos = UtilitiesService.listAllBlocos();
 		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
         templateBinding.data.put("blocos", blocos);
         
@@ -44,24 +46,57 @@ public class Moradores extends CRUD {
         if( !StringUtils.isBlank(id) ) {
         	Apartamento apartamento = Apartamento.findById(Long.parseLong(id));
         	params.put("bloco", apartamento.bloco.id.toString());
-        	templateBinding.data.put("apartamentos", Apartamento.find(" bloco = ? order by numero ", apartamento.bloco).fetch());
+			templateBinding.data.put("apartamentos", UtilitiesService
+					.listAllApartamentosByBloco(apartamento.bloco));
         } else if( !StringUtils.isBlank(bloco_id) ) {
-        	templateBinding.data.put("apartamentos", Apartamento.find(" bloco.id = ? order by numero ", Long.parseLong(bloco_id) ).fetch());
+			templateBinding.data.put("apartamentos", UtilitiesService
+					.listAllApartamentosByBloco(Long.parseLong(bloco_id)));
         }
     }
 
 	public static void index() {
-		
-		List<Apartamento> moradores = Apartamento.find(
-				"order by bloco.bloco ASC, numero ASC").fetch(0,30);
-		
-		int count = (int) Apartamento.count();
-		count /= 30;
+		MoradorService service = new MoradorService();
+		ResultList<Apartamento> result = service.search();
+		List<Apartamento> moradores = result.list();
+		int count = result.getCount();
 		int page = 1;
-		if( count % 30 > 0 ) {
-			count++;
+		render(moradores, count, page);
+	}
+	
+	public static void getJSON(Long bloco, Long apartamento, String morador,
+			int page) {
+
+		String QUERY = "SELECT e from Escritura e INNER JOIN FETCH e.apartamento a INNER JOIN FETCH a.bloco b INNER JOIN FETCH e.proprietario m WHERE e.dataEntrada <= CURRENT_DATE() AND COALESCE(e.dataSaida,CURRENT_DATE()) >= CURRENT_DATE() ";
+		List<Object> parameters = new ArrayList<Object>();
+
+		if (page == 0)
+			page = 1;
+
+		if (apartamento != null && apartamento > 0L) {
+			QUERY += " AND a.id = ?";
+			parameters.add(apartamento);
 		}
-		render(moradores,count,page);
+
+		if (bloco != null && bloco > 0L) {
+			QUERY += " AND b.id = ?";
+			parameters.add(bloco);
+		}
+
+		if (morador != null && !"".equalsIgnoreCase(morador)) {
+			QUERY += " AND m.nomeCompleto LIKE ?";
+			parameters.add(morador + "%");
+		}
+
+		List<Escritura> escrituras = Escritura.find(
+				QUERY + "ORDER BY b.bloco , a.numero , m.nomeCompleto ",
+				parameters.toArray()).fetch(page, 5);
+
+		JSONSerializer json = new JSONSerializer();
+		renderJSON(json
+				.include("proprietario.id", "proprietario.nomeCompleto",
+						"apartamento.numero", "apartamento.bloco.bloco")
+				.exclude("*").serialize(escrituras));
+
 	}
 	
 	public static void pesquisar(Long bloco , Long apartamento , int page ) {
@@ -91,6 +126,7 @@ public class Moradores extends CRUD {
 			count++;
 		}
 		
+
 		List<Apartamento> moradores = Apartamento.find(query + " order by bloco.bloco ASC, numero ASC", parameters.toArray())
 				.fetch(page, length);
 		
@@ -116,7 +152,9 @@ public class Moradores extends CRUD {
 				
 				if( object == null || !object.cpf.equals(params.get("cpf")) ){
 					validation.addError("cpf", "CPF já em uso");
-					renderArgs.put("error", "Não foi possível salvar o Morador pois o CPF informado já esta cadastrado no sistema");					
+					renderArgs
+							.put("error",
+									"Não foi possível salvar o Morador pois o CPF informado já esta cadastrado no sistema");
 					render("Moradores/novo.html",object);
 				}
 				
@@ -128,7 +166,9 @@ public class Moradores extends CRUD {
 			
 			if( object == null || !object.email.equals(params.get("email")) ){
 				validation.addError("email", "E-mail já em uso");
-				renderArgs.put("error", "Não foi possível salvar o Morador pois o E-mail informado já esta cadastrado no sistema");
+				renderArgs
+						.put("error",
+								"Não foi possível salvar o Morador pois o E-mail informado já esta cadastrado no sistema");
 				render("Moradores/novo.html",object);
 			}
 			
@@ -153,7 +193,9 @@ public class Moradores extends CRUD {
 				
 				if(object == null || !object.cpf.equals(params.get("object.cpf")) ){
 					validation.addError("object.cpf", "CPF já em uso");
-					renderArgs.put("error", "Não foi possível salvar o Morador pois o CPF informado já esta cadastrado no sistema");
+					renderArgs
+							.put("error",
+									"Não foi possível salvar o Morador pois o CPF informado já esta cadastrado no sistema");
 					render("Moradores/show.html",object);
 				}
 				
@@ -165,7 +207,9 @@ public class Moradores extends CRUD {
 			
 			if(object == null || !object.email.equals(params.get("object.email"))) {
 				validation.addError("object.email", "E-mail já em uso");
-				renderArgs.put("error", "Não foi possível salvar o Morador pois o E-mail informado já esta cadastrado no sistema");				
+				renderArgs
+						.put("error",
+								"Não foi possível salvar o Morador pois o E-mail informado já esta cadastrado no sistema");
 				render("Moradores/show.html",object);
 			}
 			
@@ -289,23 +333,23 @@ public class Moradores extends CRUD {
 	}
 
 	private static void prepare(Apartamento apartamento) {
-		List<Bloco> blocos = Bloco.find("order by bloco").fetch();
-		List<Apartamento> apartamentos = Apartamento.find("bloco = ?", apartamento.bloco).fetch();
+		List<Bloco> blocos = UtilitiesService.listAllBlocos();
+		List<Apartamento> apartamentos = UtilitiesService.listAllApartamentosByBloco(apartamento.bloco);
 		render("Moradores/novo.html",apartamento.bloco,apartamento,blocos,apartamentos);
 		
 	}
 
 	
 	private static void prepare() {
-		List<Bloco> blocos = Bloco.find("order by bloco").fetch();
-		render("Moradores/novo.html",blocos);
+		render("Moradores/novo.html", UtilitiesService.listAllBlocos());
 		
 	}
 
 	private static void prepare(Apartamento apto, Documentacao documento) {
-		List<Bloco> blocos = Bloco.find("order by bloco").fetch();
+		List<Bloco> blocos = UtilitiesService.listAllBlocos();
 		if( apto != null ) {
-			List<Apartamento> apartamentos = Apartamento.find("bloco = ?", apto.bloco).fetch();
+			List<Apartamento> apartamentos = UtilitiesService
+					.listAllApartamentosByBloco(apto.bloco);
 			render("Moradores/novo.html",documento,apto.bloco,apto,blocos,apartamentos);
 		} else {
 			render("Moradores/novo.html",documento,blocos);

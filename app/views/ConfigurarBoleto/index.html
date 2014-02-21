@@ -1,0 +1,115 @@
+#{extends 'main.html' /}
+#{set title:'Configurar Gerador de Boleto' /}
+
+#{form @ConfigurarBoleto.create() ,class:'form-horizontal'}
+<fieldset>
+		<legend>Configura&ccedil;&atilde;o do Gerador de Boletos		
+			<div class="voltar">	
+					<a href="/" class="btn btn-link">Voltar</a>
+			</div>		
+		</legend>
+		
+		<div class="form-group">
+				<label for="object.banco" class="col-lg-2 control-label">Banco</label>
+				<div class="col-lg-3">
+					#{field 'banco' }
+					<select id="object.banco" name="object.banco" class="${field.errorClass} input-lg form-control">
+						<option value="" />						
+						<option value="br.com.caelum.stella.boleto.bancos.BancoDoBrasil"  #{if object.banco.equals("br.com.caelum.stella.boleto.bancos.BancoDoBrasil")}selected="selected"#{/if}>Banco do Brasil</option>
+						<option value="br.com.caelum.stella.boleto.bancos.Bradesco" #{if object.banco.equals("br.com.caelum.stella.boleto.bancos.Bradesco")}selected="selected"#{/if}>Bradesco</option>
+						<option value="br.com.caelum.stella.boleto.bancos.Caixa" #{if object.banco.equals("br.com.caelum.stella.boleto.bancos.Caixa")}selected="selected"#{/if}>Caixa</option>
+						<option value="br.com.caelum.stella.boleto.bancos.HSBC" #{if object.banco.equals("br.com.caelum.stella.boleto.bancos.HSBC")}selected="selected"#{/if}>HSBC</option>
+						<option value="br.com.caelum.stella.boleto.bancos.Itau" #{if object.banco.equals("br.com.caelum.stella.boleto.bancos.Itau")}selected="selected"#{/if}>Itau</option>
+						<option value="br.com.caelum.stella.boleto.bancos.Santander" #{if object.banco.equals("br.com.caelum.stella.boleto.bancos.Santander")}selected="selected"#{/if}>Santander</option>						
+					</select>
+					#{/field}
+				</div>
+			</div>
+			
+			<div class="form-group">
+			<label for="object.cedente" class="col-lg-2 control-label">Cedente</label>
+			<div class="col-lg-3">
+				#{field 'object.cedente'}
+					<input type="text" name="object.cedente" id="object.cedente" class="${field.errorClass}  input-lg form-control" value="${object.cedente}"  />
+					#{ifError field.name}
+	        			<span class="error">${field.error.raw()}</span>
+	   				#{/ifError}	
+	    		#{/field}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="object.carteira" class="col-lg-2 control-label">Tipo da Carteira</label>
+			<div class="col-lg-3">
+				#{field 'object.carteira'}
+					<input type="text" name="object.carteira" id="object.carteira" class="${field.errorClass}  input-lg form-control" value="${object.carteira}"  />
+					#{ifError field.name}
+	        			<span class="error">${field.error.raw()}</span>
+	   				#{/ifError}	
+	    		#{/field}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="object.nossoNumero" class="col-lg-2 control-label">Nosso Numero</label>
+			<div class="col-lg-3">
+				#{field 'object.nossoNumero'}
+					<input type="text" name="object.nossoNumero" id="object.nossoNumero" class="${field.errorClass}  input-lg form-control" value="${object.nossoNumero}" />
+					#{ifError field.name}
+	        			<span class="error">${field.error.raw()}</span>
+	   				#{/ifError}	
+	    		#{/field}
+			</div>
+			<div class="col-lg-1">
+				#{field 'object.digitoNossoNumero'}
+					<input type="text" name="object.digitoNossoNumero" id="object.digitoNossoNumero" class="${field.errorClass}  input-lg form-control" value="${object.digitoNossoNumero}" />
+								
+					#{ifError field.name}
+	        			<span class="error">${field.error.raw()}</span>
+	   				#{/ifError}	
+	    		#{/field}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="object.contacorrente" class="col-lg-2 control-label">Agencia</label>
+			<div class="col-lg-3">
+				#{field 'object.contacorrente'}
+					<input type="text" name="object.agencia" id="object.agencia" class="${field.errorClass}  input-lg form-control" value="${object.agencia}" />
+					#{ifError field.name}
+	        			<span class="error">${field.error.raw()}</span>
+	   				#{/ifError}	
+	    		#{/field}
+			</div>			
+		</div>
+		
+		<div class="form-group">
+			<label for="object.contacorrente" class="col-lg-2 control-label">Conta Corrente</label>
+			<div class="col-lg-3">
+				#{field 'object.contacorrente'}
+					<input type="text" name="object.contacorrente" id="object.contacorrente" class="${field.errorClass}  input-lg form-control" value="${object.contacorrente}" />
+					#{ifError field.name}
+	        			<span class="error">${field.error.raw()}</span>
+	   				#{/ifError}	
+	    		#{/field}
+			</div>
+			<div class="col-lg-1">
+				#{field 'object.digitoContaCorrente'}
+					<input type="text" name="object.digitoContaCorrente" id="object.digitoContaCorrente" class="${field.errorClass}  input-lg form-control" value="${object.digitoContaCorrente}" />
+					#{ifError field.name}
+	        			<span class="error">${field.error.raw()}</span>
+	   				#{/ifError}	
+	    		#{/field}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-offset-2 col-lg-10">
+				<input type="submit" name="_save" value="Salvar" class="btn btn-primary btn-lg" />				
+			</div>	
+		</div>	
+		
+</fieldset>
+#{/form}
+
+

@@ -1,0 +1,49 @@
+<div id="moradores" class="shadow">
+	<div class="fechar" >
+		<img  src="@{'/public/images/close.png'}" alt="fechar" />
+	</div>
+	<fieldset>
+		<legend>Moradores</legend>
+	
+	<form class="form-horizontal">
+			<input type="hidden" name="target" id="target" >
+			<div class="form-group">
+				<label for="bloco" class="col-lg-3 control-label">Bloco</label>
+				<div class="col-lg-3">
+					<select id="bloco" name="bloco" class="input-lg form-control">
+						<option value="" />
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">				
+				<label for="apartamento" class="col-lg-3 control-label">Apartamento</label>
+				<div class="col-lg-3">
+						<select id="apartamento" name="apartamento" class="input-lg form-control">
+							<option value="" />
+						</select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="morador" class="col-lg-3 control-label">Morador</label>
+				<div class="col-lg-7">
+					<input type="text" id="morador" name="morador" class="input-lg form-control" />
+				</div>
+			</div>
+			
+		</form>
+		</fieldset>
+		
+		<table class="table table-striped">
+<thead>
+	<tr>
+		<th>Bloco</th>
+		<th>Apartamento</th>
+		<th>Morador</th>		
+	</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>

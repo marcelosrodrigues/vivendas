@@ -32,6 +32,7 @@
 					                <li><a href="@{Lancamentos.blank()}">Efetuar Lançamento</a></li>
 					                <li><a href="@{Boletos.index()}">Gerar Boletos</a></li>
 					                <li><a href="@{Boletos.pesquisar()}">Pesquisar Boletos</a></li>
+					                <li><a href="@{Boletos.condominio()}">Calcular o condom&iacute;nio</a></li>
 					             </ul>
 	              			</li>
               			#{/secure.check}
@@ -40,6 +41,14 @@
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Relatórios<b class="caret"></b></a>
 								<ul class="dropdown-menu">
 					                <li><a href="@{Relatorios.inadimplentes()}">Inadimplentes</a></li>					                
+					             </ul>
+	              			</li>
+              			#{/secure.check}
+              			#{secure.check "SUPERADMIN"}
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Configurações<b class="caret"></b></a>
+								<ul class="dropdown-menu">
+					                <li><a href="@{ConfigurarBoleto.index()}">Gerador de Boletos</a></li>					                
 					             </ul>
 	              			</li>
               			#{/secure.check}
@@ -52,7 +61,7 @@
 
 		</div>
 	</header>
-	<div class="container bs-docs-container">
+	<div class="container bs-docs-container wrap">
 	
 		#{if flash.success}
             <div class="bs-callout bs-callout-success">
@@ -79,6 +88,7 @@
 #{include 'includes/dependente.html' /}
 #{include 'includes/vaga.html' /}
 #{include 'includes/foto.html' /}
+#{include 'includes/moradores.html' /}
 <script src="@{'/public/javascripts/jquery.min.js'}"
 	type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/jquery-ui.js'}"
@@ -95,6 +105,8 @@
 	type="text/javascript" charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/jquery.Jcrop.min.js'}"
 	type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery.maskMoney.min.js'}" type="text/javascript"
+	charset="${_response_encoding}"></script>
 <script src="@{'/public/javascripts/bosque.js'}" type="text/javascript"
 	charset="${_response_encoding}"></script>			
 </html>

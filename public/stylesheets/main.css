@@ -1,16 +1,24 @@
 body {
-  padding-top: 70px;
+	padding-top: 70px;
 }
 
-.voltar { 
-	float:right;
-	margin-top:-5px; 
+.wrap {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	/* Negative indent footer by it's height */
+	margin: 0 auto -60px;
+}
+
+.voltar {
+	float: right;
+	margin-top: -5px;
 }
 
 .hasError {
 	color: #c00;
 	border-color: #c00;
-	background-color: #fcf2f2;	
+	background-color: #fcf2f2;
 }
 
 .error {
@@ -20,48 +28,53 @@ body {
 	font-size: 80%;
 }
 
-
 .bs-footer {
-	padding-top: 40px;
-	padding-bottom: 30px;
-	margin-top: 100px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	
 	text-align: center;
 	border-top: 1px solid #e5e5e5;
+	background-color: #f5f5f5;
 }
 
 .shadow {
-  -moz-box-shadow:    3px 3px 5px 6px #ccc;
-  -webkit-box-shadow: 3px 3px 5px 6px #ccc;
-  box-shadow:         3px 3px 5px 6px #ccc;
+	-moz-box-shadow: 3px 3px 5px 6px #ccc;
+	-webkit-box-shadow: 3px 3px 5px 6px #ccc;
+	box-shadow: 3px 3px 5px 6px #ccc;
 }
 
-div#morador, div#apartamento, div#dependente , div#vaga , div#foto {
-	display:none;
+div#morador,div#apartamento,div#dependente,div#vaga,div#foto,div#moradores {
+	display: none;
 	padding: 10px 10px 10px 10px;
 	margin-top: 10px;
 	background-color: #FFFFFF;
 }
 
-div#morador, div#dependente{
-	width:700px;	
+div#morador,div#dependente {
+	width: 700px;
+}
+
+div#moradores {
+	width: 720px;
+	height: 550px;
 }
 
 div#foto {
-	width:680px;
+	width: 680px;
 }
 
-div#apartamento  , div#vaga{
-	width:500px;	
+div#apartamento,div#vaga {
+	width: 500px;
 }
 
 .fechar {
-	float:right;
-	margin-top:-30px;
-	margin-right:-30px;	 
+	float: right;
+	margin-top: -30px;
+	margin-right: -30px;
 }
 
-div#apartamento a, div#morador a, div#dependente a  , div#vaga a , div#foto a{
-	margin-top: 10px;	
+div#apartamento a,div#morador a,div#dependente a,div#vaga a,div#foto a, div#moradores a {
+	margin-top: 10px;
 }
 
 .bs-callout h4 {
@@ -69,29 +82,37 @@ div#apartamento a, div#morador a, div#dependente a  , div#vaga a , div#foto a{
 }
 
 .bs-callout p:last-child {
-  margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 .bs-callout {
-  margin: 20px 0;
-  padding: 15px 30px 15px 15px;
-  border-left: 5px solid #eee;
+	margin: 20px 0;
+	padding: 15px 30px 15px 15px;
+	border-left: 5px solid #eee;
 }
 
 .bs-callout-danger {
-  background-color: #fcf2f2;
-  border-color: #dFb5b4;
+	background-color: #fcf2f2;
+	border-color: #dFb5b4;
 }
+
 .bs-callout-warning {
-  background-color: #fefbed;
-  border-color: #f1e7bc;
+	background-color: #fefbed;
+	border-color: #f1e7bc;
 }
+
 .bs-callout-info {
-  background-color: #f0f7fd;
-  border-color: #d0e3f0;
+	background-color: #f0f7fd;
+	border-color: #d0e3f0;
 }
 
 .bs-callout-success {
-  background-color: #dff0d8;
-  border-color: #468847;
+	background-color: #dff0d8;
+	border-color: #468847;
+}
+
+.search {
+	width: 32px;
+	height: 32px;
+	margin-top: 5px;
 }

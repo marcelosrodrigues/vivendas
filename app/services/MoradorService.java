@@ -1,13 +1,17 @@
 package services;
 
 import java.io.Serializable;
+import java.util.List;
 
+import models.Apartamento;
 import models.ContratoLocacao;
 import models.Escritura;
 import models.Morador;
 
 import org.apache.log4j.Logger;
 
+import dto.ApartamentoResultList;
+import dto.ResultList;
 import exceptions.DuplicateRegisterException;
 
 public class MoradorService implements Serializable {
@@ -79,4 +83,21 @@ public class MoradorService implements Serializable {
 		}
 
 	}
+
+
+	public ResultList<Apartamento> search() {
+
+		List<Apartamento> moradores = Apartamento.find(
+				"order by bloco.bloco ASC, numero ASC").fetch(0, 30);
+
+		int count = (int) Apartamento.count();
+		int pagecount = count / 30;
+		if (count % 30 > 0) {
+			pagecount++;
+		}
+
+		return new ApartamentoResultList(moradores, count, pagecount);
+
+	}
+
 }

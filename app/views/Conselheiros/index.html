@@ -1,0 +1,37 @@
+#{extends 'main.html' /}
+#{set title:'Conselho' /}
+
+<fieldset>
+		<legend>Conselho		
+			<div class="voltar">	
+					<a href="/" class="btn btn-link">Voltar</a>
+			</div>		
+		</legend>
+		
+		<div class="row">
+			 <div class="col-lg-3 control-label">S&iacute;ndico</div>
+			 <div class="col-lg-3">
+			 ${conselho?.sindico?.nomeCompleto}
+			 </div>
+		</div>
+		
+		<div class="row">
+			 <div class="col-lg-3 control-label">Sub S&iacute;ndico</div>
+			 <div class="col-lg-3">
+			 ${conselho?.subsindico?.nomeCompleto}
+			 </div>
+		</div>
+		
+		<div class="row">
+			 <div class="col-lg-2">Mandato</div>
+			 <div class="col-lg-2">De:
+			 ${conselho?.inicioMandato?.format("dd-MM-yyyy")}		 
+			 </div>
+			 <div class="col-lg-2">At&eacute;:
+			 ${conselho?.terminoMandato?.format("dd-MM-yyyy")}
+			 </div>
+		</div>
+		
+</fieldset>		
+<br/>
+<a href="@{Conselheiros.novo()}" class="btn btn-primary btn-lg">Novo</a>

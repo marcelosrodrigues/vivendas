@@ -28,12 +28,9 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Where;
 import org.joda.time.DateTime;
 
-import controllers.LoginController;
-import controllers.Secure;
-import controllers.Secure.Security;
-
 import play.data.validation.Required;
 import play.db.jpa.Model;
+import controllers.LoginController;
 
 
 
@@ -214,6 +211,12 @@ public class Apartamento extends Model implements Serializable {
 	public String toString() {
 		return String.format("Apartamento[bloco=%s , numero=%s]",
 				this.bloco, this.numero);
+	}
+
+	public void fazerLancamento(Lancamento lancamento) {
+
+		this.lancamento.add(lancamento);
+
 	}
 
 }
