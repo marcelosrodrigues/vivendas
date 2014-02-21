@@ -373,7 +373,8 @@ $("#despesa").blur( function() {
 	if( $(this).val().trim() != "" ) {
 		
 		var area = parseFloat($("#areaTotal").text().trim().replace(".","").replace(",","."));		
-		var despesa = parseFloat($(this).val())
+		var despesa = parseFloat($(this).maskMoney('unmasked')[0]);	
+		
 		
 		$("#condominio").text((despesa / area).toFixed(2));
 		$("#fundoreserva").text(((despesa /area)/10).toFixed(2));
