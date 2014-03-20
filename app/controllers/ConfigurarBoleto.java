@@ -13,7 +13,9 @@ public class ConfigurarBoleto extends CRUD {
 	public static void index() {
 
 		ConfiguracaoBoleto object = ConfiguracaoBoleto.all().first();
-
+		if (object == null) {
+			object = new ConfiguracaoBoleto();
+		}
 		render("ConfigurarBoleto/index.html", object);
 	}
 
