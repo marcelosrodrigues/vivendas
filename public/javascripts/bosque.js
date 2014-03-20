@@ -13,7 +13,7 @@ $('#telefoneResidencial').mask("9999-9999");
 $('#telefoneComercial').mask("9999-9999");
 
 $("#despesa").maskMoney({decimal:",",thousands:"."});
-$("#valor").maskMoney({decimal:",",thousands:"."});
+$("#valor").maskMoney({decimal:",",thousands:".",allowNegative: true});
 
 
 $("div > div.fechar > img").css('cursor', 'pointer');
@@ -375,9 +375,8 @@ $("#despesa").blur( function() {
 		var area = parseFloat($("#areaTotal").text().trim().replace(".","").replace(",","."));		
 		var despesa = parseFloat($(this).maskMoney('unmasked')[0]);	
 		
-		
 		$("#condominio").text((despesa / area).toFixed(2));
-		$("#fundoreserva").text(((despesa /area)/10).toFixed(2));
+		
 	} else {
 		$("#condominio").text("");
 		$("#fundoreserva").text("");

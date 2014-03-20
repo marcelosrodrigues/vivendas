@@ -144,12 +144,14 @@ public class BoletoService {
 
 			if (!apartamento.getMorador().equals(conselho.sindico)) {
 				if (!apartamento.getMorador().equals(conselho.subsindico)) {
-					apartamento.fazerLancamento(vencimento, condominio,
-							"CONDOMÍNIO");
+					apartamento
+							.fazerLancamento(vencimento,
+									condominio.multiply(apartamento.area),
+									"CONDOMÍNIO");
 				} else {
 					apartamento.fazerLancamento(vencimento,
-							condominio.divide(new BigDecimal(2)),
- "CONDOMÍNIO");
+							condominio.divide(new BigDecimal(2)).multiply(
+									apartamento.area), "CONDOMÍNIO");
 				}
 			}
 			apartamento.fazerLancamento(vencimento, fundoReserva,
