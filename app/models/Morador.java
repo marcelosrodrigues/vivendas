@@ -25,10 +25,9 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.joda.time.DateTime;
 
-import controllers.LoginController;
-
 import play.data.binding.As;
 import play.data.validation.Required;
+import controllers.LoginController;
 
 @Entity
 @Table
@@ -43,9 +42,9 @@ public class Morador extends Usuario {
 	@Column(nullable=false)
 	public String nomeCompleto;
 	
-	@Required
+	// @Required
 	@Temporal(value = TemporalType.DATE)
-	@As(lang={"*"}, value={"dd-MM-yyyy"}) 
+	@As(lang = {"pt"}, value = {"dd-MM-yyyy"})
 	public Date dataNascimento;
 	
 	@Column(unique=true)
@@ -57,7 +56,7 @@ public class Morador extends Usuario {
 	public String orgaoEmissor;
 
 	@Temporal(TemporalType.DATE)
-	@As(lang={"pt-BR"}, value={"dd-MM-yyyy"})
+	@As(lang = {"pt"}, value = {"dd-MM-yyyy"})
 	public Date dataEmissao;
 
 	public String telefoneComercial;	
@@ -88,6 +87,7 @@ public class Morador extends Usuario {
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date dataAlteracao = DateTime.now().toDate();
 	
+	@Override
 	@PrePersist
 	public void preInsert() {
 		this.dataCriacao = DateTime.now().toDate();

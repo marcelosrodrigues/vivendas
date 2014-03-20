@@ -3,6 +3,7 @@ package models;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -28,7 +29,7 @@ public class Conselho extends Model implements Serializable {
 	@Temporal(TemporalType.DATE)
 	public Date terminoMandato;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, cascade = {CascadeType.PERSIST})
 	public Arquivo ata;
 
 	@ManyToOne(fetch = FetchType.LAZY)

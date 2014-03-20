@@ -2,7 +2,7 @@
 #{set title:'Conselho' /}
 
 
-#{form @Conselheiros.salvar() ,class:'form-horizontal'}
+#{form @Conselheiros.salvar(), enctype:'multipart/form-data' ,class:'form-horizontal'}
 	<fieldset>
 			<legend>Conselho		
 				<div class="voltar">	
@@ -57,7 +57,7 @@
 			<div class="form-group">
 				<label for="conselho.ata"  class="col-lg-3 control-label">Ata da reuni&atilde;o de empossamento</label>
 				<div class="col-lg-3">
-					<input type="file" name="conselho.ata" id="conselho.ata" class="input-lg form-control" />
+					<input type="file" name="ata" id="ata" class="input-lg form-control" />
 				</div>
 			</div>
 			

@@ -5,7 +5,6 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -15,10 +14,9 @@ import javax.persistence.TemporalType;
 
 import org.joda.time.DateTime;
 
-import controllers.LoginController;
-
 import play.db.jpa.Blob;
 import play.db.jpa.Model;
+import controllers.LoginController;
 
 @Entity
 @Table(name="arquivo_play")
@@ -28,7 +26,6 @@ public class Arquivo extends Model implements Serializable  {
 	
 	public String contentName;
 	
-	@Lob
 	public Blob contentFile;
 	
 	@ManyToOne(fetch=FetchType.LAZY)

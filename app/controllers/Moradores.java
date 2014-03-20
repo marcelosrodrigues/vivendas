@@ -287,9 +287,11 @@ public class Moradores extends CRUD {
 
 	public static void submit(@Required Long apartamento, @Required String cpf,
 			@Required String nomeCompleto,
-			@As(format = "dd-MM-yyyy") @Required Date dataNascimento, @Required String identidade,
+			@As(format = "dd-MM-yyyy")/* @Required */Date dataNascimento,
+			@Required String identidade,
 			@Required String orgaoemissor, @As(format = "dd-MM-yyyy") @Required Date dataemissao,
-			@Required @Email String email, @Required String telefoneResidencial, String telefoneComercial,
+			/* @Required */@Email String email,
+			@Required String telefoneResidencial, String telefoneComercial,
 			String morador_type ,
 			@Required @As(format = "dd-MM-yyyy") Date dataEntradaImovel,
 			@As(format = "dd-MM-yyyy") Date dataSaidaImovel, File escritura) throws FileNotFoundException {

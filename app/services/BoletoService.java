@@ -9,10 +9,8 @@ import java.util.List;
 
 import models.Apartamento;
 import models.Boleto;
-import models.Condominio;
 import models.ConfiguracaoBoleto;
 import models.Conselho;
-import models.FundoReserva;
 import models.Lancamento;
 
 import org.apache.log4j.Logger;
@@ -146,15 +144,16 @@ public class BoletoService {
 
 			if (!apartamento.getMorador().equals(conselho.sindico)) {
 				if (!apartamento.getMorador().equals(conselho.subsindico)) {
-					apartamento.fazerLancamento(new Condominio(vencimento,
-							condominio, apartamento));
+					apartamento.fazerLancamento(vencimento, condominio,
+							"CONDOMÍNIO");
 				} else {
-					apartamento.fazerLancamento(new Condominio(vencimento,
-							condominio.divide(new BigDecimal(2)), apartamento));
+					apartamento.fazerLancamento(vencimento,
+							condominio.divide(new BigDecimal(2)),
+ "CONDOMÍNIO");
 				}
 			}
-			apartamento.fazerLancamento(new FundoReserva(vencimento,
-					fundoReserva, apartamento));
+			apartamento.fazerLancamento(vencimento, fundoReserva,
+					"FUNDO DE RESERVA");
 
 		}
 	}

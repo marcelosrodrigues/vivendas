@@ -1,8 +1,14 @@
 package controllers;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+import models.Arquivo;
 import models.Conselho;
 import play.data.binding.Binder;
-import play.db.jpa.Model;
+import play.db.jpa.Blob;
+import play.libs.MimeTypes;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -26,10 +32,12 @@ public class Conselheiros extends Controller {
 		render("Conselheiros/novo.html", conselho);
 	}
 
-	public static void salvar() {
-		Model conselho = new Conselho();
+	public static void salvar(File ata) throws FileNotFoundException {
+		Conselho conselho = new Conselho();
 		Binder.bindBean(params.getRootParamNode(), "conselho", conselho);
-
+		conselho.ata = new Arquivo(ata.getName(), new Blob());
+		conselho.ata.contentFile.set(new FileInputStream(ata),
+				MimeTypes.getContentType(ata.getName()));
 		conselho.save();
 		index();
 	}

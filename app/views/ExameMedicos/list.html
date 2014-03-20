@@ -1,7 +1,60 @@
 #{extends 'main.html' /}
 #{ set title:'Exames medicos' /}
 
-<table class="table table-striped">
+#{form @ExameMedicos.pesquisar() ,class:'form-horizontal'}
+	<fieldset>
+		<legend>Moradores		
+			<div class="voltar">
+				<a href="@{Moradores.index()}" class="btn btn-link">Voltar</a>				
+			</div>		
+		</legend>
+			<div class="form-group">
+				<label for="bloco" class="col-lg-2 control-label">Bloco</label>
+				<div class="col-lg-3">
+					#{field 'bloco' }
+					<select id="bloco" name="bloco" class="${field.errorClass} input-lg form-control">
+						<option value="" />
+						#{list items:blocos, as:'bloco'}
+							#{if bloco.id.toString() == params.bloco.toString()}
+								<option value="${bloco.id}" selected="selected">${bloco.bloco}</option>
+							#{/if}
+							#{else}
+								<option value="${bloco.id}">${bloco.bloco}</option>
+							#{/else}
+						#{/list}
+					</select>
+					#{/field}
+				</div>
+			</div>
+			
+			<div class="form-group">				
+				<label for="apartamento" class="col-lg-2 control-label">Apartamento</label>
+				<div class="col-lg-3">
+						<select id="apartamento" name="apartamento" class="input-lg form-control">
+							<option value="" />
+							#{list items:apartamentos, as:'apartamento'}
+								#{if apartamento.id.toString() == params.apartamento.toString() }
+									<option value="${apartamento.id}" selected="selected">${apartamento.numero}</option>
+								#{/if}
+								#{else}
+									<option value="${apartamento.id}">${apartamento.numero}</option>
+								#{/else}
+							#{/list}
+						</select>
+				</div>
+			</div>
+			
+		<div class="form-group">
+			<div class="col-lg-offset-2 col-lg-10">
+				<input type="submit" name="pesquisar" value="Pesquisar" class="btn btn-primary btn-lg" />
+			</div>	
+		</div>
+		</fieldset>
+		
+#{/form}
+
+
+<table class="table table-striped bottom">
 <thead>
 	<tr>
 		<th>Morador</th>
@@ -30,6 +83,6 @@
 			</td>	
 	#{/list}
 #{/else}
-
 </tbody>
+
 </table>
