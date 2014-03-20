@@ -15,12 +15,12 @@
 					#{field 'banco' }
 					<select id="object.banco" name="object.banco" class="${field.errorClass} input-lg form-control">
 						<option value="" />						
-						<option value="br.com.caelum.stella.boleto.bancos.BancoDoBrasil"  #{if object.banco.equals("br.com.caelum.stella.boleto.bancos.BancoDoBrasil")}selected="selected"#{/if}>Banco do Brasil</option>
-						<option value="br.com.caelum.stella.boleto.bancos.Bradesco" #{if object.banco.equals("br.com.caelum.stella.boleto.bancos.Bradesco")}selected="selected"#{/if}>Bradesco</option>
-						<option value="br.com.caelum.stella.boleto.bancos.Caixa" #{if object.banco.equals("br.com.caelum.stella.boleto.bancos.Caixa")}selected="selected"#{/if}>Caixa</option>
-						<option value="br.com.caelum.stella.boleto.bancos.HSBC" #{if object.banco.equals("br.com.caelum.stella.boleto.bancos.HSBC")}selected="selected"#{/if}>HSBC</option>
-						<option value="br.com.caelum.stella.boleto.bancos.Itau" #{if object.banco.equals("br.com.caelum.stella.boleto.bancos.Itau")}selected="selected"#{/if}>Itau</option>
-						<option value="br.com.caelum.stella.boleto.bancos.Santander" #{if object.banco.equals("br.com.caelum.stella.boleto.bancos.Santander")}selected="selected"#{/if}>Santander</option>						
+						<option value="br.com.caelum.stella.boleto.bancos.BancoDoBrasil"  #{if object.banco?.equals("br.com.caelum.stella.boleto.bancos.BancoDoBrasil")}selected="selected"#{/if}>Banco do Brasil</option>
+						<option value="br.com.caelum.stella.boleto.bancos.Bradesco" #{if object.banco?.equals("br.com.caelum.stella.boleto.bancos.Bradesco")}selected="selected"#{/if}>Bradesco</option>
+						<option value="br.com.caelum.stella.boleto.bancos.Caixa" #{if object.banco?.equals("br.com.caelum.stella.boleto.bancos.Caixa")}selected="selected"#{/if}>Caixa</option>
+						<option value="br.com.caelum.stella.boleto.bancos.HSBC" #{if object.banco?.equals("br.com.caelum.stella.boleto.bancos.HSBC")}selected="selected"#{/if}>HSBC</option>
+						<option value="br.com.caelum.stella.boleto.bancos.Itau" #{if object.banco?.equals("br.com.caelum.stella.boleto.bancos.Itau")}selected="selected"#{/if}>Itau</option>
+						<option value="br.com.caelum.stella.boleto.bancos.Santander" #{if object.banco?.equals("br.com.caelum.stella.boleto.bancos.Santander")}selected="selected"#{/if}>Santander</option>						
 					</select>
 					#{/field}
 				</div>
