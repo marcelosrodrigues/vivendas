@@ -16,10 +16,10 @@
 <body>
 	<header class="bs-header">
 		<div class="container">
-			<div class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
+			<div class="navbar navbar-default navbar-fixed-top bs-docs-nav">
 				<a class="navbar-brand" href="/">Condom&iacute;nio Vivendas do
 					Parque</a>
-				<div class="nav-collapse collapse bs-navbar-collapse">
+				<div class="navbar-collapse collapse navbar-responsive-collapse">
 					<ul class="nav navbar-nav">
 						#{secure.check "ADMINISTRACAO"}
 							<li class="active"><a href="@{Moradores.index()}">Apartamentos</a></li>
@@ -54,29 +54,40 @@
 	              			</li>
               			#{/secure.check}
               		</ul>
-				</div>
-				<div class="nav-collapse collapse bs-navbar-collapse" style="float: right;">
-					<a class="navbar-brand" href="@{Secure.logout()}">Sair</a>
-				</div>
+              		#{if session.contains("username")}
+              			<div class="nav navbar-nav navbar-right" style="padding-right: 15px;">
+							<a class="navbar-brand" href="#">Trocar a senha</a>
+						
+							<a class="navbar-brand" href="@{Secure.logout()}">Sair</a>
+						</div>
+					#{/if}
+				</div>				
+				
 			</div>
 
 		</div>
 	</header>
-	<div class="container bs-docs-container wrap">
-	
-		#{if flash.success}
-            <div class="bs-callout bs-callout-success">
-                ${flash.success}
-            </div>
-		#{/if}
-		#{if flash.error || error}
-		    <div class="bs-callout bs-callout-danger">
-		    	<h4>Ocorreu um erro no salvamento</h4>
-		         <p>${error ?: flash.error}</p>
-		    </div>
-		#{/if}
-	
-		#{doLayout /}
+	<div class="container bs-docs-section wrap">
+			
+			<div class="row" >
+				<div class="col-lg-4" style="margin-left: -60px;">
+					#{include 'includes/menu.html' /}
+				</div>
+				<div class="col-lg-12 col-lg-offset-1" style="float:right;">
+					#{if flash.success}
+			            <div class="alert alert-dismissable alert-success">
+			                ${flash.success}
+			            </div>
+					#{/if}
+					#{if flash.error || error}
+					    <div class="alert alert-dismissable alert-danger">
+					    	<h4>Ocorreu um erro no processamento</h4>
+					         <p>${error ?: flash.error}</p>
+					    </div>
+					#{/if}					
+					#{doLayout /}
+				</div>
+			</div>
 	</div>
 	<footer class="bs-footer">
 		<div class="container">

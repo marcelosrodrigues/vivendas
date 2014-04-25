@@ -1,0 +1,18 @@
+#{ifnot session.contains("username")}	
+		<div id="login">	
+			#{form @Secure.authenticate() , class:'form-inline'}
+							
+				<div class="form-group"  id="username-field">
+					<label for="username" class="control-label">&{'secure.username'}</label>
+					<input type="text" name="username" id="username" value="${flash.username}" class=" input-sm form-control" />
+				</div>
+				<div class="form-group"  id="password-field">
+					<label for="password" class="control-label">&{'secure.password'}</label>
+					<input type="password" name="password" id="password" value="" class=" input-sm form-control"/>
+				</div>		
+				<button type="submit" id="signin" class="btn btn-primary">&{'secure.signin'}</button>
+				
+			#{/form}
+			<a href="@{Application.liberar()}" style="text-align:right;">Se este for o seu primeiro acesso, clique aqui</a>
+		</div>
+#{/ifnot}		

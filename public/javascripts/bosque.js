@@ -320,7 +320,7 @@ $("input[id='conselho.terminoMandato']").datepicker({
 
 
 $('#cpf').blur(function() {
-	$.getJSON('/moradores/buscar?cpf=' + this.value , 
+	$.getJSON('/utilities/buscar?cpf=' + this.value , 
 			  function(data) {
 				$("#id").val(data.id);
 				$("#nomeCompleto").val(data.nomeCompleto);
@@ -334,7 +334,7 @@ $('#cpf').blur(function() {
 		  	  });
 	});
 $('select#bloco').change(function() {							
-			$.getJSON('/apartamentos/listByBloco?bloco=' + this.value , 
+			$.getJSON('/utilities/listByBloco?bloco=' + this.value , 
 					function(data){
 							$('select#apartamento option').each(function() {
 								$(this).remove();
@@ -346,6 +346,21 @@ $('select#bloco').change(function() {
 					})
 });
 
+$('select#apartamento').change(function() {							
+	$.getJSON('/utilities/buscar?apartamento=' + this.value , 
+			 function(data) {
+					$("#id").val(data.id);
+					$("#nomeCompleto").val(data.nomeCompleto);
+					$("#dataNascimento").val(data.dataNascimento);
+					$("#identidade").val(data.identidade);
+					$("#orgaoemissor").val(data.orgaoEmissor);
+					$("#dataemissao").val(data.dataEmissao);
+					$("#email").val(data.email);
+					$("#telefoneResidencial").val(data.telefoneResidencial);
+					$("#telefoneComercial").val(data.telefoneComercial);
+					$("#cpf").val(data.cpf);
+  	  		});
+});
 
 $("#cancelar").click(function() {
 	var confirmation = confirm("Deseja realmente cancelar o boleto ? ");

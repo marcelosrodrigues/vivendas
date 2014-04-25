@@ -45,7 +45,7 @@ object.dataLancamento=Data de Lançamento
 
 secure.username=E-mail
 secure.password=Senha
-secure.signin=Logar
+secure.signin=Acessar
 secure.remember=Manter auntenticado
 secure.error=Não foi possível autenticar o usuário. Entre em contato com a Administração
 secure.logout=Você saiu do sistema. Para retornar logue novamente.

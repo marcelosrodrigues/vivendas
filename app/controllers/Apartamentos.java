@@ -31,7 +31,6 @@ public class Apartamentos extends CRUD{
 		renderJSON(json.include("numero","id","bloco.id","bloco.bloco").exclude("*").serialize(apartamentos));
 		
 	}
-	
 	public static void show(long id) {
 		
 		Apartamento object = Apartamento.findById(id);

@@ -45,9 +45,9 @@
 		
 		<div class="form-group">
 			<div class="col-lg-offset-2 col-lg-10">
-				<input type="submit" name="_pagamento" value="Editar" class="btn btn-primary btn-lg" />
+				<input type="submit" name="_pagamento" value="Editar" class="btn btn-primary" />
 				#{if !boleto.isCancelado() }
-					<a id="cancelar" name="_cancelar" class="btn btn-danger btn-lg" boleto="${params.id}" 
+					<a id="cancelar" name="_cancelar" class="btn btn-danger" boleto="${params.id}" 
 					   dataVencimento="${params.dataVencimento}" apartamento="${params.apartamento}" bloco="${params.bloco}" page="${params.page}">Cancelar</a>
 				#{/if}
 			</div>	

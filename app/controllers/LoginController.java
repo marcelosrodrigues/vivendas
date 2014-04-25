@@ -2,13 +2,12 @@ package controllers;
 
 import java.util.List;
 
-import play.data.validation.Required;
-
-import exceptions.UserBlockedException;
-import exceptions.UserNotFoundException;
 import models.Grupo;
 import models.Usuario;
+import play.data.validation.Required;
 import services.UsuarioService;
+import exceptions.UserBlockedException;
+import exceptions.UserNotFoundException;
 
 
 public class LoginController extends Secure.Security{
@@ -17,8 +16,9 @@ public class LoginController extends Secure.Security{
 		return authenticate(username, password);
 	}
 
-	static boolean authenticate(String username, String password)  {
+	static boolean authenticate(@Required String username, @Required String password)  {
         try {
+              	
 			UsuarioService service = new UsuarioService();
 			Usuario usuario = service.autenticar(username, password);
 			
@@ -43,5 +43,9 @@ public class LoginController extends Secure.Security{
 		return grupos!=null && !grupos.isEmpty(); 
 		
     }
+	
+	static boolean isConnected() {		
+		return session.contains("username");
+	}
 	
 }

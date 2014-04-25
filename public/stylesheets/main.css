@@ -29,8 +29,8 @@ body {
 }
 
 .bs-footer {
-	padding-top: 15px;
-	padding-bottom: 15px;
+	padding-top: 18px;
+	padding-bottom: 18px;
 	
 	text-align: center;
 	border-top: 1px solid #e5e5e5;
@@ -81,42 +81,27 @@ div#apartamento a,div#morador a,div#dependente a,div#vaga a,div#foto a, div#mora
 	margin-top: 10px;
 }
 
-.bs-callout h4 {
-	margin-top: 0;
-}
-
-.bs-callout p:last-child {
-	margin-bottom: 0;
-}
-
-.bs-callout {
-	margin: 20px 0;
-	padding: 15px 30px 15px 15px;
-	border-left: 5px solid #eee;
-}
-
-.bs-callout-danger {
-	background-color: #fcf2f2;
-	border-color: #dFb5b4;
-}
-
-.bs-callout-warning {
-	background-color: #fefbed;
-	border-color: #f1e7bc;
-}
-
-.bs-callout-info {
-	background-color: #f0f7fd;
-	border-color: #d0e3f0;
-}
-
-.bs-callout-success {
-	background-color: #dff0d8;
-	border-color: #468847;
-}
 
 .search {
 	width: 32px;
 	height: 32px;
 	margin-top: 5px;
+}
+
+
+#login {
+    margin-top: 10px;
+    margin-left:200px;
+    padding-left: 40px;
+    padding-right: 10px;        
+    text-align: left;
+    padding-top: 10px;
+    float: right; 
+    display: inline-block;  
+     
+}
+
+#login label {
+	padding-left: 5px;
+	padding-right: 5px;
 }
