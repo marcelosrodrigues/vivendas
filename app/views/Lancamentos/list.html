@@ -1,14 +1,24 @@
 #{extends 'main.html' /}
-#{ set title:'Lancamentos' /}
+#{ set title:'Lan&ccedil;amentos' /}
 
 <fieldset>
 		<legend>
-			Lancamentos
+			Lan&ccedil;amentos
 			#{if boleto == null }
 				<div class="voltar"><a href="@{Moradores.index()}" class="btn btn-link">Voltar</a></div>
 			#{/if}
 			#{else}
-				<div class="voltar"><a href="@{Boletos.voltar(boleto.id)}" class="btn btn-link">Voltar</a></div>
+				<div class="voltar">
+				#{secure.check "FINANCEIRO"}
+						<a href="@{Boletos.voltar(boleto.id)}" class="btn btn-link">Voltar</a>
+					#{/secure.check}
+					#{secure.check "MORADOR"}
+						#{secure.notcheck "FINANCEIRO"}
+							<a href="@{Usuarios.boletos()}" class="btn btn-link">Voltar</a>
+						#{/secure.notcheck}
+					#{/secure.check}
+				</div>
+				
 			#{/else}
 		</legend>
 		<div class="row">

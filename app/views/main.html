@@ -67,25 +67,27 @@
 
 		</div>
 	</header>
-	<div class="container bs-docs-section wrap">
+	<div class="container wrap">
 			
-			<div class="row" >
-				<div class="col-lg-4" style="margin-left: -60px;">
-					#{include 'includes/menu.html' /}
-				</div>
-				<div class="col-lg-12 col-lg-offset-1" style="float:right;">
-					#{if flash.success}
-			            <div class="alert alert-dismissable alert-success">
-			                ${flash.success}
-			            </div>
-					#{/if}
-					#{if flash.error || error}
-					    <div class="alert alert-dismissable alert-danger">
-					    	<h4>Ocorreu um erro no processamento</h4>
-					         <p>${error ?: flash.error}</p>
-					    </div>
-					#{/if}					
-					#{doLayout /}
+			<div class="bs-docs-section">
+				<div class="row">
+					<div class="col-lg-4" style="margin-left: -90px">
+						#{include 'includes/menu.html' /}
+					</div>
+					<div class="col-lg-10 col-lg-offset-2" style="margin-top: -160px">
+						#{if flash.success}
+				            <div class="alert alert-dismissable alert-success">
+				                ${flash.success}
+				            </div>
+						#{/if}
+						#{if flash.error || error}
+						    <div class="alert alert-dismissable alert-danger">
+						    	<h4>Ocorreu um erro no processamento</h4>
+						         <p>${error ?: flash.error}</p>
+						    </div>
+						#{/if}					
+						#{doLayout /}
+					</div>
 				</div>
 			</div>
 	</div>

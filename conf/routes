@@ -5,7 +5,12 @@
 # Home page
  GET     /                                       Application.index
  GET     /liberar                                Application.liberar
- POST     /liberar                               Application.salvar
+ POST    /liberar                                Application.salvar
+ GET	 /morador/meusdados						 Usuarios.abrir
+ POST	 /morador/meusdados						 Usuarios.salvar
+ GET	 /morador/meusdependentes				 Usuarios.dependentes
+ GET	 /morador/depedente/adicionar			 Usuarios.dependente
+ GET	 /morador/meusboletos					 Usuarios.boletos
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

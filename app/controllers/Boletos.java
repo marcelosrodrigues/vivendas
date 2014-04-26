@@ -12,6 +12,7 @@ import models.Bloco;
 import models.Boleto;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.joda.time.DateTime;
 
 import play.data.binding.As;
@@ -130,8 +131,9 @@ public class Boletos extends Controller {
 		
 		try {
 			BoletoService service = new BoletoService();
+			Boleto documento = Boleto.findById(id);
 			byte[] boleto = service.imprimirBoleto(id);
-			renderBinary(new ByteArrayInputStream(boleto),"boleto.pdf");
+			renderBinary(new ByteArrayInputStream(boleto),String.format("boleto_%s.pdf", DateFormatUtils.format(documento.dataVencimento,"MM-yyyy")));
 		} catch (Exception e) {
 			System.out.println(e);
 		}

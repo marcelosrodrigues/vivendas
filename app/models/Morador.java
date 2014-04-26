@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
@@ -23,6 +24,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.Where;
 import org.joda.time.DateTime;
 
 import play.data.binding.As;
@@ -42,7 +44,7 @@ public class Morador extends Usuario {
 	@Column(nullable=false)
 	public String nomeCompleto;
 	
-	// @Required
+	@Required
 	@Temporal(value = TemporalType.DATE)
 	@As(lang = {"pt"}, value = {"dd-MM-yyyy"})
 	public Date dataNascimento;
@@ -74,6 +76,16 @@ public class Morador extends Usuario {
 	@ManyToOne(fetch=FetchType.LAZY,optional=true,targetEntity=Arquivo.class)
 	@LazyToOne(LazyToOneOption.PROXY)
 	public Arquivo foto;
+	
+	@OneToMany(orphanRemoval=false)
+	@JoinColumn(name="proprietario_id")
+	@Where(clause="dataEntrada <= CURRENT_DATE() AND COALESCE(dataSaida,CURRENT_DATE()) >= CURRENT_DATE()")
+	public Collection<Escritura> escrituras =  new HashSet<Escritura>();
+	
+	@OneToMany(orphanRemoval=false)
+	@JoinColumn(name="inquilino_id")
+	@Where(clause="dataInicioContrato <= CURRENT_DATE() AND COALESCE(dataTerminoContrato,CURRENT_DATE()) >= CURRENT_DATE()")	
+	public Collection<ContratoLocacao> contratos =  new HashSet<ContratoLocacao>();
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	public Usuario criadoPor;
@@ -173,6 +185,10 @@ public class Morador extends Usuario {
 
 	public boolean isDependente() {
 		return false;
+	}
+
+	public static Morador getByCPF(final String cpf) {
+		return Morador.find("cpf = ?", cpf).first();
 	}
 	
 }

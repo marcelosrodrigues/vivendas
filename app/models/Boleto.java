@@ -148,6 +148,23 @@ public class Boleto extends Model implements Serializable {
 		
 	}
 	
+	public static List<Boleto> findBoletosAbertos(Morador morador) {
+		
+		
+		final String QUERY = "select b from Boleto b " +
+				" join b.apartamento a " +
+				" left join a.escrituras e " +
+				" left join a.contratosLocacao c" +
+				" where b.dataPagamento is null " +
+				"   and b.dataCancelamento is null " +				
+				"   and b.valor > 0 " +				
+				"   and (e.proprietario = :morador or c.inquilino = :morador ) " +
+				" order by b.dataVencimento";
+		
+		return Boleto.find(QUERY).bind("morador", morador).fetch();
+		
+	}
+	
 	public static List<Map> findInadimplentes() {
 		
 		final String QUERY = "select a.numero , bl.bloco , sum(valor) from boleto b " +

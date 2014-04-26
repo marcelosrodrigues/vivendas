@@ -1,29 +1,21 @@
 package controllers;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
-import controllers.CRUD.ObjectType;
-
-import play.data.binding.Binder;
-import play.db.Model;
-import play.exceptions.TemplateNotFoundException;
-import play.mvc.Before;
-import play.mvc.Scope;
-import play.mvc.With;
-
-import flexjson.JSONSerializer;
-import flexjson.transformer.DateTransformer;
-
-import models.Apartamento;
-import models.Bloco;
 import models.Dependente;
 import models.GrauParentesco;
 import models.Morador;
 import models.Usuario;
+
+import org.apache.commons.lang.StringUtils;
+
+import play.data.binding.Binder;
+import play.exceptions.TemplateNotFoundException;
+import play.mvc.Before;
+import play.mvc.Scope;
+import play.mvc.With;
+import flexjson.JSONSerializer;
+import flexjson.transformer.DateTransformer;
 
 @CRUD.For(Dependente.class)
 @With(Secure.class)
@@ -128,7 +120,7 @@ public class Dependentes extends CRUD {
 
 		render("Dependentes/blank.html", parente, object);
 	}
-
+	
 	public static void save(String id) throws Exception {
 		ObjectType type = ObjectType.get(getControllerClass());
 		notFoundIfNull(type);

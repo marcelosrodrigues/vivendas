@@ -11,7 +11,7 @@
 		
 		<div class="form-group">
 			<label for="nomeCompleto"  class="col-lg-2 control-label">Nome Completo</label>
-			<div class="col-lg-3">
+			<div class="col-lg-6">
 				#{field 'object.nomeCompleto' }
 					<input type="text" name="object.nomeCompleto" id="nomeCompleto" value="${object.nomeCompleto}" class="${field.errorClass} input-lg form-control" />
 					#{ifError field.name}
@@ -71,7 +71,7 @@
 			<label for="identidade"  class="col-lg-2 control-label">N&ordm; Identidade</label>
 			<div class="col-lg-3">
 				#{field 'object.identidade' }
-					<input type="text" name="object.identidade" id="nomeCompleto" value="${object.identidade}" class="${field.errorClass} input-lg form-control" />
+					<input type="text" name="object.identidade" id="identidade" value="${object.identidade}" class="${field.errorClass} input-lg form-control" />
 					#{ifError field.name}
 	        			<span class="error">${field.error.raw()}</span>
 	   				#{/ifError}	
@@ -106,7 +106,7 @@
 		
 		<div class="form-group">
 			<label for="email"  class="col-lg-2 control-label">E-mail</label>
-			<div class="col-lg-3">
+			<div class="col-lg-6">
 				#{field 'object.email' }
 					<input type="text" name="object.email" id="email" value="${object.email}" class="${field.errorClass} input-lg form-control" />
 					#{ifError field.name}
@@ -136,7 +136,7 @@
 		</div>
 		
 		
-		<div class="form-group">
+		<div class="form-group bottom">
 			<div class="col-lg-offset-2 col-lg-10">
 				<input type="submit" name="_save" value="Salvar" class="btn btn-primary" />
 				<input type="submit" name="_saveAndContinue" value="Salvar e Continuar edi&ccedil;&atilde;o" class="btn btn-primary" />

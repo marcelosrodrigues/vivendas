@@ -1,0 +1,40 @@
+#{extends 'main.html' /}
+#{ set title:'Meus boletos' /}
+
+<table class="table table-striped bottom">
+<thead>
+	<tr>
+		<th>Data de Vencimento</th>
+		<th>Valor</th>
+		<th></th>
+	</tr>
+</thead>
+<tbody>
+	#{if boletos.size() == 0}
+		<tr>
+			<td colspan="3">Nenhum boleto foi encontrado.</td>
+		</tr>
+	#{/if}
+	#{else}
+		#{list items:boletos, as:'boleto'}
+			<tr>				
+				<td>${boleto.dataVencimento.format("dd-MM-yyyy")}</td>
+				<td>${boleto.valor.format("#,## 0.00")}</td>
+				<td align="right" width="25%">
+					<a href="@{Lancamentos.detalhar(boleto.id)}" class="btn btn-success btn-sm">Lan&ccedil;amentos</a>
+					#{if boleto.podeImprimir()}
+						<a href="@{Boletos.imprimir(boleto.id)}"><img src="@{'/public/images/print.png'}" alt="Imprimir boleto"/></a>
+					#{/if}									
+				</td>
+			</tr>
+		#{/list}
+	#{/else}
+</tbody>
+<tfoot>
+		<tr>
+		<td align="right"><b>Total</b></td>
+		<td>${total.format("#,## 0.00")}</td>
+		<td></td>
+	</tr>
+</tfoot>
+</table>

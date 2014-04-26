@@ -1,10 +1,7 @@
 package controllers;
 
-import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 import models.Apartamento;
 import models.Bloco;
@@ -12,12 +9,8 @@ import models.Boleto;
 import models.Lancamento;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-
-import controllers.CRUD.ObjectType;
 
 import play.data.binding.Binder;
-import play.db.Model;
 import play.exceptions.TemplateNotFoundException;
 import play.mvc.Before;
 import play.mvc.Scope;
@@ -92,7 +85,6 @@ public class Lancamentos extends CRUD {
 		
 	}
 	
-	@Check("FINANCEIRO")
 	public static void detalhar(Long id) {
 		Boleto boleto = Boleto.findById(id);
 		Apartamento apartamento = boleto.apartamento;

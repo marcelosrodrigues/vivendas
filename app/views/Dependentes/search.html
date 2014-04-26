@@ -5,7 +5,16 @@
 <fieldset>
 	<legend>
 		Morador
-		<div class="voltar"><a href="@{Moradores.index()}" class="btn btn-link">Voltar</a></div>
+		<div class="voltar">
+		#{secure.check "ADMINISTRACAO"}
+			<a href="@{Moradores.index()}" class="btn btn-link">Voltar</a>
+		#{/secure.check}
+		#{secure.check "MORADOR"}
+			#{secure.notcheck "ADMINISTRACAO" }
+				<a href="@{Application.index()}" class="btn btn-link">Voltar</a>
+			#{/secure.notcheck}
+		#{/secure.check}
+		</div>
 	</legend>
 	<div class="row">
 		 <div class="col-lg-5" id="parente.nomeCompleto" >${parente.nomeCompleto}</div>
@@ -39,4 +48,11 @@
 #{/else}
 </tbody>
 </table>
-<a id="dependente" href="@{Dependentes.add(params.morador)}" class="btn btn-primary">Adicionar</a>	
+#{secure.check "ADMINISTRACAO" }
+		<a id="dependente" href="@{Dependentes.add(params.morador)}" class="btn btn-primary ">Adicionar</a>	
+#{/secure.check}
+#{secure.check "MORADOR"}
+	#{secure.notcheck "ADMINISTRACAO" }
+		<a id="dependente" href="@{Usuarios.dependente()}" class="btn btn-primary ">Adicionar</a>	
+	#{/secure.notcheck}
+#{/secure.check}

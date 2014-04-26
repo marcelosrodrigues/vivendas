@@ -1,0 +1,109 @@
+#{extends 'main.html' /}
+#{set title:'Morador' /}
+
+
+#{form @Usuarios.salvar() ,enctype:'multipart/form-data' , class:'form-horizontal'}
+	<input type="hidden" id="id" name="morador.id" value="${morador.id}"/> 
+		<fieldset>
+		<legend>
+			Meus Dados
+			<div class="voltar"><a href="@{Application.index()}" class="btn btn-link">Voltar</a></div>
+		</legend>
+				
+		<div class="form-group">
+			<label for="cpf"  class="col-lg-2 control-label">CPF</label>
+			<div class="col-lg-3">
+				<input type="text" name="morador.cpf" id="cpf" value="${morador.cpf}" class="#{ifError 'cpf'}hasError#{/ifError} input-lg form-control"  />
+				#{ifError 'cpf'}
+	        		 <span class="error">#{error 'cpf'/}</span>
+	    		#{/ifError}
+			</div>			
+		</div>
+		
+		<div class="form-group">
+			<label for="nomeCompleto"  class="col-lg-2 control-label">Nome Completo</label>
+			<div class="col-lg-6">
+				<input type="text" name="morador.nomeCompleto" id="nomeCompleto" value="${morador.nomeCompleto}" class="#{ifError 'nomeCompleto'}hasError#{/ifError} input-lg form-control" />
+				#{ifError 'nomeCompleto'}
+	        		 <span class="error">#{error 'nomeCompleto'/}</span>
+	    		#{/ifError}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="dataNascimento"  class="col-lg-2 control-label">Data de Nascimento</label>
+			<div class="col-lg-3">
+				<input type="text" name="morador.dataNascimento" id="dataNascimento" value="${morador.dataNascimento.format('dd-MM-yyyy')}" class="#{ifError 'dataNascimento'}hasError#{/ifError}  input-lg form-control"  />
+				#{ifError 'dataNascimento'}
+	        		 <span class="error">#{error 'dataNascimento'/}</span>
+	    		#{/ifError}
+			</div>
+		</div>	
+		
+		<div class="form-group">
+			<label for="identidade"  class="col-lg-2 control-label">N&ordm; Identidade</label>
+			<div class="col-lg-3">
+				<input type="text" name="morador.identidade" id="identidade" value="${morador.identidade}" class="#{ifError 'identidade'}hasError#{/ifError} input-lg form-control"  />
+				#{ifError 'nomeCompleto'}
+	        		 <span class="error">#{error 'identidade'/}</span>
+	    		#{/ifError}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="orgaoemissor"  class="col-lg-2 control-label">Org&atilde;o Emissor</label>
+			<div class="col-lg-3">
+				<input type="text" name="morador.orgaoEmissor" id="morador.orgaoEmissor" value="${morador.orgaoEmissor}" class="#{ifError 'orgaoemissor'}hasError#{/ifError} input-lg form-control" />
+				#{ifError 'orgaoemissor'}
+	        		 <span class="error">#{error 'orgaoemissor'/}</span>
+	    		#{/ifError}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="dataemissao"  class="col-lg-2 control-label">Data de Emiss&atilde;o</label>
+			<div class="col-lg-3">
+				<input type="text" name="morador.dataEmissao" id="dataemissao" value="${morador.dataEmissao.format('dd-MM-yyyy')}" class="#{ifError 'dataemissao'}hasError#{/ifError} input-lg form-control" />
+				#{ifError 'dataemissao'}
+	        		 <span class="error">#{error 'dataemissao'/}</span>
+	    		#{/ifError}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="email"  class="col-lg-2 control-label">E-mail</label>
+			<div class="col-lg-6">
+				<input type="text" name="morador.email" id="email" value="${morador.email}" class="#{ifError 'email'}hasError#{/ifError} input-lg form-control" />
+				#{ifError 'email'}
+	        		 <span class="error">#{error 'email'/}</span>
+	    		#{/ifError}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="telefoneResidencial"  class="col-lg-2 control-label">Telefone Residencial</label>
+			<div class="col-lg-3">
+				<input type="text" name="morador.telefoneResidencial" id="telefoneResidencial" value="${morador.telefoneResidencial}" class="#{ifError 'telefoneResidencial'}hasError#{/ifError} input-lg form-control" />
+				#{ifError 'telefoneResidencial'}
+	        		 <span class="error">#{error 'telefoneResidencial'/}</span>
+	    		#{/ifError}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="telefoneComercial"  class="col-lg-2 control-label">Telefone Comercial</label>
+			<div class="col-lg-3">
+				<input type="text" name="morador.telefoneComercial" id="telefoneComercial" value="${morador.telefoneComercial}" class="input-lg form-control" />
+			</div>
+		</div>
+		
+		<div class="form-group bottom">
+			<div class="col-lg-offset-2 col-lg-10">
+				<input type="submit" value="Salvar" class="btn btn-primary" />
+			</div>	
+		</div>
+		
+		
+			
+	</fieldset>	
+#{/form}

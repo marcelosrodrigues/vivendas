@@ -1,10 +1,10 @@
 
 #{if session.contains("username")}
-<ul class="nav nav-pills nav-stacked" style="max-width: 300px;">
+<ul class="nav nav-pills nav-stacked" style="max-width: 160px;">
 #{secure.check "MORADOR"}
-	 <li><a href="#">Meus dados</a></li>
-	 <li><a href="#">Meus dependentes</a></li>
-	 <li><a href="#">Financeiro</a></li>
+	 <li><a href="@{Usuarios.abrir()}">Meus dados</a></li>
+	 <li><a href="@{Usuarios.dependentes()}">Meus dependentes</a></li>
+	 <li><a href="@{Usuarios.boletos()}">Boletos em aberto</a></li>
 #{/secure.check}
 #{secure.check "PROPRIETARIO"}
 	 <li><a href="#">Meus imoveis</a></li>

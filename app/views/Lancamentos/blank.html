@@ -10,7 +10,14 @@
 					<a href="/" class="btn btn-link">Voltar</a>
 				#{/if}
 				#{else}
-					<a href="@{Lancamentos.list(params.id)}" class="btn btn-link">Voltar</a>
+					#{secure.check "FINANCEIRO"}
+						<a href="@{Lancamentos.list(params.id)}" class="btn btn-link">Voltar</a>
+					#{/secure.check}
+					#{secure.check "MORADOR"}
+						#{secure.notcheck "FINANCEIRO"}
+							<a href="@{Usuarios.boletos()}" class="btn btn-link">Voltar</a>
+						#{/secure.notcheck}
+					#{/secure.check}
 				#{/else}
 			</div>		
 		</legend>
