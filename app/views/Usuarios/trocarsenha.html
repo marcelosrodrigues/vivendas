@@ -1,0 +1,49 @@
+#{extends 'main.html' /}
+#{set title:'Usuario' /}
+
+
+#{form @Usuarios.trocarsenha() ,enctype:'multipart/form-data' , class:'form-horizontal'}
+	 
+		<fieldset>
+		
+		<div class="form-group">
+			<label for="senhaAntiga"  class="col-lg-3 control-label">Senha Atual</label>
+			<div class="col-lg-4">
+				<input type="password" name="senhaAntiga" id="senhaAntiga" class="#{ifError 'senhaAntiga'}hasError#{/ifError} input-lg form-control" />
+				#{ifError 'senhaAntiga'}
+	        		 <span class="error">#{error 'senhaAntiga'/}</span>
+	    		#{/ifError}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="novaSenha"  class="col-lg-3 control-label">Nova senha</label>
+			<div class="col-lg-4">
+				<input type="password" name="novaSenha" id="novaSenha" class="#{ifError 'novaSenha'}hasError#{/ifError} input-lg form-control" />
+				#{ifError 'novaSenha'}
+	        		 <span class="error">#{error 'novaSenha'/}</span>
+	    		#{/ifError}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="confirmacaoSenha"  class="col-lg-3 control-label">Confirme a nova senha</label>
+			<div class="col-lg-4">
+				<input type="password" name="confirmacaoSenha" id="confirmacaoSenha" class="#{ifError 'confirmacaoSenha'}hasError#{/ifError} input-lg form-control" />
+				#{ifError 'confirmacaoSenha'}
+	        		 <span class="error">#{error 'confirmacaoSenha'/}</span>
+	    		#{/ifError}
+			</div>
+		</div>
+		
+		
+		<div class="form-group">
+			<div class="col-lg-offset-2 col-lg-10">
+				<input type="submit" value="Salvar" class="btn btn-primary" />
+			</div>	
+		</div>
+		
+		
+			
+	</fieldset>	
+#{/form}

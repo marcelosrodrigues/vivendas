@@ -4,7 +4,11 @@
 <table class="table table-striped bottom">
 <thead>
 	<tr>
-		<th>Data de Vencimento</th>
+		<th>Data de Vencimento</th>		
+		#{secure.check 'PROPRIETARIO'}
+			<th>Bloco</th>
+			<th>Apartamento</th>
+		#{/secure.check}
 		<th>Valor</th>
 		<th></th>
 	</tr>
@@ -19,6 +23,10 @@
 		#{list items:boletos, as:'boleto'}
 			<tr>				
 				<td>${boleto.dataVencimento.format("dd-MM-yyyy")}</td>
+				#{secure.check 'PROPRIETARIO'}
+					<td>${boleto.apartamento.bloco.bloco}</td>
+					<td>${boleto.apartamento.numero}</td>
+				#{/secure.check}
 				<td>${boleto.valor.format("#,## 0.00")}</td>
 				<td align="right" width="25%">
 					<a href="@{Lancamentos.detalhar(boleto.id)}" class="btn btn-success btn-sm">Lan&ccedil;amentos</a>
@@ -32,6 +40,9 @@
 </tbody>
 <tfoot>
 		<tr>
+		#{secure.check 'PROPRIETARIO'}
+			<td colspan="2"></td>
+		#{/secure.check}
 		<td align="right"><b>Total</b></td>
 		<td>${total.format("#,## 0.00")}</td>
 		<td></td>

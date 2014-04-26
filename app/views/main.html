@@ -56,7 +56,7 @@
               		</ul>
               		#{if session.contains("username")}
               			<div class="nav navbar-nav navbar-right" style="padding-right: 15px;">
-							<a class="navbar-brand" href="#">Trocar a senha</a>
+							<a class="navbar-brand" href="@{Usuarios.abrir_trocar_senha()}">Trocar a senha</a>
 						
 							<a class="navbar-brand" href="@{Secure.logout()}">Sair</a>
 						</div>
@@ -74,7 +74,7 @@
 					<div class="col-lg-4" style="margin-left: -90px">
 						#{include 'includes/menu.html' /}
 					</div>
-					<div class="col-lg-10 col-lg-offset-2" style="margin-top: -160px">
+					<div class="col-lg-10 col-lg-offset-1" style="padding-right:20px;  position: absolute;">
 						#{if flash.success}
 				            <div class="alert alert-dismissable alert-success">
 				                ${flash.success}
@@ -91,11 +91,7 @@
 				</div>
 			</div>
 	</div>
-	<footer class="bs-footer">
-		<div class="container">
-			Condom&iacute;nio Vivendas do Parque
-		</div>					
-	</footer>
+	
 </body>
 #{include 'includes/apartamento.html' /}
 #{include 'includes/morador.html' /}

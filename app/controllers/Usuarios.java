@@ -5,16 +5,17 @@ import java.util.List;
 
 import models.Boleto;
 import models.Dependente;
-import models.ExameMedico;
 import models.GrauParentesco;
 import models.Morador;
 import models.Usuario;
+
+import org.apache.commons.lang.StringUtils;
+
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 import services.MailService;
 
-@CRUD.For(ExameMedico.class)
 @With(Secure.class)
 public class Usuarios  extends Controller {
 
@@ -102,4 +103,53 @@ public class Usuarios  extends Controller {
 		render(boletos,total);
 	}
 
+	public static void abrir_trocar_senha() {
+		render("Usuarios/trocarsenha.html");
+	}
+	
+	public static void trocarsenha(String senhaAntiga , String novaSenha , String confirmacaoSenha) {
+		
+		
+		Usuario usuario = LoginController.getUserAuthenticated();
+		
+		if( StringUtils.isBlank(senhaAntiga) ) {
+			validation.addError("senhaAntiga", "Senha atual é obrigatória");
+		} else if( !usuario.password.equalsIgnoreCase(senhaAntiga) ) {
+			validation.addError("senhaAntiga", "Senha antiga não confere");
+		} 
+		
+		if( StringUtils.isBlank(novaSenha) ){
+			validation.addError("novaSenha", "Nova senha é obrigatória");
+		}
+		
+		if( StringUtils.isBlank(confirmacaoSenha) ){
+			validation.addError("confirmacaoSenha", "Confirmação da senha é obrigatória");
+		}
+		
+		if( !StringUtils.isBlank(novaSenha) && !StringUtils.isBlank(confirmacaoSenha) && !novaSenha.equalsIgnoreCase(confirmacaoSenha)){
+			validation.addError("confirmacaoSenha", "Não confere a nova senha com a confirmação");
+		}
+		
+		if( validation.hasErrors() ){
+			renderArgs
+			.put("error",
+					"Não foi possível trocar a sua senha");
+			render("Usuarios/trocarsenha.html");
+		} else {
+			usuario.password = novaSenha;
+			usuario.trocasenha = false;
+			usuario.save();
+			
+			MailService mail = new MailService();
+    		mail.from("cvparque@ig.com.br")
+    			.to(usuario.email)
+    			.subject("Troca efetuada com sucesso")
+    			.message("Sua senha foi trocada com sucesso.\r\n\r\nSegue a sua nova senha %s\r\n\r\nPortal Condominio Vivendas do Parque\r\n.",usuario.password)
+    			.send();
+			
+			flash.success("Senha trocada com sucesso");
+			render("Application/index.html");
+		}
+	}
+	
 }
