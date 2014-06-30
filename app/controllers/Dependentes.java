@@ -21,8 +21,6 @@ import flexjson.transformer.DateTransformer;
 @With(Secure.class)
 public class Dependentes extends CRUD {
 
-	
-	
 	@Before
 	static void listBlocos() {
 		List<GrauParentesco> grausParentesco = GrauParentesco.find(

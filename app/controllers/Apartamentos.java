@@ -15,7 +15,7 @@ public class Apartamentos extends CRUD{
 	
 	@Before
     static void listBlocos() {
-		List<Bloco> blocos = Bloco.find("order by bloco").fetch();
+		List<Bloco> blocos = Bloco.list();
 		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
         templateBinding.data.put("blocos", blocos);
     }
@@ -26,7 +26,7 @@ public class Apartamentos extends CRUD{
 	
 	public static void listByBloco(long bloco){
 		
-		List<Apartamento> apartamentos = Apartamento.find("select a from Apartamento a INNER JOIN a.bloco b where b.id = ? order by a.numero", bloco).fetch();
+		List<Apartamento> apartamentos = Apartamento.listByBlocoId(bloco);
 		JSONSerializer json = new JSONSerializer();
 		renderJSON(json.include("numero","id","bloco.id","bloco.bloco").exclude("*").serialize(apartamentos));
 		

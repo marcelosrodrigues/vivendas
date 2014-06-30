@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -23,8 +25,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Where;
 import org.joda.time.DateTime;
 
@@ -55,15 +55,13 @@ public class Apartamento extends Model implements Serializable {
 	@JoinColumn(name = "bloco_id", referencedColumnName = "id")
 	public Bloco bloco;
 
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "apartamento", fetch = FetchType.LAZY)
+	@OneToOne(cascade = { CascadeType.ALL }, mappedBy = "apartamento", fetch = FetchType.LAZY)
 	@Where(clause = "dataInicioContrato <= CURRENT_DATE() AND COALESCE(dataTerminoContrato,CURRENT_DATE()) >= CURRENT_DATE()")
-	@LazyCollection(LazyCollectionOption.EXTRA)	
-	public Collection<ContratoLocacao> contratosLocacao = new HashSet<ContratoLocacao>();
+	public ContratoLocacao contratoLocacao;
 
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "apartamento", fetch = FetchType.LAZY)
+	@OneToOne(cascade = { CascadeType.ALL }, mappedBy = "apartamento", fetch = FetchType.LAZY)
 	@Where(clause = "dataEntrada <= CURRENT_DATE() AND COALESCE(dataSaida,CURRENT_DATE()) >= CURRENT_DATE()")
-	@LazyCollection(LazyCollectionOption.EXTRA)	
-	public Collection<Escritura> escrituras = new HashSet<Escritura>();	
+	public Escritura escritura;	
 
 	@OneToMany(orphanRemoval = true, cascade = { CascadeType.ALL }, mappedBy = "apartamento", fetch = FetchType.LAZY)
 	public Collection<Vaga> vagas = new HashSet<Vaga>();
@@ -105,6 +103,17 @@ public class Apartamento extends Model implements Serializable {
 		this.alteradoPor = LoginController.getUserAuthenticated();
 	}
 
+	public static List<Apartamento> listByBloco(final Bloco bloco) {
+		return Apartamento.find("SELECT a from Apartamento a join a.bloco where a.bloco = ? order by a.numero", bloco)
+						  .fetch();
+	}
+
+    public static List<Apartamento> listByBlocoId(final Long bloco) {
+        return Apartamento.find("SELECT a from Apartamento a join a.bloco b where b.id = ? order by a.numero", bloco)
+                .fetch();
+    }
+	
+	
 	public Apartamento(Bloco bloco, String numero, BigDecimal area) {
 		this.bloco = bloco;
 		this.numero = numero;
@@ -116,25 +125,14 @@ public class Apartamento extends Model implements Serializable {
 	public void adicionarProprietario(Morador proprietario) {
 		Escritura escritura = new Escritura(proprietario, this, DateTime.now()
 				.toDate());
-		this.escrituras.add(escritura);
+		this.escritura = escritura;
 	}
 	public ContratoLocacao getContratoLocacao() {
-		ContratoLocacao contratoLocacao = null;
-		for( ContratoLocacao locacao : contratosLocacao ){
-			contratoLocacao = locacao;
-			break;
-		}
-		return contratoLocacao;
-		
+		return this.contratoLocacao;
 	}
 
 	public Escritura getEscritura() {
-		Escritura escritura = null;
-		for( Escritura e : escrituras) {
-			escritura = e;
-			break;
-		}
-		return escritura;
+		return this.escritura;
 	}
 
 	public Morador getProprietario() {
@@ -217,6 +215,11 @@ public class Apartamento extends Model implements Serializable {
 
 		this.lancamento.add(lancamento);
 
+	}
+
+	public static List<Apartamento> list() {
+
+        return Apartamento.find("ORDER BY bloco.bloco ASC, numero ASC").fetch();
 	}
 
 }

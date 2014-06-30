@@ -1,17 +1,13 @@
 package models;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -20,9 +16,8 @@ import javax.persistence.TemporalType;
 
 import org.joda.time.DateTime;
 
-import controllers.LoginController;
-
 import play.db.jpa.Model;
+import controllers.LoginController;
 
 @Entity
 @Table
@@ -60,12 +55,18 @@ public class Bloco extends Model implements Serializable {
 	}
 
 	public Bloco(String bloco) {
+		this();
 		this.bloco = bloco;
 	}
 	
+	public static List<Bloco> list() {
+		return Bloco.find("order by bloco")
+			 .fetch();
+	}
 	
-	
+	public Bloco() {}
 
+	@Override
 	public boolean equals(Object obj) {
 		if( obj instanceof Bloco){
 			Bloco other = (Bloco) obj;
@@ -75,6 +76,7 @@ public class Bloco extends Model implements Serializable {
 	}
 	
 	
+	@Override
 	public String toString() {
 		return this.bloco;
 	}

@@ -1,0 +1,26 @@
+<div class="form-group">
+    <div class="radio-inline">
+        <label class="control-label">
+            #{if "PROPRIETARIO".equalsIgnoreCase(_tipo)  }
+                <input type="radio" name="tipo" id="tipo"  value="PROPRIETARIO" checked="checked" />
+                Propriet&aacute;rio do im&oacute;vel
+            #{/if}
+            #{else}
+                <input type="radio" name="tipo" id="tipo" value="PROPRIETARIO" />
+                Propriet&aacute;rio do im&oacute;vel
+            #{/else}
+        </label>
+    </div>
+    <div class="radio-inline">
+        <label  class="control-label">
+            #{if "INQUILINO".equalsIgnoreCase(_tipo) }
+                <input type="radio" name="tipo" id="tipo" value="INQUILINO" checked="checked"/>
+                Im&oacute;vel alugado
+            #{/if}
+            #{else}
+                <input type="radio" name="tipo" id="tipo" value="INQUILINO"/>
+                Im&oacute;vel alugado
+            #{/else}
+        </label>
+    </div>
+</div>

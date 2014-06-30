@@ -13,7 +13,6 @@ import play.data.binding.Binder;
 import play.mvc.Before;
 import play.mvc.Scope;
 import play.mvc.With;
-import services.UtilitiesService;
 
 @CRUD.For(ExameMedico.class)
 @With(Secure.class)
@@ -34,7 +33,7 @@ public class ExameMedicos extends CRUD {
 
 	@Before(only = {"list", "pesquisar"})
 	static void listBlocos() {
-		List<Bloco> blocos = UtilitiesService.listAllBlocos();
+		List<Bloco> blocos = Bloco.list();
 		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
 		templateBinding.data.put("blocos", blocos);
 
@@ -43,11 +42,9 @@ public class ExameMedicos extends CRUD {
 		if (!StringUtils.isBlank(id)) {
 			Apartamento apartamento = Apartamento.findById(Long.parseLong(id));
 			params.put("bloco", apartamento.bloco.id.toString());
-			templateBinding.data.put("apartamentos", UtilitiesService
-					.listAllApartamentosByBloco(apartamento.bloco));
+			templateBinding.data.put("apartamentos", Apartamento.listByBloco(apartamento.bloco));
 		} else if (!StringUtils.isBlank(bloco_id)) {
-			templateBinding.data.put("apartamentos", UtilitiesService
-					.listAllApartamentosByBloco(Long.parseLong(bloco_id)));
+			templateBinding.data.put("apartamentos", Apartamento.listByBloco((Bloco)Bloco.findById(Long.parseLong(bloco_id))));
 		}
 	}
 	

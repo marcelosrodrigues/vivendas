@@ -1,0 +1,16 @@
+<div class="form-group">
+    <label for="${_target}" class="col-lg-2 control-label">${_label}</label>
+    <div class="col-lg-3">
+    #{field _fieldname }
+        <select id="${_fieldname}" name="${_target}" class="${field.errorClass} input-lg form-control">
+            <option value="" />
+            #{list items:_list, as:'object'}
+               <option value="${object.id}"  #{if object.id == _value}selected="selected"#{/if}>${object[_labelfield]}</option>
+            #{/list}
+        </select>
+        #{ifError field.name}
+            <span class="error">${field.error.raw()}</span>
+        #{/ifError}
+    #{/field}
+    </div>
+</div>

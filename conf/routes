@@ -13,6 +13,9 @@
  GET	 /morador/meusboletos					 Usuarios.boletos
  GET 	 /trocarsenha							 Usuarios.abrir_trocar_senha
  POST 	 /trocarsenha							 Usuarios.trocarsenha
+ 
+ GET	 /moradores								 Moradores.index
+ POST	 /moradores								 Moradores.pesquisar
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

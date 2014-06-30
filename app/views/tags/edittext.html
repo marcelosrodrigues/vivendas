@@ -1,0 +1,11 @@
+<div class="form-group">
+    <label for="${_fieldname}"  class="col-lg-2 control-label">&{_fieldname}</label>
+    <div class="col-lg-3">
+        #{field _fieldname }
+            <input type="text" name="${_fieldname}" id="${_fieldid}" value="${_value}" class="#{ifError _fieldname}hasError#{/ifError} input-lg form-control" />
+            #{ifError field.name}
+                <span class="error">${field.error.raw()}</span>
+            #{/ifError}
+        #{/field}
+    </div>
+</div>

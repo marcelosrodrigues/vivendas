@@ -1,5 +1,5 @@
 $('#dataNascimento').mask("99-99-9999");
-$('#dataemissao').mask("99-99-9999");
+$('#dataEmissao').mask("99-99-9999");
 $('#dataEntradaImovel').mask("99-99-9999");
 $('#dataSaidaImovel').mask("99-99-9999");
 $('#dataExame').mask("99-99-9999");
@@ -188,7 +188,7 @@ $('td[id="dependente"]').click(function(e) {
 					$("div#dependente").find("div#dataNascimento").html(data.dataNascimento);
 					$("div#dependente").find("div#identidade").html(data.identidade);
 					$("div#dependente").find("div#orgaoemissor").html(data.orgaoEmissor);
-					$("div#dependente").find("div#dataemissao").html(data.dataEmissao);
+					$("div#dependente").find("div#dataEmissao").html(data.dataEmissao);
 					$("div#dependente").find("div#email").html(data.email);
 					$("div#dependente").find("div#telefoneResidencial").html(data.telefoneResidencial);
 					$("div#dependente").find("div#telefoneComercial").html(data.telefoneComercial);
@@ -220,7 +220,7 @@ $('td[id="morador"]').click(function(e) {
 					$("#dataNascimento").html(data.dataNascimento);
 					$("#identidade").html(data.identidade);
 					$("#orgaoemissor").html(data.orgaoEmissor);
-					$("#dataemissao").html(data.dataEmissao);
+					$("#dataEmissao").html(data.dataEmissao);
 					$("#email").html(data.email);
 					$("#telefoneResidencial").html(data.telefoneResidencial);
 					$("#telefoneComercial").html(data.telefoneComercial);
@@ -265,7 +265,7 @@ $( "input[id='dataNascimento']" ).datepicker({
         changeYear: true,
     	dateFormat: "dd-mm-yy"
   	});
-$( "input[id='dataemissao']" ).datepicker({
+$( "input[id='dataEmissao']" ).datepicker({
 	changeMonth: true,
     changeYear: true,
 	dateFormat: "dd-mm-yy"
@@ -327,7 +327,7 @@ $('#cpf').blur(function() {
 				$("#dataNascimento").val(data.dataNascimento);
 				$("#identidade").val(data.identidade);
 				$("#orgaoemissor").val(data.orgaoEmissor);
-				$("#dataemissao").val(data.dataEmissao);
+				$("#dataEmissao").val(data.dataEmissao);
 				$("#email").val(data.email);
 				$("#telefoneResidencial").val(data.telefoneResidencial);
 				$("#telefoneComercial").val(data.telefoneComercial);
@@ -354,7 +354,7 @@ $('select#apartamento').change(function() {
 					$("#dataNascimento").val(data.dataNascimento);
 					$("#identidade").val(data.identidade);
 					$("#orgaoemissor").val(data.orgaoEmissor);
-					$("#dataemissao").val(data.dataEmissao);
+					$("#dataEmissao").val(data.dataEmissao);
 					$("#email").val(data.email);
 					$("#telefoneResidencial").val(data.telefoneResidencial);
 					$("#telefoneComercial").val(data.telefoneComercial);

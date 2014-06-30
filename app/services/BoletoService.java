@@ -138,7 +138,7 @@ public class BoletoService {
 		BigDecimal fundoReserva = condominio.multiply(new BigDecimal(0.10));
 		Conselho conselho = Conselho.vigente();
 
-		List<Apartamento> apartamentos = UtilitiesService.listAllApartamentos();
+		List<Apartamento> apartamentos = Apartamento.list();
 
 		for (Apartamento apartamento : apartamentos) {
 

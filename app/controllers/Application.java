@@ -11,7 +11,6 @@ import org.apache.commons.lang.StringUtils;
 import play.mvc.Controller;
 import play.mvc.Scope;
 import services.MailService;
-import services.UtilitiesService;
 
 
 public class Application extends Controller {
@@ -23,7 +22,7 @@ public class Application extends Controller {
     
     public static void liberar() {
     	
-    	List<Bloco> blocos = UtilitiesService.listAllBlocos();
+    	List<Bloco> blocos = Bloco.list();
 		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
         templateBinding.data.put("blocos", blocos);
         
@@ -32,11 +31,9 @@ public class Application extends Controller {
         if( !StringUtils.isBlank(id) ) {
         	Apartamento apartamento = Apartamento.findById(Long.parseLong(id));
         	params.put("bloco", apartamento.bloco.id.toString());
-			templateBinding.data.put("apartamentos", UtilitiesService
-					.listAllApartamentosByBloco(apartamento.bloco));
+			templateBinding.data.put("apartamentos", Apartamento.listByBloco(apartamento.bloco));
         } else if( !StringUtils.isBlank(bloco_id) ) {
-			templateBinding.data.put("apartamentos", UtilitiesService
-					.listAllApartamentosByBloco(Long.parseLong(bloco_id)));
+			templateBinding.data.put("apartamentos", Apartamento.listByBloco((Bloco)Bloco.findById(Long.parseLong(bloco_id))));
         }
     	
         templateBinding.data.put("morador", new Morador());

@@ -21,6 +21,7 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Where;
 import org.joda.time.DateTime;
 
 import play.data.validation.Required;
@@ -39,6 +40,7 @@ import exceptions.DuplicateRegisterException;
 			    @NamedQuery(name="Escritura.getByApartamento", 
 			    query="SELECT e from Escritura e WHERE e.apartamento = :apartamento AND e.dataEntrada <= CURRENT_DATE() AND COALESCE(e.dataSaida,CURRENT_DATE()) >= CURRENT_DATE()")
 })
+@Where(clause = "dataEntrada <= CURRENT_DATE() AND COALESCE(dataSaida,CURRENT_DATE()) >= CURRENT_DATE()")
 public class Escritura extends Model implements Serializable , Documentacao {
 	
 	private static final long serialVersionUID = 1L;
@@ -128,6 +130,23 @@ public class Escritura extends Model implements Serializable , Documentacao {
 	@Override
 	public void setDataSaidaImovel(Date dataSaidaImovel) {
 		dataSaida = dataSaidaImovel;		
+	}
+
+	public static Escritura findByApartamento(final Apartamento apartamento) {
+		return Escritura.find("SELECT e from Escritura e WHERE e.apartamento = ?", apartamento).first();
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		boolean equals = false;
+		
+		if( other instanceof Escritura ){
+			Escritura e = (Escritura)other;
+			equals = e.apartamento.equals(this.apartamento) && 
+					 e.proprietario.equals(this.proprietario);
+		}
+		
+		return equals;
 	}
 	
 }

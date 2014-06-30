@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import enumarations.MoradorType;
 import models.Apartamento;
 import models.Bloco;
 import models.Documentacao;
@@ -18,13 +19,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 
 import play.data.binding.As;
-import play.data.validation.Email;
 import play.data.validation.Required;
 import play.mvc.Before;
 import play.mvc.Scope;
 import play.mvc.With;
 import services.MoradorService;
-import services.UtilitiesService;
 import dto.ResultList;
 import exceptions.DuplicateRegisterException;
 import factory.DocumentacaoFactory;
@@ -35,22 +34,29 @@ import flexjson.transformer.DateTransformer;
 @With(Secure.class)
 public class Moradores extends CRUD {
 	
-	@Before(only={"index","pesquisar"})
+	@Before(only={"index","pesquisar","novo"})
     static void listBlocos() {
-		List<Bloco> blocos = UtilitiesService.listAllBlocos();
+		
+		List<Bloco> blocos = Bloco.list();
 		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
         templateBinding.data.put("blocos", blocos);
         
-        String id = params.get("apartamento");
-        String bloco_id = params.get("bloco");
+        String id = params.get("apartamento.id");
+        String bloco_id = params.get("bloco.id");
+        
         if( !StringUtils.isBlank(id) ) {
+        	
         	Apartamento apartamento = Apartamento.findById(Long.parseLong(id));
-        	params.put("bloco", apartamento.bloco.id.toString());
-			templateBinding.data.put("apartamentos", UtilitiesService
-					.listAllApartamentosByBloco(apartamento.bloco));
+        	templateBinding.data.put("bloco",apartamento.bloco);
+        	templateBinding.data.put("apartamento",apartamento);        	
+			templateBinding.data.put("apartamentos", Apartamento.listByBloco(apartamento.bloco));
+			
         } else if( !StringUtils.isBlank(bloco_id) ) {
-			templateBinding.data.put("apartamentos", UtilitiesService
-					.listAllApartamentosByBloco(Long.parseLong(bloco_id)));
+        	
+        	Bloco bloco = Bloco.findById(Long.parseLong(bloco_id));
+        	templateBinding.data.put("bloco",bloco);
+        	templateBinding.data.put("apartamentos", Apartamento.listByBloco(bloco));
+        	
         }
     }
 
@@ -99,7 +105,7 @@ public class Moradores extends CRUD {
 
 	}
 	
-	public static void pesquisar(Long bloco , Long apartamento , int page ) {
+	public static void pesquisar(Bloco bloco , Apartamento apartamento , int page ) {
 		
 		String query = " 1=1";
 		if(page == 0 ){
@@ -109,14 +115,14 @@ public class Moradores extends CRUD {
 		
 		List<Object> parameters = new ArrayList<Object>();
 		
-		if( bloco!= null && bloco >0 ){
+		if( bloco.id != null && bloco.id >0 ){
 			query += " AND bloco.id = ?";
-			parameters.add(bloco);
+			parameters.add(bloco.id);
 		}
 		
-		if( apartamento != null && apartamento >0 ){
+		if( apartamento.id != null && apartamento.id > 0 ){
 			query += " AND id = ?";
-			parameters.add(apartamento);
+			parameters.add(apartamento.id);
 		}
 		
 		int count = (int) Apartamento.count(query , parameters.toArray() );
@@ -222,32 +228,18 @@ public class Moradores extends CRUD {
 		List<Bloco> blocos = Bloco.find("order by bloco").fetch();	
 		
 		Apartamento apartamento = Apartamento.findById(id);
-		
+		Bloco bloco = apartamento.bloco;
 		List<Apartamento> apartamentos = Apartamento.find("bloco = ?", apartamento.bloco).fetch();
-		params.put("id",apartamento.getMorador().getId().toString());
-		params.put("bloco",apartamento.bloco.id.toString());
-		params.put("apartamento",apartamento.id.toString());
-		params.put("cpf",apartamento.getMorador().cpf);
-		params.put("nomeCompleto",apartamento.getMorador().nomeCompleto);
-		
-		if( apartamento.getMorador().dataNascimento != null ) {
-			params.put("dataNascimento",DateFormatUtils.format(apartamento.getMorador().dataNascimento, "dd-MM-yyyy", new Locale("pt-BR")));
-		}
-		params.put("identidade",apartamento.getMorador().identidade);
-		params.put("orgaoemissor",apartamento.getMorador().orgaoEmissor);
-		params.put("dataemissao",DateFormatUtils.format(apartamento.getMorador().dataEmissao, "dd-MM-yyyy", new Locale("pt-BR")));
-		params.put("email",apartamento.getMorador().email);
-		params.put("telefoneResidencial",apartamento.getMorador().telefoneResidencial);
-		params.put("telefoneComercial",apartamento.getMorador().telefoneComercial);
+		Morador object = apartamento.getMorador();
 		
 		if( apartamento.getMorador().equals(apartamento.getProprietario())) {
-			params.put("morador_type","P");
+			params.put("tipo",MoradorType.PROPRIETARIO.toString());
 			params.put("dataEntradaImovel",DateFormatUtils.format(apartamento.getEscritura().dataEntrada, "dd-MM-yyyy", new Locale("pt-BR")));
 			if( apartamento.getEscritura().dataSaida != null ) {
 				params.put("dataSaidaImovel",DateFormatUtils.format(apartamento.getEscritura().dataSaida, "dd-MM-yyyy", new Locale("pt-BR")));
 			}
 		} else {
-			params.put("morador_type","M");
+            params.put("tipo",MoradorType.INQUILINO.toString());
 			params.put("dataEntradaImovel",DateFormatUtils.format(apartamento.getContratoLocacao().dataInicioContrato, "dd-MM-yyyy", new Locale("pt-BR")));
 			
 			if( apartamento.getContratoLocacao().dataTerminoContrato != null ) {
@@ -255,13 +247,15 @@ public class Moradores extends CRUD {
 			}
 		}
 		
-		render("Moradores/novo.html", blocos, apartamentos);
+		render("Moradores/novo.html", object , apartamento , bloco , blocos, apartamentos);
 	}
 		
 	public static void novo() {
-
-		List<Bloco> blocos = Bloco.find("order by bloco").fetch();		
-		render("Moradores/novo.html", blocos);
+			
+		Morador object = new Morador();
+		Apartamento apartamento = new Apartamento();
+		apartamento.bloco = new Bloco();
+		render("Moradores/novo.html", object , apartamento);
 	}
 	
 	public static void buscar( String cpf ) {
@@ -285,41 +279,18 @@ public class Moradores extends CRUD {
 		
 	}
 
-	public static void submit(@Required Long apartamento, @Required String cpf,
-			@Required String nomeCompleto,
-			@As(format = "dd-MM-yyyy")/* @Required */Date dataNascimento,
-			@Required String identidade,
-			@Required String orgaoemissor, @As(format = "dd-MM-yyyy") @Required Date dataemissao,
-			/* @Required */@Email String email,
-			@Required String telefoneResidencial, String telefoneComercial,
-			String morador_type ,
+	public static void submit(final Morador morador, final Apartamento apartamento,
+			MoradorType tipo ,
 			@Required @As(format = "dd-MM-yyyy") Date dataEntradaImovel,
 			@As(format = "dd-MM-yyyy") Date dataSaidaImovel, File escritura) throws FileNotFoundException {
-		
-		Apartamento apto = null;
-		if(apartamento != null ) {
-			apto = Apartamento.findById(apartamento);
-		} 
-		
-		if(validation.hasErrors() && apartamento == null ){
-			renderArgs.put("error", play.i18n.Messages.get("crud.hasErrors"));
-			prepare();			
-		}else if(validation.hasErrors()){
-			renderArgs.put("error", play.i18n.Messages.get("crud.hasErrors"));
-			prepare(apto);
-		}
-		
-		Morador morador = Morador.create(cpf, nomeCompleto, dataNascimento,
-				identidade, orgaoemissor, dataemissao, email,
-				telefoneResidencial, telefoneComercial);
-				
-		Documentacao documentacao = DocumentacaoFactory.getDocumento(morador_type, morador, apto, dataEntradaImovel);
+						
+		Documentacao documentacao = DocumentacaoFactory.getDocumento(tipo, morador, apartamento, dataEntradaImovel);
 		documentacao.setDataSaidaImovel(dataSaidaImovel);
 		documentacao.add(escritura);
 		
 		try {
 			documentacao.salvar();
-			if( "M".equalsIgnoreCase(morador_type) ) {
+			if( tipo == MoradorType.INQUILINO ) {
 				flash.success("Contrato de Locação salvo com sucesso");
 			} else {
 				flash.success("Escritura salva com sucesso");
@@ -328,30 +299,16 @@ public class Moradores extends CRUD {
 		} catch (DuplicateRegisterException e) {
 			validation.addError(null, e.getMessage());
 			renderArgs.put("error",  e.getMessage());
-			prepare(apto, documentacao);
+			prepare(apartamento, documentacao);
 		}
 		
 		index();
 	}
 
-	private static void prepare(Apartamento apartamento) {
-		List<Bloco> blocos = UtilitiesService.listAllBlocos();
-		List<Apartamento> apartamentos = UtilitiesService.listAllApartamentosByBloco(apartamento.bloco);
-		render("Moradores/novo.html",apartamento.bloco,apartamento,blocos,apartamentos);
-		
-	}
-
-	
-	private static void prepare() {
-		render("Moradores/novo.html", UtilitiesService.listAllBlocos());
-		
-	}
-
 	private static void prepare(Apartamento apto, Documentacao documento) {
-		List<Bloco> blocos = UtilitiesService.listAllBlocos();
+		List<Bloco> blocos = Bloco.list();
 		if( apto != null ) {
-			List<Apartamento> apartamentos = UtilitiesService
-					.listAllApartamentosByBloco(apto.bloco);
+			List<Apartamento> apartamentos = Apartamento.listByBloco(apto.bloco);
 			render("Moradores/novo.html",documento,apto.bloco,apto,blocos,apartamentos);
 		} else {
 			render("Moradores/novo.html",documento,blocos);

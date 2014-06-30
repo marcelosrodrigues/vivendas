@@ -15,7 +15,7 @@ public class Utilities extends Controller {
 
 	public static void listByBloco(long bloco){
 		
-		List<Apartamento> apartamentos = Apartamento.find("select a from Apartamento a INNER JOIN a.bloco b where b.id = ? order by a.numero", bloco).fetch();
+		List<Apartamento> apartamentos = Apartamento.listByBlocoId(bloco);
 		JSONSerializer json = new JSONSerializer();
 		renderJSON(json.include("numero","id","bloco.id","bloco.bloco").exclude("*").serialize(apartamentos));
 		
@@ -25,7 +25,7 @@ public class Utilities extends Controller {
 		
 		if( !StringUtils.isBlank(cpf) ) {
 			
-			Morador morador = Morador.find("cpf = ?", cpf).first();
+			Morador morador = Morador.getByCPF(cpf);
 			JSONSerializer json = new JSONSerializer();
 			
 			renderJSON(json.include("id","cpf",

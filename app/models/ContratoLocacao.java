@@ -19,16 +19,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Where;
 import org.joda.time.DateTime;
-
-import controllers.LoginController;
-
-import exceptions.DuplicateRegisterException;
 
 import play.db.jpa.Blob;
 import play.db.jpa.Model;
 import play.libs.MimeTypes;
 import services.MoradorService;
+import controllers.LoginController;
+import exceptions.DuplicateRegisterException;
 
 @Entity
 @Table
@@ -36,6 +35,7 @@ import services.MoradorService;
 	 @NamedQuery(name="ContratoLocacao.getByApartamento", 
 			    query="SELECT e from ContratoLocacao e WHERE e.apartamento = :apartamento AND e.dataInicioContrato <= CURRENT_DATE() AND COALESCE(e.dataTerminoContrato,CURRENT_DATE()) >= CURRENT_DATE()")
 })
+@Where(clause = "dataInicioContrato <= CURRENT_DATE() AND COALESCE(dataTerminoContrato,CURRENT_DATE()) >= CURRENT_DATE()")
 public class ContratoLocacao extends Model implements Serializable , Documentacao{
 	
 	private static final long serialVersionUID = 1L;
@@ -96,6 +96,13 @@ public class ContratoLocacao extends Model implements Serializable , Documentaca
 		return this.inquilino;
 	}
 
+	public boolean isNovoInquilino() {
+		
+		return (this.getInquilino().getId() == null || this.getInquilino().getId() == 0L);
+		
+	}
+	
+	
 	@Override
 	public void add(File arquivo) throws FileNotFoundException {
 		if( arquivo != null ) {
@@ -116,8 +123,25 @@ public class ContratoLocacao extends Model implements Serializable , Documentaca
 	}
 	
 	@Override
+	public boolean equals(Object other) {
+		boolean equals = false;
+		
+		if( other instanceof ContratoLocacao ){
+			ContratoLocacao e = (ContratoLocacao)other;
+			equals = e.apartamento.equals(this.apartamento) && 
+					 e.inquilino.equals(this.inquilino);
+		}
+		
+		return equals;
+	}
+	
+	@Override
 	public void setDataSaidaImovel(Date dataSaidaImovel) {
 		dataTerminoContrato = dataSaidaImovel;		
+	}
+
+	public static ContratoLocacao findByApartamento(final Apartamento apartamento) {
+		return ContratoLocacao.find("SELECT e from ContratoLocacao e WHERE e.apartamento = ?", apartamento).first();
 	}
 
 }

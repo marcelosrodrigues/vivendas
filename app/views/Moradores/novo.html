@@ -3,198 +3,33 @@
 
 
 #{form @Moradores.submit() ,enctype:'multipart/form-data' , class:'form-horizontal'}
-	<input type="hidden" id="id" name="id" value="${params.id}"/> 
+
+	    <input type="hidden" id="id" name="object.id" value="${object.id}"/>
 		<fieldset>
 		<legend>
 			Morador
 			<div class="voltar"><a href="@{Moradores.index()}" class="btn btn-link">Voltar</a></div>
 		</legend>
-		<div class="form-group">
-			<label for="bloco" class="col-lg-2 control-label">Bloco</label>
-			<div class="col-lg-3">
-				#{field 'bloco' }
-				<select id="bloco" name="bloco" class="${field.errorClass} input-lg form-control">
-					<option value="" />
-					#{list items:blocos, as:'bloco'}
-						#{if bloco.id.toString() == params.bloco}
-							<option value="${bloco.id}" selected="selected">${bloco.bloco}</option>
-						#{/if}
-						#{else}
-							<option value="${bloco.id}">${bloco.bloco}</option>
-						#{/else}
-					#{/list}
-				</select>
-				#{/field}
-			</div>
-		</div>
-		<div class="form-group">
-			
-			<label for="apartamento" class="col-lg-2 control-label">Apartamento</label>
-			<div class="col-lg-3">
-				
-					<select id="apartamento" name="apartamento" class="#{ifError 'apartamento'}hasError#{/ifError} input-lg form-control">
-						<option value="" />
-						#{list items:apartamentos, as:'apartamento'}
-							#{if apartamento.id.toString() == params.apartamento }
-								<option value="${apartamento.id}" selected="selected">${apartamento.numero}</option>
-							#{/if}
-							#{else}
-								<option value="${apartamento.id}">${apartamento.numero}</option>
-							#{/else}
-						#{/list}
-					</select>
-					#{ifError 'apartamento'}
-	        				<span class="error">#{error 'apartamento'/}</span>
-	    			#{/ifError}	
-				
-			</div>
-		</div>
-		
-		<div class="form-group">
-			<label for="cpf"  class="col-lg-2 control-label">CPF</label>
-			<div class="col-lg-3">
-				<input type="text" name="cpf" id="cpf" value="${params.cpf}" class="#{ifError 'cpf'}hasError#{/ifError} input-lg form-control"  />
-				#{ifError 'cpf'}
-	        		 <span class="error">#{error 'cpf'/}</span>
-	    		#{/ifError}
-			</div>			
-		</div>
-		
-		<div class="form-group">
-			<label for="nomeCompleto"  class="col-lg-2 control-label">Nome Completo</label>
-			<div class="col-lg-3">
-				<input type="text" name="nomeCompleto" id="nomeCompleto" value="${params.nomeCompleto}" class="#{ifError 'nomeCompleto'}hasError#{/ifError} input-lg form-control" />
-				#{ifError 'nomeCompleto'}
-	        		 <span class="error">#{error 'nomeCompleto'/}</span>
-	    		#{/ifError}
-			</div>
-		</div>
-		
-		<div class="form-group">
-			<label for="dataNascimento"  class="col-lg-2 control-label">Data de Nascimento</label>
-			<div class="col-lg-3">
-				<input type="text" name="dataNascimento" id="dataNascimento" value="${params.dataNascimento}" class="#{ifError 'dataNascimento'}hasError#{/ifError}  input-lg form-control"  />
-				#{ifError 'dataNascimento'}
-	        		 <span class="error">#{error 'dataNascimento'/}</span>
-	    		#{/ifError}
-			</div>
-		</div>	
-		
-		<div class="form-group">
-			<label for="identidade"  class="col-lg-2 control-label">N&ordm; Identidade</label>
-			<div class="col-lg-3">
-				<input type="text" name="identidade" id="identidade" value="${params.identidade}" class="#{ifError 'identidade'}hasError#{/ifError} input-lg form-control"  />
-				#{ifError 'nomeCompleto'}
-	        		 <span class="error">#{error 'identidade'/}</span>
-	    		#{/ifError}
-			</div>
-		</div>
-		
-		<div class="form-group">
-			<label for="orgaoemissor"  class="col-lg-2 control-label">Org&atilde;o Emissor</label>
-			<div class="col-lg-3">
-				<input type="text" name="orgaoemissor" id="orgaoemissor" value="${params.orgaoemissor}" class="#{ifError 'orgaoemissor'}hasError#{/ifError} input-lg form-control" />
-				#{ifError 'orgaoemissor'}
-	        		 <span class="error">#{error 'orgaoemissor'/}</span>
-	    		#{/ifError}
-			</div>
-		</div>
-		
-		<div class="form-group">
-			<label for="dataemissao"  class="col-lg-2 control-label">Data de Emiss&atilde;o</label>
-			<div class="col-lg-3">
-				<input type="text" name="dataemissao" id="dataemissao" value="${params.dataemissao}" class="#{ifError 'dataemissao'}hasError#{/ifError} input-lg form-control" />
-				#{ifError 'dataemissao'}
-	        		 <span class="error">#{error 'dataemissao'/}</span>
-	    		#{/ifError}
-			</div>
-		</div>
-		
-		<div class="form-group">
-			<label for="email"  class="col-lg-2 control-label">E-mail</label>
-			<div class="col-lg-3">
-				<input type="text" name="email" id="email" value="${params.email}" class="#{ifError 'email'}hasError#{/ifError} input-lg form-control" />
-				#{ifError 'email'}
-	        		 <span class="error">#{error 'email'/}</span>
-	    		#{/ifError}
-			</div>
-		</div>
-		
-		<div class="form-group">
-			<label for="telefoneResidencial"  class="col-lg-2 control-label">Telefone Residencial</label>
-			<div class="col-lg-3">
-				<input type="text" name="telefoneResidencial" id="telefoneResidencial" value="${params.telefoneResidencial}" class="#{ifError 'telefoneResidencial'}hasError#{/ifError} input-lg form-control" />
-				#{ifError 'telefoneResidencial'}
-	        		 <span class="error">#{error 'telefoneResidencial'/}</span>
-	    		#{/ifError}
-			</div>
-		</div>
-		
-		<div class="form-group">
-			<label for="telefoneComercial"  class="col-lg-2 control-label">Telefone Comercial</label>
-			<div class="col-lg-3">
-				<input type="text" name="telefoneComercial" id="telefoneComercial" value="${params.telefoneComercial}" class="input-lg form-control" />
-			</div>
-		</div>
-		
-		<div class="form-group">
-			<div class="radio-inline">
-			  <label class="control-label">
-			  	#{if params.morador_type == "P" || params.morador_type == "" || params.morador_type == null  } 
-			    	<input type="radio" name="morador_type" id="morador_type" value="P" checked="checked" />
-			       		Propriet&aacute;rio do im&oacute;vel
-			    #{/if}
-			    #{else}
-			    	<input type="radio" name="morador_type" id="morador_type" value="P" />
-			       		Propriet&aacute;rio do im&oacute;vel
-			    #{/else}
-			  </label>
-			  </div>
-			  <div class="radio-inline">
-			  <label  class="control-label">
-			    #{if params.morador_type == "M" }
-			    	<input type="radio" name="morador_type" id="morador_type" value="M" checked="checked"/>
-			       		Im&oacute;vel alugado
-			    #{/if}
-		        #{else}
-		     		<input type="radio" name="morador_type" id="morador_type" value="M"/>
-		       			Im&oacute;vel alugado
-		     	#{/else}
-			  </label>
-			</div>
-		</div>
-		
-		<div class="form-group">
-			<label for="dataEntradaImovel"  class="col-lg-2 control-label">Data de Entrada</label>
-			<div class="col-lg-3">
-				<input type="text" name="dataEntradaImovel" id="dataEntradaImovel" value="${params.dataEntradaImovel}" class="#{ifError 'dataEntradaImovel'}hasError#{/ifError} input-lg form-control" />
-				#{ifError 'dataEntradaImovel'}
-	        		 <span class="error">#{error 'dataEntradaImovel'/}</span>
-	    		#{/ifError}
-			</div>
-		</div>
-		
-		<div class="form-group">
-			<label for="dataSaidaImovel"  class="col-lg-2 control-label">Data de Sa&iacute;da</label>
-			<div class="col-lg-3">
-				<input type="text" name="dataSaidaImovel" id="dataSaidaImovel" value="${params.dataSaidaImovel}" class="input-lg form-control" />
-			</div>
-		</div>
-		
-		<div class="form-group">
-			<label for="escritura"  class="col-lg-2 control-label">Escritura</label>
-			<div class="col-lg-3">
-				<input type="file" name="escritura" id="escritura" class="input-lg form-control" />
-			</div>
-		</div>
-		
+
+		#{select fieldname:'bloco', target:'apartamento.bloco.id', list:blocos, label:"Blocos", value: bloco?.id, labelfield: 'bloco' /}
+
+        #{select fieldname:'apartamento', target:'apartamento.id', list:apartamentos, label:"Apartamento", value: apartamento?.id, labelfield: 'numero' /}
+
+		#{include 'Moradores/_form.html' /}
+
+        #{MoradorType tipo:params.tipo /}
+
+        #{edittext fieldid:"dataEntradaImovel", fieldname:"dataEntradaImovel", label:"Data de Entrada",value:params.dataEntradaImovel /}
+
+        #{edittext fieldid:"dataEntradaImovel", fieldname:"dataSaidaImovel", label:"Data de Saida",value:params.dataSaidaImovel /}
+
+        #{filefield fieldname:escritura, label:"Escritura" /}
+
 		<div class="form-group bottom">
 			<div class="col-lg-offset-2 col-lg-10">
 				<input type="submit" value="Salvar" class="btn btn-primary" />
 			</div>	
 		</div>
-		
-		
 			
 	</fieldset>	
 #{/form}

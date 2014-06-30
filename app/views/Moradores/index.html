@@ -1,7 +1,7 @@
 #{extends 'main.html' /}
 #{ set title:'Moradores' /}
 
-#{form @Moradores.pesquisar() ,class:'form-horizontal'}
+#{form @Moradores.pesquisar() , method:'POST' , class:'form-horizontal'}
 	<fieldset>
 		<legend>Moradores		
 			<div class="voltar">
@@ -15,14 +15,14 @@
 				<label for="bloco" class="col-lg-2 control-label">Bloco</label>
 				<div class="col-lg-3">
 					#{field 'bloco' }
-					<select id="bloco" name="bloco" class="${field.errorClass} input-lg form-control">
+					<select id="bloco" name="bloco.id" class="${field.errorClass} input-lg form-control">
 						<option value="" />
-						#{list items:blocos, as:'bloco'}
-							#{if bloco.id.toString() == params.bloco.toString()}
-								<option value="${bloco.id}" selected="selected">${bloco.bloco}</option>
+						#{list items:blocos, as:'bl'}
+							#{if bloco != null && bl.id == bloco.id }
+								<option value="${bl.id}" selected="selected">${bl.bloco}</option>
 							#{/if}
 							#{else}
-								<option value="${bloco.id}">${bloco.bloco}</option>
+								<option value="${bl.id}">${bl.bloco}</option>
 							#{/else}
 						#{/list}
 					</select>
@@ -33,14 +33,14 @@
 			<div class="form-group">				
 				<label for="apartamento" class="col-lg-2 control-label">Apartamento</label>
 				<div class="col-lg-3">
-						<select id="apartamento" name="apartamento" class="input-lg form-control">
+						<select id="apartamento" name="apartamento.id" class="input-lg form-control">
 							<option value="" />
-							#{list items:apartamentos, as:'apartamento'}
-								#{if apartamento.id.toString() == params.apartamento.toString() }
-									<option value="${apartamento.id}" selected="selected">${apartamento.numero}</option>
+							#{list items:apartamentos, as:'apto'}
+								#{if apartamento != null && apto.id == apartamento.id }
+									<option value="${apto.id}" selected="selected">${apto.numero}</option>
 								#{/if}
 								#{else}
-									<option value="${apartamento.id}">${apartamento.numero}</option>
+									<option value="${apto.id}">${apto.numero}</option>
 								#{/else}
 							#{/list}
 						</select>

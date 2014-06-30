@@ -2,6 +2,7 @@ package factory;
 
 import java.util.Date;
 
+import enumarations.MoradorType;
 import models.Apartamento;
 import models.ContratoLocacao;
 import models.Documentacao;
@@ -17,12 +18,12 @@ public class DocumentacaoFactory {
 		
 	}
 	
-	public static final Documentacao getDocumento(final String moradorType , final Morador morador , final Apartamento apartamento , Date dataEntrada ) {
+	public static final Documentacao getDocumento(final MoradorType tipo , final Morador morador , final Apartamento apartamento , Date dataEntrada ) {
 		
 		Documentacao documentacao = null;
-		if( "P".equalsIgnoreCase(moradorType) ){			
+		if( tipo == MoradorType.PROPRIETARIO ){
 			documentacao = new Escritura(morador, apartamento, dataEntrada);
-		} else if ("M".equalsIgnoreCase(moradorType) ){
+		} else if ( tipo == MoradorType.INQUILINO ){
 			documentacao = new ContratoLocacao(morador, apartamento, dataEntrada);
 		}
 		documentacao.setService(service);
