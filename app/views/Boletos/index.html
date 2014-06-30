@@ -8,14 +8,9 @@
 				<a href="@{Moradores.index()}" class="btn btn-link">Voltar</a>				
 			</div>		
 		</legend>
-		
-		<div class="form-group">
-			<label for="dataVencimento" class="col-lg-2 control-label">Data do Vencimento</label>
-			<div class="col-lg-3">
-					<input type="text" name="dataVencimento" id="dataVencimento" value="${params?.dataLancamento?.format('dd-MM-yyyy')}" class="input-lg form-control"  />					
-			</div>
-		</div>
-		
+
+        #{edittext fieldid:"dataVencimento", fieldname:"dataVencimento", label:"Data de Vencimento",value:params?.dataLancamento?.format('dd-MM-yyyy') /}
+
 		<div class="form-group">
 			<div class="col-lg-offset-2 col-lg-10">
 				<input type="submit" name="gerar" value="Gerar Boletos" class="btn btn-primary" />

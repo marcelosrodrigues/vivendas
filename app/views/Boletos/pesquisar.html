@@ -8,53 +8,13 @@
 				<a href="@{Moradores.index()}" class="btn btn-link">Voltar</a>				
 			</div>		
 		</legend>
-		
-		
-							
-			<div class="form-group">
-				<label for="bloco" class="col-lg-2 control-label">Bloco</label>
-				<div class="col-lg-3">
-					#{field 'bloco' }
-					<select id="bloco" name="bloco" class="${field.errorClass} input-lg form-control">
-						<option value="" />
-						#{list items:blocos, as:'bloco'}
-							#{if bloco.id.toString() == params.bloco.toString()}
-								<option value="${bloco.id}" selected="selected">${bloco.bloco}</option>
-							#{/if}
-							#{else}
-								<option value="${bloco.id}">${bloco.bloco}</option>
-							#{/else}
-						#{/list}
-					</select>
-					#{/field}
-				</div>
-			</div>
-			
-			<div class="form-group">				
-				<label for="apartamento" class="col-lg-2 control-label">Apartamento</label>
-				<div class="col-lg-3">
-						<select id="apartamento" name="apartamento" class="input-lg form-control">
-							<option value="" />
-							#{list items:apartamentos, as:'apartamento'}
-								#{if apartamento.id.toString() == params.apartamento.toString() }
-									<option value="${apartamento.id}" selected="selected">${apartamento.numero}</option>
-								#{/if}
-								#{else}
-									<option value="${apartamento.id}">${apartamento.numero}</option>
-								#{/else}
-							#{/list}
-						</select>
-				</div>
-			</div>
-		
-		
-		<div class="form-group">
-			<label for="dataVencimento" class="col-lg-2 control-label">Data do Vencimento</label>
-			<div class="col-lg-3">
-					<input type="text" name="dataVencimento" id="dataVencimento" value="${params.dataVencimento}" class="input-lg form-control"  />					
-			</div>
-		</div>
-		
+
+        #{select fieldname:'bloco', target:'bloco', list:blocos, label:"Bloco", value: params.bloco, labelfield: 'bloco' /}
+
+        #{select fieldname:'apartamento', target:'apartamento', list:apartamentos, label:"Apartamento", value: params.apartamento, labelfield: 'numero' /}
+
+        #{edittext fieldid:"dataVencimento", fieldname:"dataVencimentoo", label:"Data do Vencimento",value:params.dataVencimento /}
+
 		<div class="form-group">
 			<div class="col-lg-offset-2 col-lg-10">
 				<input type="submit" name="pesquisar" value="Pesquisar" class="btn btn-primary" />

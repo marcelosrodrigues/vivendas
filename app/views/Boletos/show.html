@@ -35,14 +35,9 @@
 			<label for="dataVencimento" class="col-lg-2 control-label">Data do Vencimento</label>
 			<div class="col-lg-3">${boleto.dataVencimento.format("dd-MM-yyyy")}</div>
 		</div>
-		
-		<div class="form-group">
-			<label for="dataPagamento" class="col-lg-2 control-label">Data do Pagamento</label>
-			<div class="col-lg-3">
-				<input type="text" name="dataPagamento" id="dataPagamento" value="${params.dataPagamento?.format('dd-MM-yyyy')}" class="input-lg form-control"  />
-			</div>
-		</div>
-		
+
+        #{edittext fieldid:"dataPagamento", fieldname:"dataPagamento", label:"Número",value:params.dataPagamento?.format('dd-MM-yyyy') /}
+
 		<div class="form-group">
 			<div class="col-lg-offset-2 col-lg-10">
 				<input type="submit" name="_pagamento" value="Editar" class="btn btn-primary" />
