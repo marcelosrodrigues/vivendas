@@ -22,25 +22,18 @@ import play.mvc.Controller;
 import play.mvc.Scope;
 import play.mvc.With;
 import services.BoletoService;
+import utils.CommandFactory;
+import utils.Constante;
 
 @With(Secure.class)
 public class Boletos extends Controller {
 	
 	@Before(only="pesquisar")
     static void listBlocos() {
-		List<Bloco> blocos = Bloco.find("order by bloco").fetch();
-		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
-        templateBinding.data.put("blocos", blocos);
-        
-        String id = params.get("apartamento");
-        String bloco_id = params.get("bloco");
-        if( !StringUtils.isBlank(id) ) {
-        	Apartamento apartamento = Apartamento.findById(Long.parseLong(id));
-        	params.put("bloco", apartamento.bloco.id.toString());
-        	templateBinding.data.put("apartamentos", Apartamento.find(" bloco = ? order by numero ", apartamento.bloco).fetch());
-        } else if( !StringUtils.isBlank(bloco_id) ) {
-        	templateBinding.data.put("apartamentos", Apartamento.find(" bloco.id = ? order by numero ", Long.parseLong(bloco_id) ).fetch());
-        }
+        final Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
+        CommandFactory.getInstance()
+                .get(Constante.BLOCOS,params,templateBinding)
+                .execute();
     }
 	
 	@Check("FINANCEIRO")
@@ -105,7 +98,7 @@ public class Boletos extends Controller {
 	}
 	
 	@Check("FINANCEIRO")
-	public static void editar(Long id ,@As(format="dd-MM-yyyy") Date dataVencimento , @As(format="dd-MM-yyyy") @Required Date dataPagamento , Long bloco , Long apartamento , int page) {
+	public static void editar(Long id ,@As(format="dd-MM-yyyy") Date dataVencimento , @As(format="dd-MM-yyyy") @Required Date dataPagamento , Bloco bloco , Apartamento apartamento , int page) {
 		
 		Boleto boleto = Boleto.findById(id);
 		boleto.dataPagamento = dataPagamento;
@@ -117,7 +110,7 @@ public class Boletos extends Controller {
 	}
 	
 	@Check("FINANCEIRO")
-	public static void cancelar(Long id ,@As(format="dd-MM-yyyy") Date dataVencimento ,  Long bloco , Long apartamento , int page) {
+	public static void cancelar(Long id ,@As(format="dd-MM-yyyy") Date dataVencimento ,  Bloco bloco , Apartamento apartamento , int page) {
 		Boleto boleto = Boleto.findById(id);
 		boleto.cancela();
 		boleto.save();
@@ -141,7 +134,7 @@ public class Boletos extends Controller {
 		
 	}
 	@Check("FINANCEIRO")
-	public static void pesquisar(@As(format="dd-MM-yyyy") Date dataVencimento , Long bloco , Long apartamento , int page) {
+	public static void pesquisar(@As(format="dd-MM-yyyy") Date dataVencimento , Bloco bloco , Apartamento apartamento , int page) {
 				
 		String query = " 1=1";
 		if(page == 0 ){
@@ -155,14 +148,14 @@ public class Boletos extends Controller {
 			parameters.add(dataVencimento);
 		}
 		
-		if( bloco!= null && bloco >0 ){
+		if( bloco!= null && bloco.id != null ){
 			query += " AND apartamento.bloco.id = ?";
-			parameters.add(bloco);
+			parameters.add(bloco.id);
 		}
 		
-		if( apartamento != null && apartamento >0 ){
+		if( apartamento != null && apartamento.id  != null  ){
 			query += " AND apartamento.id = ?";
-			parameters.add(apartamento);
+			parameters.add(apartamento.id);
 		}
 		
 		int count = (int) Boleto.count(query , parameters.toArray() );

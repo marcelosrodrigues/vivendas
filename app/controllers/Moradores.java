@@ -29,35 +29,21 @@ import exceptions.DuplicateRegisterException;
 import factory.DocumentacaoFactory;
 import flexjson.JSONSerializer;
 import flexjson.transformer.DateTransformer;
+import utils.CommandFactory;
+import utils.Constante;
 
 @CRUD.For(Morador.class)
 @With(Secure.class)
 public class Moradores extends CRUD {
 	
 	@Before(only={"index","pesquisar","novo"})
-    static void listBlocos() {
-		
-		List<Bloco> blocos = Bloco.list();
-		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
-        templateBinding.data.put("blocos", blocos);
-        
-        String id = params.get("apartamento.id");
-        String bloco_id = params.get("bloco.id");
-        
-        if( !StringUtils.isBlank(id) ) {
-        	
-        	Apartamento apartamento = Apartamento.findById(Long.parseLong(id));
-        	templateBinding.data.put("bloco",apartamento.bloco);
-        	templateBinding.data.put("apartamento",apartamento);        	
-			templateBinding.data.put("apartamentos", Apartamento.listByBloco(apartamento.bloco));
-			
-        } else if( !StringUtils.isBlank(bloco_id) ) {
-        	
-        	Bloco bloco = Bloco.findById(Long.parseLong(bloco_id));
-        	templateBinding.data.put("bloco",bloco);
-        	templateBinding.data.put("apartamentos", Apartamento.listByBloco(bloco));
-        	
-        }
+    public static void listBlocos() {
+
+        final Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
+        CommandFactory.getInstance()
+                      .get(Constante.BLOCOS,params,templateBinding)
+                      .execute();
+
     }
 
 	public static void index() {
@@ -225,11 +211,11 @@ public class Moradores extends CRUD {
 	
 	public static void abrir(Long id) {
 		
-		List<Bloco> blocos = Bloco.find("order by bloco").fetch();	
+		List<Bloco> blocos = Bloco.list();
 		
 		Apartamento apartamento = Apartamento.findById(id);
 		Bloco bloco = apartamento.bloco;
-		List<Apartamento> apartamentos = Apartamento.find("bloco = ?", apartamento.bloco).fetch();
+		List<Apartamento> apartamentos = Apartamento.listByBloco(apartamento.bloco);
 		Morador object = apartamento.getMorador();
 		
 		if( apartamento.getMorador().equals(apartamento.getProprietario())) {

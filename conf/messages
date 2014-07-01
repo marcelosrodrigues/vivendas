@@ -27,6 +27,7 @@ dataemissao=Data de Emissão
 telefoneComercial=Telefone Comercial
 telefoneResidencial=Telefone Residencial
 dataEntradaImovel=Data de Entrada
+dataVencimento=Data de Vencimento
 
 object.area=Área
 object.numero=Numero

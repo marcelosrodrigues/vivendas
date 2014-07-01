@@ -8,6 +8,7 @@ import play.mvc.Before;
 import play.mvc.Scope;
 import play.mvc.With;
 import flexjson.JSONSerializer;
+import utils.Constante;
 
 @CRUD.For(Apartamento.class)
 @With(Secure.class)
@@ -17,7 +18,7 @@ public class Apartamentos extends CRUD{
     static void listBlocos() {
 		List<Bloco> blocos = Bloco.list();
 		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
-        templateBinding.data.put("blocos", blocos);
+        templateBinding.data.put(Constante.BLOCOS, blocos);
     }
 	
 	public static void list() {

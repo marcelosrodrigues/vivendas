@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{ set title:'Moradores' /}
+#{set title:'Moradores' /}
 
 #{form @Moradores.pesquisar() , method:'POST' , class:'form-horizontal'}
 	<fieldset>
@@ -8,44 +8,10 @@
 				<a href="@{Moradores.index()}" class="btn btn-link">Voltar</a>				
 			</div>		
 		</legend>
-		
-		
-							
-			<div class="form-group">
-				<label for="bloco" class="col-lg-2 control-label">Bloco</label>
-				<div class="col-lg-3">
-					#{field 'bloco' }
-					<select id="bloco" name="bloco.id" class="${field.errorClass} input-lg form-control">
-						<option value="" />
-						#{list items:blocos, as:'bl'}
-							#{if bloco != null && bl.id == bloco.id }
-								<option value="${bl.id}" selected="selected">${bl.bloco}</option>
-							#{/if}
-							#{else}
-								<option value="${bl.id}">${bl.bloco}</option>
-							#{/else}
-						#{/list}
-					</select>
-					#{/field}
-				</div>
-			</div>
-			
-			<div class="form-group">				
-				<label for="apartamento" class="col-lg-2 control-label">Apartamento</label>
-				<div class="col-lg-3">
-						<select id="apartamento" name="apartamento.id" class="input-lg form-control">
-							<option value="" />
-							#{list items:apartamentos, as:'apto'}
-								#{if apartamento != null && apto.id == apartamento.id }
-									<option value="${apto.id}" selected="selected">${apto.numero}</option>
-								#{/if}
-								#{else}
-									<option value="${apto.id}">${apto.numero}</option>
-								#{/else}
-							#{/list}
-						</select>
-				</div>
-			</div>
+
+        #{select fieldname:'bloco', target:'bloco.id', list:blocos, label:"Bloco", value: bloco?.id, labelfield: 'bloco' /}
+
+        #{select fieldname:'apartamento', target:'apartamento.id', list:apartamentos, label:"Apartamento", value: apartamento?.id, labelfield: 'numero' /}
 			
 		<div class="form-group">
 			<div class="col-lg-offset-2 col-lg-10">
@@ -88,8 +54,8 @@
 		<tr>
 			<td colspan="8">
 				<ul class="pager">
-  					<li class="previous #{if page == null || page <= 1 || count <= 1 } disabled #{/if}"><a href="@{Moradores.pesquisar(params.bloco,params.apartamento,page-1)}">&larr; Anterior</a></li>
-  					<li class="next #{if page !=null && ( page == count || count <= 1 )} disabled #{/if}"><a href="@{Moradores.pesquisar(params.bloco,params.apartamento,page+1)}">Pr&oacute;ximo &rarr;</a></li>
+  					<li class="previous #{if page == null || page <= 1 || count <= 1 } disabled #{/if}"><a href="@{Moradores.pesquisar(bloco?.id,apartamento?.id,page-1)}">&larr; Anterior</a></li>
+  					<li class="next #{if page !=null && ( page == count || count <= 1 )} disabled #{/if}"><a href="@{Moradores.pesquisar(bloco?.id,apartamento?.id,page+1)}">Pr&oacute;ximo &rarr;</a></li>
 				</ul>
 			</td>
 		</tr>

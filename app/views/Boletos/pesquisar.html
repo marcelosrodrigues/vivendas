@@ -9,11 +9,11 @@
 			</div>		
 		</legend>
 
-        #{select fieldname:'bloco', target:'bloco', list:blocos, label:"Bloco", value: params.bloco, labelfield: 'bloco' /}
+        #{select fieldname:'bloco', target:'bloco.id', list:blocos, label:"Bloco", value: bloco?.id, labelfield: 'bloco' /}
 
-        #{select fieldname:'apartamento', target:'apartamento', list:apartamentos, label:"Apartamento", value: params.apartamento, labelfield: 'numero' /}
+        #{select fieldname:'apartamento', target:'apartamento.id', list:apartamentos, label:"Apartamento", value: apartamento?.id, labelfield: 'numero' /}
 
-        #{edittext fieldid:"dataVencimento", fieldname:"dataVencimentoo", label:"Data do Vencimento",value:params.dataVencimento /}
+        #{edittext fieldid:"dataVencimento", fieldname:"dataVencimento", label:"Data do Vencimento",value:params.dataVencimento /}
 
 		<div class="form-group">
 			<div class="col-lg-offset-2 col-lg-10">
@@ -68,8 +68,8 @@
 		<tr>
 			<td colspan="8">
 				<ul class="pager">
-  					<li class="previous #{if page == null || page <= 1 || count <= 1 } disabled #{/if}"><a href="@{Boletos.pesquisar(params.dataVencimento,params.bloco,params.apartamento,page-1)}">&larr; Anterior</a></li>
-  					<li class="next #{if page !=null && ( page == count || count <= 1 )} disabled #{/if}"><a href="@{Boletos.pesquisar(params.dataVencimento,params.bloco,params.apartamento,page+1)}">Pr&oacute;ximo &rarr;</a></li>
+  					<li class="previous #{if page == null || page <= 1 || count <= 1 } disabled #{/if}"><a href="@{Boletos.pesquisar(params.dataVencimento,bloco?.id,apartamento?.id,page-1)}">&larr; Anterior</a></li>
+  					<li class="next #{if page !=null && ( page == count || count <= 1 )} disabled #{/if}"><a href="@{Boletos.pesquisar(params.dataVencimento,bloco?.id,apartamento?.id,page+1)}">Pr&oacute;ximo &rarr;</a></li>
 				</ul>
 			</td>
 		</tr>

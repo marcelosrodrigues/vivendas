@@ -10,8 +10,7 @@ public class Blocos extends Controller {
 
 	public static void list() {
 
-		List<Bloco> blocos = Bloco.find("ORDER BY bloco").fetch();
-
+		List<Bloco> blocos = Bloco.list();
 		JSONSerializer json = new JSONSerializer();
 		renderJSON(json.include("id", "bloco").exclude("*").serialize(blocos));
 
