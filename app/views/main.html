@@ -16,55 +16,38 @@
 <body>
 	<header class="bs-header">
 		<div class="container">
-			<div class="navbar navbar-default navbar-fixed-top bs-docs-nav">
-				<a class="navbar-brand" href="/">Condom&iacute;nio Vivendas do
-					Parque</a>
-				<div class="navbar-collapse collapse navbar-responsive-collapse">
-					<ul class="nav navbar-nav">
-						#{secure.check "ADMINISTRACAO"}
-							<li class="active"><a href="@{Moradores.index()}">Apartamentos</a></li>
-							<li><a href="@{ExameMedicos.list()}">Exames Médico</a></li>
-						#{/secure.check}
-						#{secure.check "FINANCEIRO"}
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Financeiro<b class="caret"></b></a>
-								<ul class="dropdown-menu">
-					                <li><a href="@{Lancamentos.blank()}">Efetuar Lançamento</a></li>
-					                <li><a href="@{Boletos.index()}">Gerar Boletos</a></li>
-					                <li><a href="@{Boletos.pesquisar()}">Pesquisar Boletos</a></li>
-					                <li><a href="@{Boletos.condominio()}">Calcular o condom&iacute;nio</a></li>
-					             </ul>
-	              			</li>
-              			#{/secure.check}
-              			#{secure.check "FINANCEIRO"}
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Relatórios<b class="caret"></b></a>
-								<ul class="dropdown-menu">
-					                <li><a href="@{Relatorios.inadimplentes()}">Inadimplentes</a></li>					                
-					             </ul>
-	              			</li>
-              			#{/secure.check}
-              			#{secure.check "SUPERADMIN"}
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Configurações<b class="caret"></b></a>
-								<ul class="dropdown-menu">
-					                <li><a href="@{ConfigurarBoleto.index()}">Gerador de Boletos</a></li>					                
-									<li><a href="@{Conselheiros.index()}">Conselho</a></li>					                
-					             </ul>
-	              			</li>
-              			#{/secure.check}
-              		</ul>
-              		#{if session.contains("username")}
-              			<div class="nav navbar-nav navbar-right" style="padding-right: 15px;">
-							<a class="navbar-brand" href="@{Usuarios.abrir_trocar_senha()}">Trocar a senha</a>
-						
-							<a class="navbar-brand" href="@{Secure.logout()}">Sair</a>
-						</div>
-					#{/if}
-				</div>				
-				
-			</div>
-
+			#{menu label: "Condomínio Vivendas do Parque"}
+                    #{secure.check "ADMINISTRACAO"}
+                        #{menuitem url: "Moradores.index" , label: "Apartamentos" /}
+                        #{menuitem url: "ExameMedicos.list" , label: "Exames Médico" /}
+                    #{/secure.check}
+                    #{secure.check "FINANCEIRO"}
+                        #{menugroup label: "Financeiro"}
+                                #{menuitem url: "Lancamentos.blank" , label: "Efetuar Lançamento" /}
+                                #{menuitem url: "Boletos.index" , label: "Gerar Boletos" /}
+                                #{menuitem url: "Boletos.pesquisar" , label: "Pesquisar Boletos" /}
+                                #{menuitem url: "Boletos.condominio" , label: "Calcular o condomínio" /}
+                        #{/menugroup}
+                    #{/secure.check}
+                    #{secure.check "FINANCEIRO"}
+                        #{menugroup label: "Relatórios"}
+                            #{menuitem url: "Relatorios.inadimplentes" , label: "Inadimplentes" /}
+                        #{/menugroup}
+                    #{/secure.check}
+                    #{secure.check "SUPERADMIN"}
+                         #{menugroup label: "Configurações"}
+                                #{menuitem url: "ConfigurarBoleto.index" , label: "Gerador de Boletos" /}
+                                #{menuitem url: "Conselheiros.index" , label: "Conselho" /}
+                         #{/menugroup}
+                    #{/secure.check}
+                </ul>
+                #{if session.contains("username")}
+                    <div class="nav navbar-nav navbar-right" style="padding-right: 15px;">
+                        <a class="navbar-brand" href="@{Usuarios.abrir_trocar_senha()}">Trocar a senha</a>
+                        <a class="navbar-brand" href="@{Secure.logout()}">Sair</a>
+                    </div>
+                #{/if}
+			#{/menu}
 		</div>
 	</header>
 	<div class="container wrap">

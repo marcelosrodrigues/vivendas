@@ -1,0 +1,3 @@
+<li #{if play.mvc.Router.reverse(_url).url.equalsIgnoreCase(request.url)}class="active"#{/if}>
+    <a href="${play.mvc.Router.reverse(_url).url}">${_label}</a>
+</li>

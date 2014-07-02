@@ -44,6 +44,8 @@ public class Moradores extends CRUD {
                       .get(Constante.BLOCOS,params,templateBinding)
                       .execute();
 
+
+
     }
 
 	public static void index() {

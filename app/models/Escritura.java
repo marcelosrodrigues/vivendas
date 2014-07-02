@@ -135,7 +135,7 @@ public class Escritura extends Model implements Serializable , Documentacao {
 	public static Escritura findByApartamento(final Apartamento apartamento) {
 		return Escritura.find("SELECT e from Escritura e WHERE e.apartamento = ?", apartamento).first();
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
 		boolean equals = false;
