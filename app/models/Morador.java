@@ -22,9 +22,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 import org.joda.time.DateTime;
 
 import play.data.binding.As;
@@ -33,9 +31,7 @@ import controllers.LoginController;
 
 @Entity
 @Table
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="user_type",columnDefinition="CHAR(1) NOT NULL CHECK IN ('P','M', 'D')",length=1,discriminatorType=DiscriminatorType.STRING)
-@DiscriminatorValue("M")
+@Inheritance(strategy=InheritanceType.JOINED)
 public class Morador extends Usuario {
 
 	private static final long serialVersionUID = 1L;
@@ -51,8 +47,7 @@ public class Morador extends Usuario {
 	
 	@Column(unique=true)
 	public String cpf;
-	
-	
+
 	public String identidade;
 	
 	public String orgaoEmissor;
@@ -69,20 +64,22 @@ public class Morador extends Usuario {
 	@ManyToOne(cascade={CascadeType.ALL},targetEntity=ExameMedico.class,fetch=FetchType.LAZY)
 	@LazyToOne(LazyToOneOption.PROXY)
 	public ExameMedico exameMedico;
-	
+
+    @LazyCollection(LazyCollectionOption.EXTRA)
 	@OneToMany(cascade={CascadeType.ALL},orphanRemoval=true,mappedBy="morador",fetch=FetchType.LAZY)
 	public Collection<Dependente> dependentes = new HashSet<Dependente>();
 	
 	@ManyToOne(fetch=FetchType.LAZY,optional=true,targetEntity=Arquivo.class)
 	@LazyToOne(LazyToOneOption.PROXY)
 	public Arquivo foto;
-	
-	@OneToMany(orphanRemoval=false)
+
+    @LazyCollection(LazyCollectionOption.EXTRA)
+	@OneToMany(orphanRemoval=false,fetch = FetchType.LAZY)
 	@JoinColumn(name="proprietario_id")
 	@Where(clause="dataEntrada <= CURRENT_DATE() AND COALESCE(dataSaida,CURRENT_DATE()) >= CURRENT_DATE()")
 	public Collection<Escritura> escrituras =  new HashSet<Escritura>();
 	
-	@OneToMany(orphanRemoval=false)
+	@OneToMany(orphanRemoval=false,fetch = FetchType.LAZY)
 	@JoinColumn(name="inquilino_id")
 	@Where(clause="dataInicioContrato <= CURRENT_DATE() AND COALESCE(dataTerminoContrato,CURRENT_DATE()) >= CURRENT_DATE()")	
 	public Collection<ContratoLocacao> contratos =  new HashSet<ContratoLocacao>();

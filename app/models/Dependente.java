@@ -19,15 +19,14 @@ import controllers.LoginController;
 
 @Entity
 @Table
-@DiscriminatorValue("D")
 public class Dependente extends Morador implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne(optional=false)
+	@ManyToOne(optional=false,fetch=FetchType.LAZY)
 	public GrauParentesco grauParentesco;
 	
-	@ManyToOne(optional=false)
+	@ManyToOne(optional=false,fetch=FetchType.LAZY)
 	public Morador morador;
 	
 	@ManyToOne(fetch=FetchType.LAZY)

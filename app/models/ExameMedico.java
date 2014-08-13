@@ -23,7 +23,6 @@ import play.db.jpa.Model;
 
 @Entity
 @Table
-@Inheritance(strategy=InheritanceType.JOINED)
 public class ExameMedico extends Model implements Serializable {
 
 	private static final long serialVersionUID = 1L;

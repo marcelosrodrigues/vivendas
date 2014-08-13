@@ -4,26 +4,26 @@ import java.util.List;
 
 import models.Apartamento;
 
-public class ApartamentoResultList implements ResultList<Apartamento> {
+public class ApartamentoResultList extends AbstractResultList<Apartamento> {
 
 	private final List<Apartamento> apartamentos;
-	private final Integer count;
-	private final Integer pageCount;
+	private final Long count;
+	private final Long pageCount;
 
-	public ApartamentoResultList(List<Apartamento> apartamentos, int count,
-			int pagecount) {
+	public ApartamentoResultList(List<Apartamento> apartamentos, Long count,
+                                 Long pagecount) {
 		this.apartamentos = apartamentos;
 		this.count = count;
 		this.pageCount = pagecount;
 	}
 
 	@Override
-	public Integer getCount() {
+	public Long getCount() {
 		return count;
 	}
 
 	@Override
-	public Integer getPageCount() {
+	public Long getPageCount() {
 		return pageCount;
 	}
 

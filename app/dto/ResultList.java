@@ -4,9 +4,13 @@ import java.util.List;
 
 public interface ResultList<E> {
 
-	Integer getCount();
+    Long getCount();
 
-	Integer getPageCount();
+    Long getPageCount();
 
 	List<E> list();
+
+    boolean next();
+
+    void setPage(Long page);
 }

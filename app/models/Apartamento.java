@@ -25,6 +25,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Where;
 import org.joda.time.DateTime;
 
@@ -51,7 +53,7 @@ public class Apartamento extends Model implements Serializable {
 	public BigDecimal area;
 
 	@Required
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, fetch=FetchType.EAGER)
 	@JoinColumn(name = "bloco_id", referencedColumnName = "id")
 	public Bloco bloco;
 

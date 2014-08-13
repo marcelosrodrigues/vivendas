@@ -3,14 +3,14 @@
 require:
     - play -> crud
     - play -> secure
-    - play -> pdf 0.9    
-    - play -> cobertura 2.5    
+    - play -> pdf 0.9
     - org.hibernate -> hibernate-envers 3.6.1.Final    
     - br.com.caelum.stella -> caelum-stella-hibernate-validator 1.2
     - br.com.caelum.stella -> caelum-stella-core 2.1.1
     - br.com.caelum.stella -> caelum-stella-boleto 2.1.1
     - net.sf.flexjson -> flexjson 2.1
     - commons-validator -> commons-validator 1.4.0
+    - uaihebert.com -> EasyCriteria 3.0.0
 exclude: 
     - org.hibernate -> hibernate-tools 3.2.0.ga 
     - org.beanshell -> bsh 2.0b4 

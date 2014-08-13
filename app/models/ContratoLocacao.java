@@ -55,7 +55,7 @@ public class ContratoLocacao extends Model implements Serializable , Documentaca
 	@ManyToOne(optional=false,cascade={CascadeType.ALL})
 	public Morador inquilino;
 	
-	@ManyToOne(optional=false)
+	@ManyToOne(optional=false,fetch = FetchType.LAZY)
 	public Apartamento apartamento;
 	
 	@ManyToOne(fetch=FetchType.LAZY)

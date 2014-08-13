@@ -16,38 +16,7 @@
 <body>
 	<header class="bs-header">
 		<div class="container">
-			#{menu label: "Condomínio Vivendas do Parque"}
-                    #{secure.check "ADMINISTRACAO"}
-                        #{menuitem url: "Moradores.index" , label: "Apartamentos" /}
-                        #{menuitem url: "ExameMedicos.list" , label: "Exames Médico" /}
-                    #{/secure.check}
-                    #{secure.check "FINANCEIRO"}
-                        #{menugroup label: "Financeiro"}
-                                #{menuitem url: "Lancamentos.blank" , label: "Efetuar Lançamento" /}
-                                #{menuitem url: "Boletos.index" , label: "Gerar Boletos" /}
-                                #{menuitem url: "Boletos.pesquisar" , label: "Pesquisar Boletos" /}
-                                #{menuitem url: "Boletos.condominio" , label: "Calcular o condomínio" /}
-                        #{/menugroup}
-                    #{/secure.check}
-                    #{secure.check "FINANCEIRO"}
-                        #{menugroup label: "Relatórios"}
-                            #{menuitem url: "Relatorios.inadimplentes" , label: "Inadimplentes" /}
-                        #{/menugroup}
-                    #{/secure.check}
-                    #{secure.check "SUPERADMIN"}
-                         #{menugroup label: "Configurações"}
-                                #{menuitem url: "ConfigurarBoleto.index" , label: "Gerador de Boletos" /}
-                                #{menuitem url: "Conselheiros.index" , label: "Conselho" /}
-                         #{/menugroup}
-                    #{/secure.check}
-                </ul>
-                #{if session.contains("username")}
-                    <div class="nav navbar-nav navbar-right" style="padding-right: 15px;">
-                        <a class="navbar-brand" href="@{Usuarios.abrir_trocar_senha()}">Trocar a senha</a>
-                        <a class="navbar-brand" href="@{Secure.logout()}">Sair</a>
-                    </div>
-                #{/if}
-			#{/menu}
+			#{include 'includes/topmenu.html'/}
 		</div>
 	</header>
 	<div class="container wrap">
@@ -58,17 +27,7 @@
 						#{include 'includes/menu.html' /}
 					</div>
 					<div class="col-lg-10 col-lg-offset-1" style="padding-right:20px;  position: absolute;">
-						#{if flash.success}
-				            <div class="alert alert-dismissable alert-success">
-				                ${flash.success}
-				            </div>
-						#{/if}
-						#{if flash.error || error}
-						    <div class="alert alert-dismissable alert-danger" style="margin-top: 10px; margin-bottom: 10px;">
-						    	<h4>Ocorreu um erro no processamento</h4>
-						         <p>${error ?: flash.error}</p>
-						    </div>
-						#{/if}					
+						#{include 'includes/flash.html' /}
 						#{doLayout /}
 					</div>
 				</div>

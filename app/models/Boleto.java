@@ -153,8 +153,8 @@ public class Boleto extends Model implements Serializable {
 		
 		final String QUERY = "select b from Boleto b " +
 				" join b.apartamento a " +
-				" left join a.escrituras e " +
-				" left join a.contratosLocacao c" +
+				" left join a.escritura e " +
+				" left join a.contratoLocacao c" +
 				" where b.dataPagamento is null " +
 				"   and b.dataCancelamento is null " +				
 				"   and b.valor > 0 " +				

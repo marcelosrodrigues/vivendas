@@ -1,0 +1,29 @@
+#{menu label: "Condomínio Vivendas do Parque"}
+    #{secure.check "ADMINISTRACAO"}
+        #{menuitem url: "Moradores.index" , label: "Apartamentos" /}
+        #{menuitem url: "ExameMedicos.list" , label: "Exames Médico" /}
+    #{/secure.check}
+    #{secure.check "FINANCEIRO"}
+        #{menugroup label: "Financeiro"}
+            #{menuitem url: "Lancamentos.blank" , label: "Efetuar Lançamento" /}
+            #{menuitem url: "Boletos.index" , label: "Gerar Boletos" /}
+            #{menuitem url: "Boletos.pesquisar" , label: "Pesquisar Boletos" /}
+            #{menuitem url: "Boletos.condominio" , label: "Calcular o condomínio" /}
+        #{/menugroup}
+    #{/secure.check}
+    #{secure.check "FINANCEIRO"}
+        #{menugroup label: "Relatórios"}
+            #{menuitem url: "Relatorios.inadimplentes" , label: "Inadimplentes" /}
+        #{/menugroup}
+    #{/secure.check}
+    #{secure.check "SUPERADMIN"}
+        #{menugroup label: "Configurações"}
+            #{menuitem url: "ConfigurarBoleto.index" , label: "Gerador de Boletos" /}
+            #{menuitem url: "Conselheiros.index" , label: "Conselho" /}
+        #{/menugroup}
+    #{/secure.check}
+</ul>
+    #{secure.logged}
+        #{include 'includes/optionsmenu.html' /}
+    #{/secure.logged}
+#{/menu}

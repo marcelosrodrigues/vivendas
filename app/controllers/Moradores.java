@@ -52,19 +52,19 @@ public class Moradores extends CRUD {
 		MoradorService service = new MoradorService();
 		ResultList<Apartamento> result = service.search();
 		List<Apartamento> moradores = result.list();
-		int count = result.getCount();
-		int page = 1;
+		Long count = result.getCount();
+        Long page = 1L;
 		render(moradores, count, page);
 	}
 	
 	public static void getJSON(Long bloco, Long apartamento, String morador,
-			int page) {
+			Long page) {
 
 		String QUERY = "SELECT e from Escritura e INNER JOIN FETCH e.apartamento a INNER JOIN FETCH a.bloco b INNER JOIN FETCH e.proprietario m WHERE e.dataEntrada <= CURRENT_DATE() AND COALESCE(e.dataSaida,CURRENT_DATE()) >= CURRENT_DATE() ";
 		List<Object> parameters = new ArrayList<Object>();
 
-		if (page == 0)
-			page = 1;
+		if (page == 0L)
+			page = 1L;
 
 		if (apartamento != null && apartamento > 0L) {
 			QUERY += " AND a.id = ?";
@@ -81,11 +81,10 @@ public class Moradores extends CRUD {
 			parameters.add(morador + "%");
 		}
 
-		List<Escritura> escrituras = Escritura.find(
-				QUERY + "ORDER BY b.bloco , a.numero , m.nomeCompleto ",
-				parameters.toArray()).fetch(page, 5);
-
-		JSONSerializer json = new JSONSerializer();
+		final ResultList<Escritura> resultlist = Escritura.findBy(bloco,apartamento,morador);
+        resultlist.setPage(page);
+        List<Escritura> escrituras = resultlist.list();
+                JSONSerializer json = new JSONSerializer();
 		renderJSON(json
 				.include("proprietario.id", "proprietario.nomeCompleto",
 						"apartamento.numero", "apartamento.bloco.bloco")

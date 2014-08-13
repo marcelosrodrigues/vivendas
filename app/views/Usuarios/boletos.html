@@ -16,8 +16,13 @@
 <tbody>
 	#{if boletos.size() == 0}
 		<tr>
-			<td colspan="3">Nenhum boleto foi encontrado.</td>
-		</tr>
+        #{secure.check 'PROPRIETARIO'}
+			<td colspan="5">Nenhum boleto foi encontrado.</td>
+        #{/secure.check}
+        #{secure.notcheck 'PROPRIETARIO'}
+            <td colspan="5">Nenhum boleto foi encontrado.</td>
+        #{/secure.notcheck}
+        </tr>
 	#{/if}
 	#{else}
 		#{list items:boletos, as:'boleto'}

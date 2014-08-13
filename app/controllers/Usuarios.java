@@ -22,10 +22,9 @@ public class Usuarios  extends Controller {
 	public static void abrir() {
 		
 		Usuario usuario = LoginController.getUserAuthenticated();
-		Morador morador = Morador.findById(usuario.id);
-		
-		
-		render(morador);		
+		Morador object = Morador.findById(usuario.id);
+
+		render(object);
 	}
 	
 	@Before(only={"salvar"})
@@ -50,21 +49,21 @@ public class Usuarios  extends Controller {
 		
 	}
 	
-	public static void salvar(final Morador morador) {
+	public static void salvar(final Morador object) {
 		
-		validation.valid(morador);
+		validation.valid(object);
 		if( validation.hasErrors() ) {
 			renderArgs.put("error", play.i18n.Messages.get("crud.hasErrors"));
-			render("Usuarios/abrir.html",morador);
+			render("Usuarios/abrir.html",object);
 		} else {
-			morador.save();
-			session.put("username", morador.email);
+            object.save();
+			session.put("username", object.email);
 			flash.success("Sua atualização foi encaminhada para Administração avaliar. Obrigado por sua atualização.");
 			MailService mail = new MailService();
 			mail.from("cvparque@ig.com.br")
 				.to("cvparque@ig.com.br")
-				.subject("O morador %s atualizou o seu registro. Por favor verifique." , morador.nomeCompleto)
-				.message("O morador %s atualizou o seu registro. Por favor verifique.\r\nCPF: %s" , morador.nomeCompleto,morador.cpf)
+				.subject("O morador %s atualizou o seu registro. Por favor verifique." , object.nomeCompleto)
+				.message("O morador %s atualizou o seu registro. Por favor verifique.\r\nCPF: %s" , object.nomeCompleto,object.cpf)
 				.send();
 			
 			render("Application/index.html");

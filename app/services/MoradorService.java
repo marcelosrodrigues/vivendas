@@ -90,8 +90,8 @@ public class MoradorService implements Serializable {
 		List<Apartamento> moradores = Apartamento.find(
 				"order by bloco.bloco ASC, numero ASC").fetch(0, 30);
 
-		int count = (int) Apartamento.count();
-		int pagecount = count / 30;
+        Long count = Apartamento.count();
+        Long pagecount = count / 30;
 		if (count % 30 > 0) {
 			pagecount++;
 		}
