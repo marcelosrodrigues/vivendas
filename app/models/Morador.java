@@ -3,6 +3,7 @@ package models;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -158,7 +159,21 @@ public class Morador extends Usuario {
 			this.dependentes.add(dependente);
 		}
 	}
-	
+
+    public List<Dependente> meusDependentes() {
+
+        return Dependente.find("SELECT d from Dependente d join d.morador m where m = ? order by d.grauParentesco.nome asc, d.nomeCompleto",
+                        this).fetch();
+
+    }
+
+    public List<Apartamento> meusImoveis() {
+
+        return Apartamento.find("SELECT a from Apartamento a inner join a.bloco b inner join fetch a.escritura e left join fetch a.contratoLocacao c where e.proprietario = ? order by b.bloco , a.numero ",
+                this).fetch();
+
+    }
+
 	public static Morador create(String cpf, String nomeCompleto,
 			Date dataNascimento, String identidade, String orgaoemissor,
 			Date dataemissao, String email, String telefoneResidencial,

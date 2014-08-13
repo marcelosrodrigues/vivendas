@@ -13,6 +13,7 @@
  GET	 /morador/meusdependentes				 Usuarios.dependentes
  GET	 /morador/depedente/adicionar			 Usuarios.dependente
  GET	 /morador/meusboletos					 Usuarios.boletos
+ GET	 /morador/meusimoveis					 Usuarios.meusImoveis
 
  GET 	 /trocarsenha							 Usuarios.abrir_trocar_senha
  POST 	 /trocarsenha							 Usuarios.trocarsenha

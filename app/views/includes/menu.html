@@ -7,7 +7,7 @@
 	 <li><a href="@{Usuarios.boletos()}">Boletos em aberto</a></li>
 #{/secure.check}
 #{secure.check "PROPRIETARIO"}
-	 <li><a href="#">Meus imoveis</a></li>
+	 <li><a href="@{Usuarios.meusImoveis()}">Meus Imóveis</a></li>
 #{/secure.check}		
 </ul>
 #{/if}		

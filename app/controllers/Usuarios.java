@@ -3,11 +3,7 @@ package controllers;
 import java.math.BigDecimal;
 import java.util.List;
 
-import models.Boleto;
-import models.Dependente;
-import models.GrauParentesco;
-import models.Morador;
-import models.Usuario;
+import models.*;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -30,17 +26,17 @@ public class Usuarios  extends Controller {
 	@Before(only={"salvar"})
 	public static void validate() {
 		
-		Usuario usuario = Usuario.getByEmail(params.get("morador.email"));
+		Usuario usuario = Usuario.getByEmail(params.get("object.email"));
 		
-		if( usuario !=null && usuario.id != Long.parseLong(params.get("morador.id")) ) {
-			validation.addError("morador.email", "E-mail já em uso");
+		if( usuario !=null && usuario.id != Long.parseLong(params.get("object.id")) ) {
+			validation.addError("object.email", "E-mail já em uso");
 			renderArgs
 					.put("error",
 							"Não foi possível salvar os seus dados pois o E-mail informado já esta cadastrado no sistema");
 		} else {
-			Morador morador = Morador.getByCPF(params.get("morador.id"));
-			if( morador != null && morador.id != Long.parseLong(params.get("morador.id"))){
-				validation.addError("morador.cpf", "CPF já em uso");
+			Morador morador = Morador.getByCPF(params.get("object.cpf"));
+			if( morador != null && morador.id != Long.parseLong(params.get("object.id"))){
+				validation.addError("object.cpf", "CPF já em uso");
 				renderArgs
 						.put("error",
 								"Não foi possível salvar os seus dados pois o CPF informado já esta cadastrado no sistema");
@@ -74,10 +70,7 @@ public class Usuarios  extends Controller {
 	public static void dependentes() {
 		
 		Morador parente = (Morador) LoginController.getUserAuthenticated();
-		
-		List<Dependente> dependentes = Dependente
-				.find("SELECT d from Dependente d join d.morador m where m.id = ? order by d.grauParentesco.nome asc, d.nomeCompleto",
-						parente.id).fetch();
+		List<Dependente> dependentes = parente.meusDependentes();
 		render("Dependentes/search.html",dependentes, parente);
 		
 	}
@@ -90,6 +83,14 @@ public class Usuarios  extends Controller {
 
 		render("Dependentes/blank.html", parente, object);
 	}
+
+    public static void meusImoveis() {
+        Morador morador = (Morador)LoginController.getUserAuthenticated();
+        List<Apartamento> apartamentos = morador.meusImoveis();
+
+        render("Usuarios/meusImoveis.html",apartamentos);
+
+    }
 	
 	public static void boletos() {
 		Morador morador = (Morador) LoginController.getUserAuthenticated();

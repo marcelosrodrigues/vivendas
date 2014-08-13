@@ -1,0 +1,43 @@
+#{extends 'main.html' /}
+#{set title:'Moradores' /}
+
+<fieldset>
+    <legend>Meus Imóveis
+        <div class="voltar">
+            <div class="voltar"><a href="@{Application.index()}" class="btn btn-link">Voltar</a></div>
+        </div>
+    </legend>
+
+</fieldset>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Bloco</th>
+        <th>Apartamento</th>
+        <th>Morador</th>
+    </tr>
+    </thead>
+    <tbody>
+    #{if apartamentos.size() == 0}
+    <tr>
+        <td colspan="3">Nenhum morador foi encontrado.</td>
+    </tr>
+    #{/if}
+    #{else}
+        #{list items:apartamentos, as:'apartamento'}
+        <tr>
+            <td>${apartamento.bloco.bloco}</td>
+            <td id="apartamento" apartamento="${apartamento.id}">${apartamento.numero}</td>
+            <td>
+                #{if apartamento.contratoLocacao != null }
+                    "Alugado para " ${apartamento.contratoLocacao.inquilino.nomeCompleto}
+                #{/if}
+                #{else}
+                    O próprio
+                #{/else}
+            </td>
+        #{/list}
+    #{/else}
+    </tbody>
+</table>
