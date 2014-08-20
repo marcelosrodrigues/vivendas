@@ -1,16 +1,19 @@
 package controllers;
 
-import java.util.List;
-
 import models.Apartamento;
-import models.Bloco;
 import models.Morador;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.validator.GenericValidator;
 
+import play.Logger;
+import play.data.binding.Binder;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Scope;
 import services.MailService;
+import utils.CommandFactory;
+import utils.Constante;
 
 
 public class Application extends Controller {
@@ -19,25 +22,50 @@ public class Application extends Controller {
         render();
     }
 
+    @Before
+    public static void prepare() {
+    	
+    	Logger.debug("Preparar tela de liberação");
+    	
+    	final Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
+	    CommandFactory.getInstance()
+	                   .get(Constante.BLOCOS,params,templateBinding)
+	                   .execute();
+	    
+    }
     
     public static void liberar() {
     	
-    	List<Bloco> blocos = Bloco.list();
-		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
-        templateBinding.data.put("blocos", blocos);
-        
-        String id = params.get("apartamento");
-        String bloco_id = params.get("bloco");
-        if( !StringUtils.isBlank(id) ) {
-        	Apartamento apartamento = Apartamento.findById(Long.parseLong(id));
-        	params.put("bloco", apartamento.bloco.id.toString());
-			templateBinding.data.put("apartamentos", Apartamento.listByBloco(apartamento.bloco));
-        } else if( !StringUtils.isBlank(bloco_id) ) {
-			templateBinding.data.put("apartamentos", Apartamento.listByBloco((Bloco)Bloco.findById(Long.parseLong(bloco_id))));
-        }
-    	
-        templateBinding.data.put("morador", new Morador());
+		final Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
+	    templateBinding.data.put(Constante.MORADOR, new Morador());
     	render("Moradores/email.html");
+    }
+    
+    @Before(only={"salvar"},priority=0)
+    static void valide() {
+    	
+    	Logger.debug("validando a liberação de acesso ao sistema");
+    	
+    	
+    	final Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
+    	Morador morador = new Morador();
+    	Binder.bindBean(params.getRootParamNode(), Constante.MORADOR, morador);
+    	
+    	final String email = params.get("morador.email");
+    	if( StringUtils.isEmpty(email) ) {
+    		validation.addError("morador.email", "E-mail é obrigatório");
+			renderArgs
+					.put("error",
+							"Não foi possível gerar uma senha. Não foi informado nenhum e-mail válido");
+			render("Moradores/email.html",morador);
+    	} else if( !GenericValidator.isEmail(email)){
+    		validation.addError("morador.email", "E-mail inválido");
+			renderArgs
+					.put("error",
+							"Não foi possível gerar uma senha. Não foi informado nenhum e-mail válido");
+			render("Moradores/email.html",morador);
+    	}
+    	
     }
     
     public static void salvar(Long apartamento , final Morador morador) {
@@ -46,7 +74,7 @@ public class Application extends Controller {
     		if( morador.id > 0) {
     			atual = Morador.findById(morador.id);
     		} else {
-    			final Apartamento apto = Apartamento.find("where id = ? ", apartamento).first();
+    			final Apartamento apto = Apartamento.findById(apartamento);
     			atual = apto.getMorador();
     		}
     		

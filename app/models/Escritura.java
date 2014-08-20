@@ -1,40 +1,44 @@
 package models;
 
-import controllers.LoginController;
-import dto.EscrituraResultList;
-import dto.ResultList;
-import exceptions.DuplicateRegisterException;
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Where;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.joda.time.DateTime;
-import play.data.validation.Required;
-import play.db.jpa.Blob;
-import play.db.jpa.Model;
-import play.libs.MimeTypes;
-import services.MoradorService;
-
-import javax.persistence.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Where;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
+
+import play.data.validation.Required;
+import play.db.jpa.Blob;
+import play.db.jpa.Model;
+import play.libs.MimeTypes;
+import services.MoradorService;
+import controllers.LoginController;
+import dto.EscrituraResultList;
+import dto.ResultList;
+import exceptions.DuplicateRegisterException;
+
 @Entity
 @Table
-@NamedQueries({
-        @NamedQuery(name = "Escritura.getByApartamentoAndProprietario",
-                query = "SELECT e from Escritura e WHERE e.apartamento = :apartamento AND e.proprietario = :proprietario AND e.dataEntrada <= CURRENT_DATE() AND COALESCE(e.dataSaida,CURRENT_DATE()) >= CURRENT_DATE()"),
-        @NamedQuery(name = "Escritura.getByApartamento",
-                query = "SELECT e from Escritura e WHERE e.apartamento = :apartamento AND e.dataEntrada <= CURRENT_DATE() AND COALESCE(e.dataSaida,CURRENT_DATE()) >= CURRENT_DATE()")
-})
 @Where(clause = "dataEntrada <= CURRENT_DATE() AND COALESCE(dataSaida,CURRENT_DATE()) >= CURRENT_DATE()")
 public class Escritura extends Model implements Serializable, Documentacao {
 
@@ -150,21 +154,20 @@ public class Escritura extends Model implements Serializable, Documentacao {
 
         Criteria criteria = session.createCriteria(Escritura.class)
                 .createAlias("apartamento", "a", Criteria.INNER_JOIN)
-                .createAlias("proprietario", "m", Criteria.INNER_JOIN)
+                .createAlias("proprietario", "p", Criteria.INNER_JOIN)
                 .createAlias("a.bloco", "b", Criteria.INNER_JOIN)
                 .addOrder(Order.asc("b.bloco"))
                 .addOrder(Order.asc("a.numero"))
-                .addOrder(Order.asc("m.nomeCompleto"));
+                .addOrder(Order.asc("p.nomeCompleto"));
 
-        if (bloco != null && bloco > 0L) {
-            criteria = criteria.add(Restrictions.eq("b.id", bloco));
-        }
         if (apartamento != null && apartamento > 0L) {
             criteria = criteria.add(Restrictions.eq("a.id", apartamento));
+        } else if (bloco != null && bloco > 0L) {
+            criteria = criteria.add(Restrictions.eq("b.id", bloco));
         }
 
         if (!StringUtils.isBlank(morador)) {
-            criteria = criteria.add(Restrictions.like("m.nomeCompleto", morador + "%", MatchMode.END));
+            criteria = criteria.add(Restrictions.ilike("p.nomeCompleto", morador + "%"));
         }
         return new EscrituraResultList(criteria);
 

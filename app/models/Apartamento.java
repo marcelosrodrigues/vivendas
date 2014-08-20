@@ -25,14 +25,18 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.annotations.Where;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 
 import play.data.validation.Required;
 import play.db.jpa.Model;
 import controllers.LoginController;
+import dto.ApartamentoResultList;
+import dto.ResultList;
 
 
 
@@ -104,17 +108,6 @@ public class Apartamento extends Model implements Serializable {
 		this.dataAlteracao = DateTime.now().toDate();
 		this.alteradoPor = LoginController.getUserAuthenticated();
 	}
-
-	public static List<Apartamento> listByBloco(final Bloco bloco) {
-		return Apartamento.find("SELECT a from Apartamento a join a.bloco where a.bloco = ? order by a.numero", bloco)
-						  .fetch();
-	}
-
-    public static List<Apartamento> listByBlocoId(final Long bloco) {
-        return Apartamento.find("SELECT a from Apartamento a join a.bloco b where b.id = ? order by a.numero", bloco)
-                .fetch();
-    }
-	
 	
 	public Apartamento(Bloco bloco, String numero, BigDecimal area) {
 		this.bloco = bloco;
@@ -214,14 +207,51 @@ public class Apartamento extends Model implements Serializable {
 	}
 
 	public void fazerLancamento(Lancamento lancamento) {
-
 		this.lancamento.add(lancamento);
-
 	}
 
 	public static List<Apartamento> list() {
-
         return Apartamento.find("ORDER BY bloco.bloco ASC, numero ASC").fetch();
 	}
+
+    public static ResultList<Apartamento> findBy( final Bloco bloco , final Apartamento apartamento ) {
+        final Session session = (Session) Apartamento.em().getDelegate();
+        Criteria criteria = session.createCriteria(Apartamento.class)
+                                   .createAlias("bloco","b", Criteria.INNER_JOIN)
+                                   .createAlias("escritura","e",Criteria.INNER_JOIN)
+                                   .createAlias("e.proprietario","p",Criteria.INNER_JOIN)
+                                   .createAlias("contratoLocacao","c",Criteria.LEFT_JOIN)                                   
+                                   .createAlias("c.inquilino","i",Criteria.LEFT_JOIN)
+                                   .addOrder(Order.asc("b.bloco"))
+                                   .addOrder(Order.asc("numero"));
+
+        if( bloco != null ) {
+            criteria = criteria.add(Restrictions.eq("bloco",bloco));
+        }
+
+        if( apartamento != null ){
+            criteria = criteria.add(Restrictions.eq("b.apartamento",apartamento));
+        }
+
+        return new ApartamentoResultList(criteria);
+
+    }
+    
+
+	public static List<Apartamento> listByBloco(final Bloco bloco) {
+		return Apartamento.find("SELECT a from Apartamento a join a.bloco where a.bloco = ? order by a.numero", bloco)
+						  .fetch();
+	}
+
+    public static List<Apartamento> listByBlocoId(final Long bloco) {
+        return Apartamento.find("SELECT a from Apartamento a join a.bloco b where b.id = ? order by a.numero", bloco)
+                .fetch();
+    }
+    
+    public static BigDecimal getAreaTotal() {
+    	return (BigDecimal) Apartamento.em()
+    								   .createQuery("SELECT sum(area) from Apartamento")
+    								   .getSingleResult();
+    }
 
 }

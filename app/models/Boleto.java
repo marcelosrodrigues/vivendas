@@ -19,10 +19,16 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 
 import play.db.jpa.Model;
 import controllers.LoginController;
+import dto.BoletoResultList;
+import dto.ResultList;
 
 @Entity
 public class Boleto extends Model implements Serializable {
@@ -165,6 +171,10 @@ public class Boleto extends Model implements Serializable {
 		
 	}
 	
+	public static List<Boleto> findByDataVencimento(final Date dataVencimento ){
+		return Boleto.find("dataVencimento = ? and dataCancelamento is null order by apartamento.bloco.bloco , apartamento.numero" , dataVencimento).fetch();
+	}
+	
 	public static List<Map> findInadimplentes() {
 		
 		final String QUERY = "select a.numero , bl.bloco , sum(valor) from boleto b " +
@@ -177,6 +187,33 @@ public class Boleto extends Model implements Serializable {
 							 " having sum(valor) > 0 ";	
 		
 		return em().createNativeQuery(QUERY).getResultList();
+	}
+	
+	public static ResultList<Boleto> findBy(final Date dataVencimento , final Bloco bloco , final Apartamento apartamento) {
+		
+		Session session = (Session) Boleto.em().getDelegate();
+		Criteria criteria = session.createCriteria(Boleto.class)
+								   .createCriteria("apartamento", "a", Criteria.INNER_JOIN)
+								   .createCriteria("a.bloco", "b", Criteria.INNER_JOIN)
+								   .addOrder(Order.asc("b.bloco"))
+								   .addOrder(Order.asc("a.numero"))
+								   .addOrder(Order.asc("dataVencimento"))
+								   .addOrder(Order.asc("dataPagamento"))
+								   .addOrder(Order.asc("dataCancelamento"));
+								   
+		if( dataVencimento != null ) {
+			criteria = criteria.add(Restrictions.eq("dataVencimento", dataVencimento));
+		}
+		
+		if( bloco != null ) {
+			criteria = criteria.add(Restrictions.eq("a.bloco", bloco));
+		}
+		
+		if( apartamento != null ) {
+			criteria = criteria.add(Restrictions.eq("apartamento", apartamento));
+		}
+		
+		return new BoletoResultList(criteria);
 	}
 	
 }

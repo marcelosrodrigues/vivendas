@@ -83,21 +83,4 @@ public class MoradorService implements Serializable {
 		}
 
 	}
-
-
-	public ResultList<Apartamento> search() {
-
-		List<Apartamento> moradores = Apartamento.find(
-				"order by bloco.bloco ASC, numero ASC").fetch(0, 30);
-
-        Long count = Apartamento.count();
-        Long pagecount = count / 30;
-		if (count % 30 > 0) {
-			pagecount++;
-		}
-
-		return new ApartamentoResultList(moradores, count, pagecount);
-
-	}
-
 }

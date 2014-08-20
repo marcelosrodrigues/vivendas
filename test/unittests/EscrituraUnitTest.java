@@ -1,3 +1,5 @@
+package unittests;
+
 import models.Escritura;
 import org.junit.Test;
 import play.test.UnitTest;
@@ -15,6 +17,7 @@ public class EscrituraUnitTest extends UnitTest {
 
         List<Escritura> escrituras = Escritura.findBy(null, null , null).list();
         assertFalse(escrituras.isEmpty());
+        assertEquals(5 , escrituras.size());
     }
 
     @Test

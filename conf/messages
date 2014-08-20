@@ -17,6 +17,10 @@ object.dataEmissao=Data de Emissão
 object.telefoneComercial=Telefone Comercial
 object.telefoneResidencial=Telefone Residencial
 
+morador.email=E-mail
+morador.nomeCompleto=Nome Completo
+morador.cpf=CPF
+
 email=E-mail
 nomeCompleto=Nome Completo
 dataNascimento=Data de Nascimento

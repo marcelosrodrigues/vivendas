@@ -2,7 +2,6 @@ package controllers;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +10,6 @@ import models.Apartamento;
 import models.Bloco;
 import models.Boleto;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.joda.time.DateTime;
 
@@ -24,6 +22,7 @@ import play.mvc.With;
 import services.BoletoService;
 import utils.CommandFactory;
 import utils.Constante;
+import dto.ResultList;
 
 @With(Secure.class)
 public class Boletos extends Controller {
@@ -56,23 +55,19 @@ public class Boletos extends Controller {
 	public static void voltar(Long id) {
 		
 		Boleto boleto = Boleto.findById(id);
-		Collection<Boleto> boletos = Boleto.find("dataVencimento = ? and dataCancelamento is null order by apartamento.bloco.bloco , apartamento.numero" , boleto.dataVencimento).fetch();
+		Collection<Boleto> boletos = Boleto.findByDataVencimento(boleto.dataVencimento);
 		render("Boletos/gerarBoleto.html",boletos);
 	}
 	
 	public static void condominio() {
-		BigDecimal areaTotal = (BigDecimal) Apartamento.em()
-				.createQuery("SELECT sum(area) from Apartamento")
-				.getSingleResult();
+		BigDecimal areaTotal = Apartamento.getAreaTotal();
 		render("Boletos/condominio.html", areaTotal);
 	}
 
 	public static void calcularCondominio(
 			@Required @As(format = "#,## 0.00") BigDecimal despesa) {
 
-		BigDecimal areaTotal = (BigDecimal) Apartamento.em()
-				.createQuery("SELECT sum(area) from Apartamento")
-				.getSingleResult();
+		BigDecimal areaTotal = Apartamento.getAreaTotal();
 
 		if (despesa == null || despesa.doubleValue() <= 0D) {
 			validation.addError("despesa",
@@ -98,7 +93,7 @@ public class Boletos extends Controller {
 	}
 	
 	@Check("FINANCEIRO")
-	public static void editar(Long id ,@As(format="dd-MM-yyyy") Date dataVencimento , @As(format="dd-MM-yyyy") @Required Date dataPagamento , Bloco bloco , Apartamento apartamento , int page) {
+	public static void editar(Long id ,@As(format="dd-MM-yyyy") Date dataVencimento , @As(format="dd-MM-yyyy") @Required Date dataPagamento , Bloco bloco , Apartamento apartamento , Long page) {
 		
 		Boleto boleto = Boleto.findById(id);
 		boleto.dataPagamento = dataPagamento;
@@ -110,7 +105,7 @@ public class Boletos extends Controller {
 	}
 	
 	@Check("FINANCEIRO")
-	public static void cancelar(Long id ,@As(format="dd-MM-yyyy") Date dataVencimento ,  Bloco bloco , Apartamento apartamento , int page) {
+	public static void cancelar(Long id ,@As(format="dd-MM-yyyy") Date dataVencimento ,  Bloco bloco , Apartamento apartamento , Long page) {
 		Boleto boleto = Boleto.findById(id);
 		boleto.cancela();
 		boleto.save();
@@ -134,39 +129,12 @@ public class Boletos extends Controller {
 		
 	}
 	@Check("FINANCEIRO")
-	public static void pesquisar(@As(format="dd-MM-yyyy") Date dataVencimento , Bloco bloco , Apartamento apartamento , int page) {
+	public static void pesquisar(@As(format="dd-MM-yyyy") Date dataVencimento , Bloco bloco , Apartamento apartamento , Long page) {
 				
-		String query = " 1=1";
-		if(page == 0 ){
-			page = 1;
-		}
-		int length = 50;
-		
-		List<Object> parameters = new ArrayList<Object>();
-		if( dataVencimento != null  ) {
-			query += " AND dataVencimento = ?";
-			parameters.add(dataVencimento);
-		}
-		
-		if( bloco!= null && bloco.id != null ){
-			query += " AND apartamento.bloco.id = ?";
-			parameters.add(bloco.id);
-		}
-		
-		if( apartamento != null && apartamento.id  != null  ){
-			query += " AND apartamento.id = ?";
-			parameters.add(apartamento.id);
-		}
-		
-		int count = (int) Boleto.count(query , parameters.toArray() );
-		count /= length;
-		
-		if( count % length > 0 ) {
-			count++;
-		}
-		
-		List<Boleto> boletos = Boleto.find(query + " ORDER by apartamento.bloco.bloco , apartamento.numero , dataVencimento , dataPagamento , dataCancelamento", parameters.toArray())
-				.fetch(page, length);
+		ResultList<Boleto> resultlist = Boleto.findBy(dataVencimento, bloco, apartamento);
+		Long count = resultlist.getCount();
+		resultlist.setPage(page);
+		List<Boleto> boletos = resultlist.list();
 		render("Boletos/pesquisar.html",boletos,count,page);
 	}
 	

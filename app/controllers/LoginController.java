@@ -22,7 +22,7 @@ public class LoginController extends Secure.Security{
 			UsuarioService service = new UsuarioService();
 			Usuario usuario = service.autenticar(username, password);
 			
-			return usuario != null;
+			return ( usuario != null );
 			
 		} catch (UserNotFoundException e) {
 			renderArgs.put("error", e.getMessage());	

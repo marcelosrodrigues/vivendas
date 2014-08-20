@@ -7,9 +7,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
@@ -23,7 +20,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.Where;
 import org.joda.time.DateTime;
 
 import play.data.binding.As;
@@ -178,6 +179,7 @@ public class Morador extends Usuario {
 			Date dataNascimento, String identidade, String orgaoemissor,
 			Date dataemissao, String email, String telefoneResidencial,
 			String telefoneComercial) {
+		
 		Morador morador = Morador.find("cpf = ?", cpf).first();		
 		if( morador == null ) {
 			morador = new Morador(nomeCompleto, cpf, email, telefoneResidencial, telefoneComercial, identidade, orgaoemissor, dataemissao, dataNascimento);			

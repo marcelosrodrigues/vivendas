@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import dto.ApartamentoResultList;
 import enumarations.MoradorType;
 import models.Apartamento;
 import models.Bloco;
@@ -49,8 +50,7 @@ public class Moradores extends CRUD {
     }
 
 	public static void index() {
-		MoradorService service = new MoradorService();
-		ResultList<Apartamento> result = service.search();
+		ResultList<Apartamento> result = Apartamento.findBy(null,null);
 		List<Apartamento> moradores = result.list();
 		Long count = result.getCount();
         Long page = 1L;
@@ -59,27 +59,6 @@ public class Moradores extends CRUD {
 	
 	public static void getJSON(Long bloco, Long apartamento, String morador,
 			Long page) {
-
-		String QUERY = "SELECT e from Escritura e INNER JOIN FETCH e.apartamento a INNER JOIN FETCH a.bloco b INNER JOIN FETCH e.proprietario m WHERE e.dataEntrada <= CURRENT_DATE() AND COALESCE(e.dataSaida,CURRENT_DATE()) >= CURRENT_DATE() ";
-		List<Object> parameters = new ArrayList<Object>();
-
-		if (page == 0L)
-			page = 1L;
-
-		if (apartamento != null && apartamento > 0L) {
-			QUERY += " AND a.id = ?";
-			parameters.add(apartamento);
-		}
-
-		if (bloco != null && bloco > 0L) {
-			QUERY += " AND b.id = ?";
-			parameters.add(bloco);
-		}
-
-		if (morador != null && !"".equalsIgnoreCase(morador)) {
-			QUERY += " AND m.nomeCompleto LIKE ?";
-			parameters.add(morador + "%");
-		}
 
 		final ResultList<Escritura> resultlist = Escritura.findBy(bloco,apartamento,morador);
         resultlist.setPage(page);
@@ -92,36 +71,12 @@ public class Moradores extends CRUD {
 
 	}
 	
-	public static void pesquisar(Bloco bloco , Apartamento apartamento , int page ) {
-		
-		String query = " 1=1";
-		if(page == 0 ){
-			page = 1;
-		}
-		int length = 50;
-		
-		List<Object> parameters = new ArrayList<Object>();
-		
-		if( bloco.id != null && bloco.id >0 ){
-			query += " AND bloco.id = ?";
-			parameters.add(bloco.id);
-		}
-		
-		if( apartamento.id != null && apartamento.id > 0 ){
-			query += " AND id = ?";
-			parameters.add(apartamento.id);
-		}
-		
-		int count = (int) Apartamento.count(query , parameters.toArray() );
-		count /= length;
-		
-		if( count % length > 0 ) {
-			count++;
-		}
-		
+	public static void pesquisar(Bloco bloco , Apartamento apartamento , Long page ) {
 
-		List<Apartamento> moradores = Apartamento.find(query + " order by bloco.bloco ASC, numero ASC", parameters.toArray())
-				.fetch(page, length);
+		ResultList<Apartamento> resultlist = Apartamento.findBy(bloco,apartamento);
+        resultlist.setPage(page);
+        Long count = resultlist.getCount();
+        List<Apartamento> moradores = resultlist.list();
 		
 		render("Moradores/index.html",moradores,count,page);
 		

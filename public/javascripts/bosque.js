@@ -400,6 +400,7 @@ $("#despesa").blur( function() {
 });
 
 function callbackPesquisarMorador() {
+    $("div#moradores > table > tbody > tr").remove();
 	$.ajax({
 		url: '/moradores/getJSON',
 		type:'POST',
@@ -410,8 +411,8 @@ function callbackPesquisarMorador() {
 		},
 	    cache: false
 	}).done( function(data) {
-		$("div#moradores > table > tbody > tr").remove();
-		$.each(data,function(i,item){
+        $("div#moradores > table > tbody > tr").remove();
+        $.each(data,function(i,item){
 			$("div#moradores > table > tbody ").append("<tr style=\"cursor:pointer\" onclick=\"javascript:getMorador(" + item.proprietario.id + ",'" + item.proprietario.nomeCompleto + "');\"><td>" + item.apartamento.bloco.bloco + "</td><td>" + item.apartamento.numero + "</td><td>" + item.proprietario.nomeCompleto + "</td></tr>");
 		});					
 	});
@@ -421,6 +422,9 @@ function pesquisarMorador(controller,target) {
 	var offset = $(controller).offset();
 	$("div#moradores").offset({top: offset.top , left: offset.left });
 	$("input#target").val(target);
+    $("select#bloco").val("");
+    $("select#apartamento").val("");
+    $("input#morador").val("");
 	$.getJSON('/blocos/list' , 
 			function(data){
 					$('select#bloco option').each(function() {
@@ -434,7 +438,8 @@ function pesquisarMorador(controller,target) {
 	
 	$("select#bloco").change(callbackPesquisarMorador);
 	$("select#apartamento").change(callbackPesquisarMorador);
-	$("input#morador").keydown(callbackPesquisarMorador);
+	$("input#morador").keypress(callbackPesquisarMorador);
+    $("input#morador").keydown(callbackPesquisarMorador);
 		
 	callbackPesquisarMorador();
 	

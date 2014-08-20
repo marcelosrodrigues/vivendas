@@ -12,4 +12,6 @@ public interface Constante {
     static final String APARTAMENTOS = "apartamentos";
 
     static final String APARTAMENTO = "apartamento";
+
+	static final String MORADOR = "morador";
 }
