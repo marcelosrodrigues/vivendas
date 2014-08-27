@@ -1,11 +1,8 @@
 package controllers;
 
 import models.Apartamento;
+import models.Bloco;
 import models.Morador;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.validator.GenericValidator;
-
 import play.Logger;
 import play.data.binding.Binder;
 import play.mvc.Before;
@@ -14,6 +11,8 @@ import play.mvc.Scope;
 import services.MailService;
 import utils.CommandFactory;
 import utils.Constante;
+import utils.validators.ValidatorFactory;
+import utils.validators.dto.EmailIsValid;
 
 
 public class Application extends Controller {
@@ -37,7 +36,7 @@ public class Application extends Controller {
     public static void liberar() {
     	
 		final Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
-	    templateBinding.data.put(Constante.MORADOR, new Morador());
+	    templateBinding.data.put("object", new Morador());
     	render("Moradores/email.html");
     }
     
@@ -46,41 +45,43 @@ public class Application extends Controller {
     	
     	Logger.debug("validando a liberação de acesso ao sistema");
     	
+    	Morador object = new Morador();
+    	Apartamento apartamento = new Apartamento();
+    	Bloco bloco = new Bloco();
+    	Binder.bindBean(params.getRootParamNode(),"object", object);
+    	Binder.bindBean(params.getRootParamNode(),"apartamento", apartamento);
+    	Binder.bindBean(params.getRootParamNode(),"bloco", bloco);    	
+    	    	
+    	ValidatorFactory validations = ValidatorFactory.getInstance();
     	
-    	final Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
-    	Morador morador = new Morador();
-    	Binder.bindBean(params.getRootParamNode(), Constante.MORADOR, morador);
-    	
-    	final String email = params.get("morador.email");
-    	if( StringUtils.isEmpty(email) ) {
-    		validation.addError("morador.email", "E-mail é obrigatório");
-			renderArgs
-					.put("error",
-							"Não foi possível gerar uma senha. Não foi informado nenhum e-mail válido");
-			render("Moradores/email.html",morador);
-    	} else if( !GenericValidator.isEmail(email)){
-    		validation.addError("morador.email", "E-mail inválido");
-			renderArgs
-					.put("error",
-							"Não foi possível gerar uma senha. Não foi informado nenhum e-mail válido");
-			render("Moradores/email.html",morador);
+    	validations.validate(bloco)
+    					.and(apartamento)
+    					.and(new EmailIsValid("object.email", object.email));
+        	
+    	if( validations.hasErrors() ){
+    		for( play.data.validation.Error error : validations ){
+    			validation.addError(error.getKey(), error.message());
+    		}
+    		renderArgs.put("error",
+					"Não foi possível gerar uma senha. Não foi informado nenhum e-mail válido");
+    		render("Moradores/email.html",object);
     	}
     	
     }
     
-    public static void salvar(Long apartamento , final Morador morador) {
+    public static void salvar(Long apartamento , final Morador object) {
     
     		Morador atual = null;
-    		if( morador.id > 0) {
-    			atual = Morador.findById(morador.id);
+    		if( object.id > 0) {
+    			atual = Morador.findById(object.id);
     		} else {
     			final Apartamento apto = Apartamento.findById(apartamento);
     			atual = apto.getMorador();
     		}
     		
-    		atual.email = morador.email;
-    		atual.nomeCompleto = morador.nomeCompleto;
-    		atual.cpf = morador.cpf;    		
+    		atual.email = object.email;
+    		atual.nomeCompleto = object.nomeCompleto;
+    		atual.cpf = object.cpf;    		
     		atual.bloqueado = false;
     		
     		atual.save();
@@ -89,13 +90,13 @@ public class Application extends Controller {
     		mail.from("cvparque@ig.com.br")
     			.to(atual.email)
     			.subject("Bem-vindo ao Portal Condominio Vivendas do Parque")
-    			.message("Olá, %s! Seja bem-vindo ao Portal Condominio Vivendas do Parque\r\n. Segue abaixo a sua senha de acesso \r\n\r\n %s",morador.nomeCompleto,morador.password)
+    			.message("Olá, %s! Seja bem-vindo ao Portal Condominio Vivendas do Parque\r\n. Segue abaixo a sua senha de acesso \r\n\r\n %s",object.nomeCompleto,object.password)
     			.send();
     		
     		mail.from("cvparque@ig.com.br")
     			.to("cvparque@ig.com.br")
-    			.subject("O morador %s solicitou liberação de acesso" , morador.nomeCompleto)
-    			.message("O morador %s solicitou liberação de acesso" , morador.nomeCompleto)
+    			.subject("O morador %s solicitou liberação de acesso" , object.nomeCompleto)
+    			.message("O morador %s solicitou liberação de acesso" , object.nomeCompleto)
     			.send();
     		
     		flash.success("Olá, %s! Seja bem-vindo ao Portal Condominio Vivendas do Parque\r\n. Enviamos para o e-mail que informaste os dados necessários para acessar o Portal. Em caso de duvidas, entre em contato com a Administração.",atual.nomeCompleto);

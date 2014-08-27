@@ -205,4 +205,8 @@ public class Morador extends Usuario {
 		return Morador.find("cpf = ?", cpf).first();
 	}
 	
+	public static boolean exists(final String cpf) {
+		return  Morador.count("cpf = ?", cpf) > 0;
+	}
+	
 }

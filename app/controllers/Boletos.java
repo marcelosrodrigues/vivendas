@@ -22,6 +22,8 @@ import play.mvc.With;
 import services.BoletoService;
 import utils.CommandFactory;
 import utils.Constante;
+import utils.validators.ValidatorFactory;
+import utils.validators.dto.GreaterThanValid;
 import dto.ResultList;
 
 @With(Secure.class)
@@ -65,13 +67,17 @@ public class Boletos extends Controller {
 	}
 
 	public static void calcularCondominio(
-			@Required @As(format = "#,## 0.00") BigDecimal despesa) {
+			@Required @As(format = "#,##",lang={"pt"}) BigDecimal despesa) {
 
-		BigDecimal areaTotal = Apartamento.getAreaTotal();
-
-		if (despesa == null || despesa.doubleValue() <= 0D) {
-			validation.addError("despesa",
-					"Valor total da despesa é obrigatória");
+		BigDecimal areaTotal = Apartamento.getAreaTotal();		
+		
+		ValidatorFactory validations = ValidatorFactory.getInstance();
+		validations.validate(new GreaterThanValid("despesa", despesa, BigDecimal.ZERO));
+		
+		if (validations.hasErrors()) {
+			for( play.data.validation.Error error : validations ){
+    			validation.addError(error.getKey(), error.message());
+    		}
 			renderArgs
 					.put("error",
 							"Não foi possível calcular o condominio, verifique os erros abaixo");

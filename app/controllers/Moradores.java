@@ -2,13 +2,10 @@ package controllers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import dto.ApartamentoResultList;
-import enumarations.MoradorType;
 import models.Apartamento;
 import models.Bloco;
 import models.Documentacao;
@@ -24,14 +21,14 @@ import play.data.validation.Required;
 import play.mvc.Before;
 import play.mvc.Scope;
 import play.mvc.With;
-import services.MoradorService;
+import utils.CommandFactory;
+import utils.Constante;
 import dto.ResultList;
+import enumarations.MoradorType;
 import exceptions.DuplicateRegisterException;
 import factory.DocumentacaoFactory;
 import flexjson.JSONSerializer;
 import flexjson.transformer.DateTransformer;
-import utils.CommandFactory;
-import utils.Constante;
 
 @CRUD.For(Morador.class)
 @With(Secure.class)
@@ -95,8 +92,7 @@ public class Moradores extends CRUD {
 		if(StringUtils.isBlank(params.get("cpf"))) {
 			params.remove("cpf");
 		} else {
-			if( Morador.count("cpf = ?", params.get("cpf")) > 0 ) {			
-				
+			if( Morador.exists(params.get("cpf")) ) {			
 				
 				if( object == null || !object.cpf.equals(params.get("cpf")) ){
 					validation.addError("cpf", "CPF já em uso");
@@ -110,7 +106,7 @@ public class Moradores extends CRUD {
 			}
 		}
 		
-		if( !StringUtils.isBlank(params.get("email")) && Usuario.count("email = ?" , params.get("email")) > 0 ) {
+		if( !StringUtils.isBlank(params.get("email")) && Usuario.exists(params.get("email")) ) {
 			
 			if( object == null || !object.email.equals(params.get("email")) ){
 				validation.addError("email", "E-mail já em uso");
@@ -137,7 +133,7 @@ public class Moradores extends CRUD {
 		if(StringUtils.isBlank(params.get("object.cpf"))) {
 			params.remove("object.cpf");
 		} else {
-			if( Morador.count("cpf = ?", params.get("object.cpf")) > 0 ) {
+			if( Morador.exists(params.get("cpf")) ) {
 				
 				if(object == null || !object.cpf.equals(params.get("object.cpf")) ){
 					validation.addError("object.cpf", "CPF já em uso");
@@ -151,7 +147,7 @@ public class Moradores extends CRUD {
 			}
 		}
 		
-		if( !StringUtils.isBlank(params.get("object.email")) && Usuario.count("email = ?" , params.get("object.email")) > 0 ) {
+		if( !StringUtils.isBlank(params.get("object.email")) && Usuario.exists(params.get("email")) ) {
 			
 			if(object == null || !object.email.equals(params.get("object.email"))) {
 				validation.addError("object.email", "E-mail já em uso");

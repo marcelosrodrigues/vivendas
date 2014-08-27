@@ -136,11 +136,15 @@ public class Usuario extends Model implements Serializable {
 	
 	@PrePersist
 	public void preInsert() {
-		this.password = RandomStringUtils.randomAlphanumeric(10);
+		this.password = RandomStringUtils.randomAlphanumeric(8);
 	}
 	
-	public static Usuario getByEmail(String email) {
+	public static Usuario getByEmail(final String email) {
 		return Usuario.find("email = ?", email).first();
+	}
+	
+	public static boolean exists(final String email) {
+		return Usuario.count("email = ?" , email) > 0;
 	}
 		
 }

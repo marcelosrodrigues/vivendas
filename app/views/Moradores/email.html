@@ -3,17 +3,17 @@
 
 
 #{form @Application.salvar() ,enctype:'multipart/form-data' , class:'form-horizontal'}
-		<input type="hidden" id="id" name="morador.id" value="${morador.id}"/>
+		<input type="hidden" id="id" name="object.id" value="${object.id}"/>
 
 		#{select fieldname:'bloco', target:'bloco.id', list:blocos, label:"Bloco", value: bloco?.id, labelfield: 'bloco' /}
 
         #{select fieldname:'apartamento', target:'apartamento.id', list:apartamentos, label:"Apartamento", value: apartamento?.id, labelfield: 'numero' /}
         
-		#{edittext fieldid:"cpf", fieldname:"morador.cpf", value:morador.cpf /}
+		#{edittext fieldid:"cpf", fieldname:"object.cpf", value:object.cpf /}
 		
-		#{edittext fieldid:"nomeCompleto" , fieldname:"morador.nomeCompleto", value:morador.nomeCompleto /}
+		#{edittext fieldid:"nomeCompleto" , fieldname:"object.nomeCompleto", value:object.nomeCompleto /}
 				
-		#{edittext fieldid:"email", fieldname:"morador.email",value:morador.email /}
+		#{edittext fieldid:"email", fieldname:"object.email",value:object.email /}
 		
 		<div class="form-group bottom">
 			<div class="col-lg-offset-2 col-lg-10">

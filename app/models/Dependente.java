@@ -3,7 +3,6 @@ package models;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -41,6 +40,7 @@ public class Dependente extends Morador implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date dataAlteracao = DateTime.now().toDate();
 	
+	@Override
 	@PrePersist
 	public void preInsert() {
 		this.dataCriacao = DateTime.now().toDate();
@@ -49,6 +49,7 @@ public class Dependente extends Morador implements Serializable {
 		this.alteradoPor = LoginController.getUserAuthenticated();
 	}
 
+	@Override
 	@PreUpdate
 	public void preUpdate() {
 		this.dataAlteracao = DateTime.now().toDate();
@@ -65,10 +66,11 @@ public class Dependente extends Morador implements Serializable {
 	public Dependente() {
 	}
 
-	public void setMorador(Morador morador) {
+	public void setMorador(final Morador morador) {
 		this.morador = morador;
 	}
 	
+	@Override
 	public boolean isDependente() {
 		return true;
 	}
