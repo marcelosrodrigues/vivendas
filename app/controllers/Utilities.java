@@ -13,7 +13,7 @@ import flexjson.transformer.DateTransformer;
 
 public class Utilities extends Controller {
 
-	public static void listByBloco(long bloco){
+	public static void listByBloco(Long bloco){
 		
 		List<Apartamento> apartamentos = Apartamento.listByBlocoId(bloco);
 		JSONSerializer json = new JSONSerializer();
@@ -21,7 +21,7 @@ public class Utilities extends Controller {
 		
 	}
 	
-	public static void buscar( String cpf ) {
+	public static void buscarMoradorByCPF( String cpf ) {
 		
 		if( !StringUtils.isBlank(cpf) ) {
 			
@@ -42,7 +42,7 @@ public class Utilities extends Controller {
 		
 	}
 	
-	public static void buscar( Long apartamento ) {
+	public static void buscarMoradorByApartamento( Long apartamento ) {
 		
 		if( apartamento > 0 ) {
 			final Apartamento apto = Apartamento.findById(apartamento);

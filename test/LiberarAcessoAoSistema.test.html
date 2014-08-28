@@ -1,0 +1,18 @@
+#{selenium}
+    
+    open('http://localhost:9000/liberar')
+    select('bloco','C')
+    pause(1000)
+    select('apartamento','605')
+    pause(1000)
+    
+    
+    assertValue('cpf','398.528.147-53')
+    assertValue('nomeCompleto','MAURO CESAR BRAGA LEITAO')
+    type('email','mauro@hemacon.com.br')
+    
+    clickAndWait('css=input.btn.btn-primary')
+    
+    verifyText('css=div.alert.alert-dismissable.alert-success','Olá, MAURO CESAR BRAGA LEITAO! Seja bem-vindo ao Portal Condominio Vivendas do Parque . Enviamos para o e-mail que informaste os dados necessários para acessar o Portal. Em caso de duvidas, entre em contato com a Administração.')
+    
+#{/selenium}

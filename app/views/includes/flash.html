@@ -6,6 +6,13 @@
 #{if flash.error || error}
     <div class="alert alert-dismissable alert-danger" style="margin-top: 10px; margin-bottom: 10px;">
         <h4>Ocorreu um erro no processamento</h4>
-        <p>${error ?: flash.error}</p>
+        <p>
+        	#{if error}
+        		${error}
+        	#{/if}
+        	#{else}
+        		&{flash.error}
+        	#{/else}
+        </p>
     </div>
 #{/if}

@@ -6,17 +6,17 @@ import java.util.List;
 
 import models.Apartamento;
 import models.Bloco;
-import play.data.validation.Error;
 import utils.validators.dto.EmailIsValid;
+import utils.validators.dto.Error;
 import utils.validators.dto.GreaterThanValid;
 
 public final class ValidatorFactory implements Iterable<Error>{
 	
-	private final List<play.data.validation.Error> ERRORS_LIST = new ArrayList<play.data.validation.Error>();
+	private final List<Error> ERRORS_LIST = new ArrayList<Error>();
 	
 	public void addError(final String fieldname , final String errorMessage) {
 		
-		this.ERRORS_LIST.add(new play.data.validation.Error(fieldname,errorMessage,null));
+		this.ERRORS_LIST.add(new Error(fieldname,errorMessage));
 		
 	}
 	
@@ -47,7 +47,7 @@ public final class ValidatorFactory implements Iterable<Error>{
 	private ValidatorFactory(){}
 
 	@Override
-	public Iterator<play.data.validation.Error> iterator() {
+	public Iterator<Error> iterator() {
 		return this.ERRORS_LIST.iterator();
 	}
 	

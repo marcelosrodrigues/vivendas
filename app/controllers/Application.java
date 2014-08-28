@@ -13,6 +13,7 @@ import utils.CommandFactory;
 import utils.Constante;
 import utils.validators.ValidatorFactory;
 import utils.validators.dto.EmailIsValid;
+import utils.validators.dto.Error;
 
 
 public class Application extends Controller {
@@ -59,11 +60,12 @@ public class Application extends Controller {
     					.and(new EmailIsValid("object.email", object.email));
         	
     	if( validations.hasErrors() ){
-    		for( play.data.validation.Error error : validations ){
-    			validation.addError(error.getKey(), error.message());
+    		for( Error error : validations ){
+    			validation.addError(error.getKey(), error.getMessage());
     		}
+    		
     		renderArgs.put("error",
-					"Não foi possível gerar uma senha. Não foi informado nenhum e-mail válido");
+					"Não foi possível gerar uma senha. Verifique os campos informados e tente novamente. Em caso de dúvida, entre em contato com a Administração");
     		render("Moradores/email.html",object);
     	}
     	

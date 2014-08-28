@@ -22,8 +22,6 @@ $('td[id="morador"]').css('cursor', 'pointer');
 $('td[id="dependente"]').css('cursor', 'pointer');
 $('td[id="vaga"]').css('cursor', 'pointer');
 
-
-var localMediaStream;
 $("div > div.fechar > img").click(function(){	
 	$("div[id='apartamento']").hide();
 	$("div[id='morador']").hide();
@@ -35,116 +33,11 @@ $("div > div.fechar > img").click(function(){
 	$("div[id='webcam'] > #camera-foto").remove();
 	$("div[id='webcam'] > input[type='hidden']").remove();
 	
-	if( localMediaStream != null ){
+	/**if( localMediaStream != null ){
 		localMediaStream.stop();
-	}
-	
+	}	**/
 	
 });
-
-function salvarFoto() {
-	
-	var offset = $(this).offset();
-	$("#camera-foto").attr("src", "");
-	$("div[id='foto']").offset({top: 80 , left: 20 });	
-	$("div[id='foto']").show();
-	$("div[id='apartamento']").hide();
-	$("div[id='morador']").hide();
-	$("div[id='dependente']").hide();
-	$("div[id='vaga']").hide();
-	$("#salvar-foto").hide();
-	
-	$("div[id='webcam']").append("<video id='camera-video' autoplay width='660' height='500' style='display:block;'></video>");
-	$("div[id='webcam']").append("<canvas id='camera-foto' style='display:none;' width='660' height='500'></canvas>");
-	$("div[id='webcam']").append("<input type=\"hidden\" id=\"x\" />");
-	$("div[id='webcam']").append("<input type=\"hidden\" id=\"y\" />");
-	$("div[id='webcam']").append("<input type=\"hidden\" id=\"x2\" />");
-	$("div[id='webcam']").append("<input type=\"hidden\" id=\"y2\" />");
-	$("div[id='webcam']").append("<input type=\"hidden\" id=\"h\" />");
-	$("div[id='webcam']").append("<input type=\"hidden\" id=\"w\" />");
-
-	$("#camera-video").show();
-	$("#camera-foto").hide();
-	
-	
-	video = document.querySelector("video");
-	canvas = document.querySelector("canvas");
-    ctx = canvas.getContext("2d");
-	
-	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-	if (navigator.getUserMedia) {
-	      navigator.getUserMedia({
-	        video: {
-	          mandatory: {
-	            minWidth: 660,
-	            minHeight: 500
-	          }
-	        }
-	      }, (function(stream) {
-
-	        var vid;
-	        vid = document.getElementById("camera-video");
-	        vid.src = window.URL.createObjectURL(stream);
-	        localMediaStream = stream;
-
-	      }), function(err) {
-	        console.log("The following error occurred when trying to use getUserMedia: " + err);
-	      });
-	    }else{
-	      alert("Sorry, your browser does not support getUserMedia");
-	    }
-	
-		$("#click").click(function(){
-			ctx.drawImage(video, 0, 0, 660, 500);
-			$("#camera-foto").attr("src", canvas.toDataURL("image/webp"));
-			$("#camera-video").hide();
-			$("#camera-foto").show();
-			$("#salvar-foto").show();
-						
-			localMediaStream.stop();
-			
-			$("#camera-foto").Jcrop({
-				onSelect: onSelect,
-				onChange: onSelect
-			});
-			
-			$("#salvar-foto").click( function(){
-				
-				$.ajax({
-					url: '/imagens/salvar',
-					type:'POST',
-					beforeSend: function(xhr){xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');},
-					data: {
-						x: $("#x").val(),
-						y: $("#y").val(),
-						x2: $("#x2").val(),
-				        y2: $("#y2").val(),
-						h: $("#h").val(),
-						w: $("#w").val(),
-						img:canvas.toDataURL("image/png")
-					},
-					complete: function( data ) {
-						$("img#foto").attr("src","/public/images/" + data.responseText);
-						$("div[id='foto']").hide();
-					}
-				});
-			});
-			
-		});
-	
-}
-
-function onSelect(coords) {	
-	$("#x").val(coords.x);
-	$("#y").val(coords.y);
-	$("#x2").val(coords.x);
-	$("#y2").val(coords.y);
-	$("#h").val(coords.h);
-	$("#w").val(coords.w);
-}
-
-
-$("a#foto").click(salvarFoto);
 
 $('td[id="vaga"]').click(function(e) {
 	
@@ -213,7 +106,7 @@ $('td[id="morador"]').click(function(e) {
 	var offset = $(this).offset();
 	$("div[id='morador']").offset({top: offset.top - 15, left: offset.left - 15});
 	
-	$.getJSON('/moradores/buscar?cpf=' + $(this).attr("cpf"), 
+	$.getJSON('/morador/' + $(this).attr("cpf"), 
 			  function(data) {
 					$("#nomeCompleto").html(data.nomeCompleto);
 					$("#cpf").html(data.cpf);
@@ -231,6 +124,21 @@ $('td[id="morador"]').click(function(e) {
 					$("div[id='dependente']").hide();
 					$("div[id='vaga']").hide();
 		  	  });
+	});
+
+$('#cpf').blur(function() {
+	$.getJSON('/morador/' + this.value , 
+			  function(data) {
+					$("#id").val(data.id);
+					$("#nomeCompleto").val(data.nomeCompleto);
+					$("#dataNascimento").val(data.dataNascimento);
+					$("#identidade").val(data.identidade);
+					$("#orgaoemissor").val(data.orgaoEmissor);
+					$("#dataEmissao").val(data.dataEmissao);
+					$("#email").val(data.email);
+					$("#telefoneResidencial").val(data.telefoneResidencial);
+					$("#telefoneComercial").val(data.telefoneComercial);
+			  	  });
 	});
 
 $('td[id="apartamento"]').click(function(e){
@@ -318,23 +226,8 @@ $("input[id='conselho.terminoMandato']").datepicker({
 	dateFormat: "dd-mm-yy"   	
 });
 
-
-$('#cpf').blur(function() {
-	$.getJSON('/utilities/buscar?cpf=' + this.value , 
-			  function(data) {
-				$("#id").val(data.id);
-				$("#nomeCompleto").val(data.nomeCompleto);
-				$("#dataNascimento").val(data.dataNascimento);
-				$("#identidade").val(data.identidade);
-				$("#orgaoemissor").val(data.orgaoEmissor);
-				$("#dataEmissao").val(data.dataEmissao);
-				$("#email").val(data.email);
-				$("#telefoneResidencial").val(data.telefoneResidencial);
-				$("#telefoneComercial").val(data.telefoneComercial);
-		  	  });
-	});
 $('select#bloco').change(function() {							
-			$.getJSON('/utilities/listByBloco?bloco=' + this.value , 
+			$.getJSON('/bloco/'+ this.value + '/apartamentos' , 
 					function(data){
 							$('select#apartamento option').each(function() {
 								$(this).remove();
@@ -347,7 +240,7 @@ $('select#bloco').change(function() {
 });
 
 $('select#apartamento').change(function() {							
-	$.getJSON('/utilities/buscar?apartamento=' + this.value , 
+	$.getJSON('/apartamentos/' + this.value + '/morador', 
 			 function(data) {
 					$("#id").val(data.id);
 					$("#nomeCompleto").val(data.nomeCompleto);
@@ -425,7 +318,7 @@ function pesquisarMorador(controller,target) {
     $("select#bloco").val("");
     $("select#apartamento").val("");
     $("input#morador").val("");
-	$.getJSON('/blocos/list' , 
+	$.getJSON('/blocos' , 
 			function(data){
 					$('select#bloco option').each(function() {
 						$(this).remove();

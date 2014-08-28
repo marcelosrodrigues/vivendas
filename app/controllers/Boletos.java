@@ -23,6 +23,7 @@ import services.BoletoService;
 import utils.CommandFactory;
 import utils.Constante;
 import utils.validators.ValidatorFactory;
+import utils.validators.dto.Error;
 import utils.validators.dto.GreaterThanValid;
 import dto.ResultList;
 
@@ -74,9 +75,9 @@ public class Boletos extends Controller {
 		ValidatorFactory validations = ValidatorFactory.getInstance();
 		validations.validate(new GreaterThanValid("despesa", despesa, BigDecimal.ZERO));
 		
-		if (validations.hasErrors()) {
-			for( play.data.validation.Error error : validations ){
-    			validation.addError(error.getKey(), error.message());
+		if( validations.hasErrors() ){
+    		for( Error error : validations ){
+    			validation.addError(error.getKey(), error.getMessage());
     		}
 			renderArgs
 					.put("error",

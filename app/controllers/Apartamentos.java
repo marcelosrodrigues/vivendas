@@ -7,8 +7,8 @@ import models.Bloco;
 import play.mvc.Before;
 import play.mvc.Scope;
 import play.mvc.With;
-import flexjson.JSONSerializer;
 import utils.Constante;
+import flexjson.JSONSerializer;
 
 @CRUD.For(Apartamento.class)
 @With(Secure.class)
@@ -24,14 +24,7 @@ public class Apartamentos extends CRUD{
 	public static void list() {
 		redirect("Moradores.index");
 	}
-	
-	public static void listByBloco(long bloco){
-		
-		List<Apartamento> apartamentos = Apartamento.listByBlocoId(bloco);
-		JSONSerializer json = new JSONSerializer();
-		renderJSON(json.include("numero","id","bloco.id","bloco.bloco").exclude("*").serialize(apartamentos));
-		
-	}
+
 	public static void show(long id) {
 		
 		Apartamento object = Apartamento.findById(id);

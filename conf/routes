@@ -1,7 +1,6 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-
 # Home page
  GET     /                                       Application.index
  GET     /liberar                                Application.liberar
@@ -20,6 +19,15 @@
  
  GET	 /moradores								 Moradores.index
  POST	 /moradores								 Moradores.pesquisar
+
+
+# Javascripts
+GET		/bloco/{bloco}/apartamentos				 Utilities.listByBloco
+GET		/morador/{cpf}							 Utilities.buscarMoradorByCPF
+GET		/apartamentos/{apartamento}/morador		 Utilities.buscarMoradorByApartamento
+GET		/blocos									 Blocos.list
+
+
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
