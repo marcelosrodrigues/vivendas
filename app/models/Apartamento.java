@@ -154,6 +154,7 @@ public class Apartamento extends Model implements Serializable {
 			String historico) {
 		Lancamento conta = new Lancamento(dataLancamento, valor, historico,
 				this);
+		
 		this.lancamento.add(conta);
 	}
 
@@ -253,5 +254,19 @@ public class Apartamento extends Model implements Serializable {
     								   .createQuery("SELECT sum(area) from Apartamento")
     								   .getSingleResult();
     }
+
+	public boolean temLancamento(String historio, Date dataLancamento) {
+		
+		return this.lancamento.contains(new Lancamento(dataLancamento,null,historio,this));
+	}
+
+	public void extorna(String historio, Date dataLancamento) {
+		if( temLancamento(historio, dataLancamento) ) {
+			
+			this.lancamento.remove(new Lancamento(dataLancamento,null,historio,this));
+			
+		}
+		
+	}
 
 }

@@ -25,9 +25,9 @@ public class Apartamentos extends CRUD{
 		redirect("Moradores.index");
 	}
 
-	public static void show(long id) {
+	public static void show(long apartamento) {
 		
-		Apartamento object = Apartamento.findById(id);
+		Apartamento object = Apartamento.findById(apartamento);
 		render(object);
 		
 	}

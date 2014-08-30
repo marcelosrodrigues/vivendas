@@ -1,0 +1,14 @@
+#{selenium}
+
+	open('http://localhost:9000/')
+	type('username','marcelosrodrigues@globo.com')
+	type('password','2pk0#3ty?')
+	clickAndWait('signin')
+	
+	assertText('sair','Sair')
+
+	clickAndWait('sair')
+	
+	verifyText('css=div.alert.alert-dismissable.alert-success','Você saiu do sistema. Para retornar logue novamente.')
+	
+#{/selenium}

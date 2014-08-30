@@ -6,13 +6,12 @@ import models.Apartamento;
 import models.Bloco;
 import models.ExameMedico;
 import models.Morador;
-
-import org.apache.commons.lang.StringUtils;
-
 import play.data.binding.Binder;
 import play.mvc.Before;
 import play.mvc.Scope;
 import play.mvc.With;
+import utils.CommandFactory;
+import utils.Constante;
 
 @CRUD.For(ExameMedico.class)
 @With(Secure.class)
@@ -33,19 +32,11 @@ public class ExameMedicos extends CRUD {
 
 	@Before(only = {"list", "pesquisar"})
 	static void listBlocos() {
-		List<Bloco> blocos = Bloco.list();
-		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
-		templateBinding.data.put("blocos", blocos);
-
-		String id = params.get("apartamento");
-		String bloco_id = params.get("bloco");
-		if (!StringUtils.isBlank(id)) {
-			Apartamento apartamento = Apartamento.findById(Long.parseLong(id));
-			params.put("bloco", apartamento.bloco.id.toString());
-			templateBinding.data.put("apartamentos", Apartamento.listByBloco(apartamento.bloco));
-		} else if (!StringUtils.isBlank(bloco_id)) {
-			templateBinding.data.put("apartamentos", Apartamento.listByBloco((Bloco)Bloco.findById(Long.parseLong(bloco_id))));
-		}
+		final Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
+	    CommandFactory.getInstance()
+	                   .get(Constante.BLOCOS,params,templateBinding)
+	                   .execute();
+	    
 	}
 	
 	public static void list() {
@@ -55,55 +46,55 @@ public class ExameMedicos extends CRUD {
 		
 	}
 	
-	public static void pesquisar(Long bloco, Long apartamento) {
+	public static void pesquisar(Bloco bloco, Apartamento apartamento) {
 
 		String QUERY = "";
 		List<Morador> moradores = null;
-		if (bloco != null && bloco > 0L
-				&& (apartamento == null || apartamento == 0L)) {
+		if (bloco != null && bloco.id !=null && bloco.id > 0L
+				&& (apartamento == null || apartamento.id == null)) {
 			QUERY = " select m from Morador m "
 					+ " left join m.exameMedico e  "
 					+ " where (  exists ( select ee from Escritura ee  inner join ee.apartamento a inner join a.bloco b"
 					+ "  					where ee.proprietario = m  "
-					+ "					  and b.id = ? "
+					+ "					  and b = ? "
 					+ "   				  and ee.dataEntrada <= CURRENT_DATE() AND COALESCE(ee.dataSaida,CURRENT_DATE()) >= CURRENT_DATE() ) or  "
 					+ "  exists ( select cc from ContratoLocacao cc  inner join cc.apartamento a inner join a.bloco b "
 					+ "  		     where cc.inquilino = m  "
-					+ "			   and b.id = ? 		 "
+					+ "			   and b = ? 		 "
 					+ "  		   and cc.dataInicioContrato <= CURRENT_DATE() AND COALESCE(cc.dataTerminoContrato,CURRENT_DATE()) >= CURRENT_DATE()) or  "
 					+ "  exists ( select dd from Dependente dd inner join dd.morador mm "
 					+ "  where dd = m "
 					+ "    and (exists ( select ee from Escritura ee  inner join ee.apartamento a inner join a.bloco b"
 					+ "  					where ee.proprietario = mm  "
-					+ "					  and b.id = ? "
+					+ "					  and b = ? "
 					+ "   				  and ee.dataEntrada <= CURRENT_DATE() AND COALESCE(ee.dataSaida,CURRENT_DATE()) >= CURRENT_DATE() ) or  "
 					+ "  exists ( select cc from ContratoLocacao cc  inner join cc.apartamento a inner join a.bloco b "
 					+ "  		     where cc.inquilino = mm  "
-					+ "			   and b.id = ? 		 "
+					+ "			   and b = ? 		 "
 					+ "  		   and cc.dataInicioContrato <= CURRENT_DATE() AND COALESCE(cc.dataTerminoContrato,CURRENT_DATE()) >= CURRENT_DATE()))"
 					+ ") )		  "
 					+ "  order by m.nomeCompleto asc ";
 			moradores = Morador.find(QUERY, bloco, bloco, bloco, bloco).fetch();
-		} else if (apartamento != null && apartamento > 0L) {
+		} else if (apartamento != null && apartamento.id != null && apartamento.id > 0L) {
 			QUERY = " select m from Morador m "
 					+ " left join m.exameMedico e  "
 					+ " where (  exists ( select ee from Escritura ee  inner join ee.apartamento a "
 					+ "  					where ee.proprietario = m  "
-					+ "					  and a.id = ? "
+					+ "					  and a = ? "
 					+ "   				  and ee.dataEntrada <= CURRENT_DATE() AND COALESCE(ee.dataSaida,CURRENT_DATE()) >= CURRENT_DATE() ) or  "
 					+ "  exists ( select cc from ContratoLocacao cc  inner join cc.apartamento a "
 					+ "  		     where cc.inquilino = m  "
-					+ "			   and a.id = ? 		 "
+					+ "			   and a = ? 		 "
 					+ "  		   and cc.dataInicioContrato <= CURRENT_DATE() AND COALESCE(cc.dataTerminoContrato,CURRENT_DATE()) >= CURRENT_DATE()) or  "
 					+ "  exists ( select dd from Dependente dd inner join dd.morador mm "
 					+ "  where dd = m "
 					+ "    and (exists ( select ee from Escritura ee  inner join ee.apartamento a"
 					+ "  					where ee.proprietario = mm  "
-					+ "					  and a.id = ? "
+					+ "					  and a = ? "
 					+ "   				  and ee.dataEntrada <= CURRENT_DATE() AND COALESCE(ee.dataSaida,CURRENT_DATE()) >= CURRENT_DATE() ) or  "
 					+ "  exists ( select cc from ContratoLocacao cc  inner join cc.apartamento a "
 					+ "  		     where cc.inquilino = mm  "
-					+ "			       and a.id = ? 		 "
+					+ "			       and a = ? 		 "
 					+ "  		       and cc.dataInicioContrato <= CURRENT_DATE() AND COALESCE(cc.dataTerminoContrato,CURRENT_DATE()) >= CURRENT_DATE()))"
 					+ ") )		  " + "  order by m.nomeCompleto asc ";
 

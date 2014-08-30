@@ -14,6 +14,7 @@ import utils.Constante;
 import utils.validators.ValidatorFactory;
 import utils.validators.dto.EmailIsValid;
 import utils.validators.dto.Error;
+import utils.validators.dto.ExistsByEmailValid;
 
 
 public class Application extends Controller {
@@ -56,8 +57,9 @@ public class Application extends Controller {
     	ValidatorFactory validations = ValidatorFactory.getInstance();
     	
     	validations.validate(bloco)
-    					.and(apartamento)
-    					.and(new EmailIsValid("object.email", object.email));
+				   .and(apartamento)
+				   .and(new EmailIsValid("object.email", object.email))
+				   .and(new ExistsByEmailValid("object.email", object));
         	
     	if( validations.hasErrors() ){
     		for( Error error : validations ){

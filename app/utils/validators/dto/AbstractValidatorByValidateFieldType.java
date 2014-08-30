@@ -1,7 +1,7 @@
 package utils.validators.dto;
 
 
-abstract class AbstractValidatorByValidateFieldType implements ValidateField {
+public abstract class AbstractValidatorByValidateFieldType implements ValidateField {
 	
 	private final Object value;
 	private final String field;

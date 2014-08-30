@@ -1,0 +1,26 @@
+#{selenium}
+
+	open('http://localhost:9000/')
+	type('username','marcelosrodrigues@globo.com')
+	type('password','2pk0#3ty?')
+	clickAndWait('signin')
+	
+	open('http://localhost:9000/morador/177')
+	
+	assertValue('cpf','347.595.657-87')
+    assertValue('nomeCompleto','CARLOS ALBERTO GOMES')
+    assertValue('identidade','260.036')
+    assertValue('orgaoEmissor','M.M.')
+    assertValue('dataEmissao','22-03-2000')
+    assertValue('telefoneResidencial','2581-0459')
+    click('dataNascimento')
+    click('link=17')
+    type('email','marcelosrodrigues@hotmail.com')
+    
+    
+    clickAndWait('_save')
+    
+    
+    clickAndWait('sair')
+
+#{/selenium}

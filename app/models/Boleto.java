@@ -75,15 +75,19 @@ public class Boleto extends Model implements Serializable {
 	
 	@PrePersist
 	public void preInsert() {
-		this.dataCriacao = DateTime.now().toDate();
-		this.dataAlteracao = DateTime.now().toDate();
-		this.criadoPor = LoginController.getUserAuthenticated();
-		this.alteradoPor = LoginController.getUserAuthenticated();
-		this.calcular();
+		
+		final Date dataCriacao = DateTime.now().toDate();
+		final Usuario criadoPor = LoginController.getUserAuthenticated();
+		
+		this.dataCriacao = dataCriacao;
+		this.dataAlteracao = dataCriacao;
+		this.criadoPor = criadoPor;
+		this.alteradoPor = criadoPor;
 	}
 
 	@PreUpdate
 	public void preUpdate() {
+		
 		this.dataAlteracao = DateTime.now().toDate();
 		this.alteradoPor = LoginController.getUserAuthenticated();
 	}
@@ -184,7 +188,9 @@ public class Boleto extends Model implements Serializable {
 							 "   and dataCancelamento is null " +
 							 "   and datediff( current_date , dataVencimento ) > 30 " +
 							 " group by a.numero , bl.bloco  " +
-							 " having sum(valor) > 0 ";	
+							 " having sum(valor) > 0 " +
+							 " order by bl.bloco , a.numero ";	
+		
 		
 		return em().createNativeQuery(QUERY).getResultList();
 	}
@@ -192,25 +198,25 @@ public class Boleto extends Model implements Serializable {
 	public static ResultList<Boleto> findBy(final Date dataVencimento , final Bloco bloco , final Apartamento apartamento) {
 		
 		Session session = (Session) Boleto.em().getDelegate();
-		Criteria criteria = session.createCriteria(Boleto.class)
-								   .createCriteria("apartamento", "a", Criteria.INNER_JOIN)
-								   .createCriteria("a.bloco", "b", Criteria.INNER_JOIN)
-								   .addOrder(Order.asc("b.bloco"))
+		Criteria criteria = session.createCriteria(Boleto.class,"b")
+								   .createCriteria("b.apartamento", "a", Criteria.INNER_JOIN)
+								   .createCriteria("a.bloco", "bl", Criteria.INNER_JOIN)
+								   .addOrder(Order.asc("bl.bloco"))
 								   .addOrder(Order.asc("a.numero"))
-								   .addOrder(Order.asc("dataVencimento"))
-								   .addOrder(Order.asc("dataPagamento"))
-								   .addOrder(Order.asc("dataCancelamento"));
+								   .addOrder(Order.asc("b.dataVencimento"))
+								   .addOrder(Order.asc("b.dataPagamento"))
+								   .addOrder(Order.asc("b.dataCancelamento"));
 								   
 		if( dataVencimento != null ) {
-			criteria = criteria.add(Restrictions.eq("dataVencimento", dataVencimento));
+			criteria = criteria.add(Restrictions.eq("b.dataVencimento", dataVencimento));
 		}
 		
-		if( bloco != null ) {
+		if( bloco != null && bloco.id != null && bloco.id > 0L) {
 			criteria = criteria.add(Restrictions.eq("a.bloco", bloco));
 		}
 		
-		if( apartamento != null ) {
-			criteria = criteria.add(Restrictions.eq("apartamento", apartamento));
+		if( apartamento != null && apartamento.id != null && apartamento.id > 0L ) {
+			criteria = criteria.add(Restrictions.eq("b.apartamento", apartamento));
 		}
 		
 		return new BoletoResultList(criteria);

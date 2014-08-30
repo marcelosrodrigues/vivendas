@@ -138,7 +138,7 @@ public class Morador extends Usuario {
 		if( obj instanceof Morador ){
 			
 			Morador morador = (Morador)obj;
-			return ( morador.cpf !=null && morador.cpf.equalsIgnoreCase(this.cpf));
+			return ( morador.id.equals(this.id) );
 		}
 		return false;
 	}
@@ -199,6 +199,16 @@ public class Morador extends Usuario {
 
 	public boolean isDependente() {
 		return false;
+	}
+	
+	public boolean isSindico() {
+		Conselho conselho = Conselho.vigente();
+		return conselho != null && this.equals(conselho.sindico);
+	}
+	
+	public boolean isSubSindico() {
+		Conselho conselho = Conselho.vigente();
+		return conselho != null && this.equals(conselho.subsindico);
 	}
 
 	public static Morador getByCPF(final String cpf) {

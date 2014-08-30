@@ -36,7 +36,7 @@
 			<div class="col-lg-3">${boleto.dataVencimento.format("dd-MM-yyyy")}</div>
 		</div>
 
-        #{edittext fieldid:"dataPagamento", fieldname:"dataPagamento", label:"Número",value:params.dataPagamento?.format('dd-MM-yyyy') /}
+        #{edittext fieldid:"dataPagamento", fieldname:"object.dataPagamento", label:"Número",value:params.dataPagamento?.format('dd-MM-yyyy') /}
 
 		<div class="form-group">
 			<div class="col-lg-offset-2 col-lg-10">

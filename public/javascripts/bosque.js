@@ -13,6 +13,11 @@ $('#telefoneResidencial').mask("9999-9999");
 $('#telefoneComercial').mask("9999-9999");
 
 $("#despesa").maskMoney({decimal:",",thousands:"."});
+$("#agua").maskMoney({decimal:",",thousands:"."});
+$("#cotaextra").maskMoney({decimal:",",thousands:"."});
+$("#taxa").maskMoney({decimal:",",thousands:"."});
+
+
 $("#valor").maskMoney({decimal:",",thousands:".",allowNegative: true});
 
 
@@ -106,7 +111,7 @@ $('td[id="morador"]').click(function(e) {
 	var offset = $(this).offset();
 	$("div[id='morador']").offset({top: offset.top - 15, left: offset.left - 15});
 	
-	$.getJSON('/morador/' + $(this).attr("cpf"), 
+	$.getJSON('/' + $(this).attr("cpf"), 
 			  function(data) {
 					$("#nomeCompleto").html(data.nomeCompleto);
 					$("#cpf").html(data.cpf);
@@ -117,7 +122,7 @@ $('td[id="morador"]').click(function(e) {
 					$("#email").html(data.email);
 					$("#telefoneResidencial").html(data.telefoneResidencial);
 					$("#telefoneComercial").html(data.telefoneComercial);
-					$("div[id='morador'] > a[id='edit']").attr("href","/moradores/show?id=" + data.id);
+					$("div[id='morador'] > a[id='edit']").attr("href","/morador/" + data.id);
 					$("div[id='morador'] > a[id='dependente']").attr("href","/dependentes/search?morador=" + data.id);
 					$("div[id='morador']").show();
 					$("div[id='apartamento']").hide();
@@ -127,7 +132,7 @@ $('td[id="morador"]').click(function(e) {
 	});
 
 $('#cpf').blur(function() {
-	$.getJSON('/morador/' + this.value , 
+	$.getJSON('/' + this.value , 
 			  function(data) {
 					$("#id").val(data.id);
 					$("#nomeCompleto").val(data.nomeCompleto);
@@ -240,7 +245,7 @@ $('select#bloco').change(function() {
 });
 
 $('select#apartamento').change(function() {							
-	$.getJSON('/apartamentos/' + this.value + '/morador', 
+	$.getJSON('/apartamento/' + this.value + '/morador', 
 			 function(data) {
 					$("#id").val(data.id);
 					$("#nomeCompleto").val(data.nomeCompleto);
@@ -263,13 +268,13 @@ $("#cancelar").click(function() {
 	}
 });
 
-$('input[id="morador_type"]').click(function() {
-	if(this.value == 'M') {
+$('input[id="tipo"]').click(function() {
+	if(this.value == 'INQUILINO') {
 		$('label[for="dataEntradaImovel"]').text("Data do inicio do contrato");
 		$('label[for="dataSaidaImovel"]').text("Data do termino do contrato");
 		$('label[for="escritura"]').text("Contrato de Locação");
 	}
-	if(this.value == 'P') {
+	if(this.value == 'PROPRIETARIO') {
 		$('label[for="dataEntradaImovel"]').text("Data de Entrada");
 		$('label[for="dataSaidaImovel"]').text("Data de Saída");
 		$('label[for="escritura"]').text("Escritura");

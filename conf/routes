@@ -10,7 +10,7 @@
  POST	 /morador/meusdados						 Usuarios.salvar
 
  GET	 /morador/meusdependentes				 Usuarios.dependentes
- GET	 /morador/depedente/adicionar			 Usuarios.dependente
+ GET	 /morador/dependente/adicionar			 Usuarios.dependente
  GET	 /morador/meusboletos					 Usuarios.boletos
  GET	 /morador/meusimoveis					 Usuarios.meusImoveis
 
@@ -19,12 +19,18 @@
  
  GET	 /moradores								 Moradores.index
  POST	 /moradores								 Moradores.pesquisar
-
+ 
+ 
+# Administrativo
+GET		/morador/{id}				 	 		 Moradores.show
+POST	/morador/{id}							 Moradores.save({id})
+GET		/apartamento/{id}/documentacao 			 Moradores.abrir({id})
+GET		/apartamento/morador/novo				 Moradores.novo
 
 # Javascripts
 GET		/bloco/{bloco}/apartamentos				 Utilities.listByBloco
-GET		/morador/{cpf}							 Utilities.buscarMoradorByCPF
-GET		/apartamentos/{apartamento}/morador		 Utilities.buscarMoradorByApartamento
+GET		/{cpf}							 		 Utilities.buscarMoradorByCPF({cpf})
+GET		/apartamento/{apartamento}/morador		 Utilities.buscarMoradorByApartamento
 GET		/blocos									 Blocos.list
 
 

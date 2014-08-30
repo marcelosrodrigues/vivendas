@@ -1,0 +1,10 @@
+#{selenium}
+
+	open('http://localhost:9000/')
+	type('username','marcelosrodrigues@globo.com')
+	type('password','123456')
+	clickAndWait('signin')
+	
+	verifyText('css=div.alert.alert-dismissable.alert-danger','Ocorreu um erro no processamento Não foi possível autenticar o usuário. Entre em contato com a Administração')
+	
+#{/selenium}

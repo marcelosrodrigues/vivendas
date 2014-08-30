@@ -11,24 +11,28 @@ import models.Bloco;
 import models.Documentacao;
 import models.Escritura;
 import models.Morador;
-import models.Usuario;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 
 import play.data.binding.As;
+import play.data.binding.Binder;
 import play.data.validation.Required;
 import play.mvc.Before;
 import play.mvc.Scope;
 import play.mvc.With;
 import utils.CommandFactory;
 import utils.Constante;
+import utils.validators.ValidatorFactory;
+import utils.validators.dto.EmailIsValid;
+import utils.validators.dto.Error;
+import utils.validators.dto.ExistsByCPFValid;
+import utils.validators.dto.ExistsByEmailValid;
+import utils.validators.dto.NotBlankValid;
 import dto.ResultList;
 import enumarations.MoradorType;
 import exceptions.DuplicateRegisterException;
 import factory.DocumentacaoFactory;
 import flexjson.JSONSerializer;
-import flexjson.transformer.DateTransformer;
 
 @CRUD.For(Morador.class)
 @With(Secure.class)
@@ -42,8 +46,6 @@ public class Moradores extends CRUD {
                       .get(Constante.BLOCOS,params,templateBinding)
                       .execute();
 
-
-
     }
 
 	public static void index() {
@@ -52,6 +54,10 @@ public class Moradores extends CRUD {
 		Long count = result.getCount();
         Long page = 1L;
 		render(moradores, count, page);
+	}
+	
+	public static void list() {
+		index();
 	}
 	
 	public static void getJSON(Long bloco, Long apartamento, String morador,
@@ -79,87 +85,37 @@ public class Moradores extends CRUD {
 		
 	}
 	
-	@Before(only={"submit"})
-	static void validate_new_morador() throws Exception {
+	@Before(only={"submit","save"})
+	static void validate() throws Exception {		
 		
+		Morador object = new Morador();
+		Binder.bindBean(params.getRootParamNode(),"object", object);
+
+		ValidatorFactory validations = ValidatorFactory.getInstance();
+    	
+    	validations.validate(new EmailIsValid("object.email", object.email))
+				   .and(new ExistsByEmailValid("object.email", object))
+				   .and(new NotBlankValid("object.cpf", object.cpf))
+				   .and(new ExistsByCPFValid("object.cpf", object));		
 		
-		Morador object = null;
-		
-		if( !StringUtils.isBlank(params.get("id"))) {
-			object = Morador.findById(Long.parseLong(params.get("id")));
-		}
-		
-		if(StringUtils.isBlank(params.get("cpf"))) {
-			params.remove("cpf");
-		} else {
-			if( Morador.exists(params.get("cpf")) ) {			
-				
-				if( object == null || !object.cpf.equals(params.get("cpf")) ){
-					validation.addError("cpf", "CPF já em uso");
-					renderArgs
-							.put("error",
-									"Não foi possível salvar o Morador pois o CPF informado já esta cadastrado no sistema");
-					render("Moradores/novo.html",object);
-				}
-				
-				
-			}
-		}
-		
-		if( !StringUtils.isBlank(params.get("email")) && Usuario.exists(params.get("email")) ) {
-			
-			if( object == null || !object.email.equals(params.get("email")) ){
-				validation.addError("email", "E-mail já em uso");
-				renderArgs
-						.put("error",
-								"Não foi possível salvar o Morador pois o E-mail informado já esta cadastrado no sistema");
-				render("Moradores/novo.html",object);
-			}
-			
-		}
-		
+    	if( validations.hasErrors()){
+    		
+    		for( Error error : validations ){
+    			validation.addError(error.getKey(), error.getMessage());
+    		}
+    		
+    		renderArgs.put("error",	"Não foi possível salvar o Morador. Verifique os erros abaixo");
+    		
+    		if( request.actionMethod.equals("submit")) {
+    			render("Moradores/novo.html",object);
+    		} else {
+    			render("Moradores/show.html",object);
+    		}
+    		
+    	}
+    	
 	}
 	
-	@Before(only={"save"})
-	static void validate() throws Exception {
-		
-		
-		Morador object = null;
-		
-		if( !StringUtils.isBlank(params.get("id"))) {
-			object = Morador.findById(Long.parseLong(params.get("id")));
-		}
-		
-		if(StringUtils.isBlank(params.get("object.cpf"))) {
-			params.remove("object.cpf");
-		} else {
-			if( Morador.exists(params.get("cpf")) ) {
-				
-				if(object == null || !object.cpf.equals(params.get("object.cpf")) ){
-					validation.addError("object.cpf", "CPF já em uso");
-					renderArgs
-							.put("error",
-									"Não foi possível salvar o Morador pois o CPF informado já esta cadastrado no sistema");
-					render("Moradores/show.html",object);
-				}
-				
-				
-			}
-		}
-		
-		if( !StringUtils.isBlank(params.get("object.email")) && Usuario.exists(params.get("email")) ) {
-			
-			if(object == null || !object.email.equals(params.get("object.email"))) {
-				validation.addError("object.email", "E-mail já em uso");
-				renderArgs
-						.put("error",
-								"Não foi possível salvar o Morador pois o E-mail informado já esta cadastrado no sistema");
-				render("Moradores/show.html",object);
-			}
-			
-		}
-		
-	}
 	
 	public static void abrir(Long id) {
 		
@@ -195,34 +151,13 @@ public class Moradores extends CRUD {
 		apartamento.bloco = new Bloco();
 		render("Moradores/novo.html", object , apartamento);
 	}
-	
-	public static void buscar( String cpf ) {
-		
-		if( !StringUtils.isBlank(cpf) ) {
-			
-			Morador morador = Morador.find("cpf = ?", cpf).first();
-			JSONSerializer json = new JSONSerializer();
-			
-			renderJSON(json.include("id","cpf",
-			"nomeCompleto",
-			"dataNascimento","identidade","orgaoEmissor", "dataEmissao",
-			"email", "telefoneResidencial","telefoneComercial")
-				.exclude("*")
-				.transform(new DateTransformer("dd-MM-yyyy"), "dataNascimento")
-				.transform(new DateTransformer("dd-MM-yyyy"), "dataEmissao")
-				.serialize(morador));
-		
-			
-		}
-		
-	}
 
-	public static void submit(final Morador morador, final Apartamento apartamento,
+	public static void submit(final Morador object, final Apartamento apartamento,
 			MoradorType tipo ,
 			@Required @As(format = "dd-MM-yyyy") Date dataEntradaImovel,
 			@As(format = "dd-MM-yyyy") Date dataSaidaImovel, File escritura) throws FileNotFoundException {
 						
-		Documentacao documentacao = DocumentacaoFactory.getDocumento(tipo, morador, apartamento, dataEntradaImovel);
+		Documentacao documentacao = DocumentacaoFactory.getDocumento(tipo, object, apartamento, dataEntradaImovel);
 		documentacao.setDataSaidaImovel(dataSaidaImovel);
 		documentacao.add(escritura);
 		

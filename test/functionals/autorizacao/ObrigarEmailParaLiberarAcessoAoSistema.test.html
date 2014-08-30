@@ -1,0 +1,18 @@
+#{selenium}
+    
+    open('http://localhost:9000/liberar')
+    select('bloco','A')
+    pause(1000)
+    select('apartamento','101')
+    pause(1000)
+    
+    
+    assertValue('cpf','347.595.657-87')
+    assertValue('nomeCompleto','CARLOS ALBERTO GOMES')
+    type('email','mauro@hemacon.com.br')
+    
+    clickAndWait('css=input.btn.btn-primary')
+    
+    assertText('css=div.alert.alert-dismissable.alert-danger','Ocorreu um erro no processamento Não foi possível gerar uma senha. Verifique os campos informados e tente novamente. Em caso de dúvida, entre em contato com a Administração')
+    
+#{/selenium}

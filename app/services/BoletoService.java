@@ -10,13 +10,13 @@ import java.util.List;
 import models.Apartamento;
 import models.Boleto;
 import models.ConfiguracaoBoleto;
-import models.Conselho;
 import models.Lancamento;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import play.db.jpa.Transactional;
+import utils.Constante;
 import br.com.caelum.stella.boleto.Banco;
 import br.com.caelum.stella.boleto.Datas;
 import br.com.caelum.stella.boleto.Emissor;
@@ -39,7 +39,7 @@ public class BoletoService {
 							dataVencimento, apartamento));
 
 			DateTime vencimento = new DateTime(dataVencimento.getTime());
-			Collection<Lancamento> lancamentos = Lancamento.find("apartamento = ? and MONTH(L.dataLancamento) = ?", apartamento , vencimento.minusMonths(1).getMonthOfYear() ).fetch(); 
+			Collection<Lancamento> lancamentos = Lancamento.findLancamentoPorData(vencimento.minusMonths(1), apartamento); 
 
 			Boleto boleto = new Boleto(apartamento, dataVencimento);
 			for (Lancamento lancamento : lancamentos) {
@@ -75,9 +75,8 @@ public class BoletoService {
 			LOGGER.info(String.format(
 					"Inicio da geração dos boletos com vencimento para %tD",
 					dataVencimento));
-			
 
-			Collection<Lancamento> lancamentos = Lancamento.find("MONTH(dataLancamento) = ? ORDER BY apartamento.bloco.bloco , apartamento.numero",  vencimento.minusMonths(1).getMonthOfYear() ).fetch();
+			Collection<Lancamento> lancamentos = Lancamento.findLancamentoPorData(vencimento.minusMonths(1));
 
 			Apartamento apartamento = null;
 			Boleto boleto = null;
@@ -133,30 +132,47 @@ public class BoletoService {
 	}
 
 	public void calcularCondominio(Date vencimento, BigDecimal areaTotal,
-			BigDecimal valor) {
+			BigDecimal valor, BigDecimal agua, BigDecimal cotaextra, BigDecimal taxa) {
 		BigDecimal condominio = valor.divide(areaTotal, RoundingMode.HALF_UP);
 		BigDecimal fundoReserva = condominio.multiply(new BigDecimal(0.10));
-		Conselho conselho = Conselho.vigente();
-
+		BigDecimal contaagua = agua.divide(areaTotal , RoundingMode.HALF_UP);
+		
 		List<Apartamento> apartamentos = Apartamento.list();
 
 		for (Apartamento apartamento : apartamentos) {
 
-			if (!apartamento.getMorador().equals(conselho.sindico)) {
-				if (!apartamento.getMorador().equals(conselho.subsindico)) {
+			apartamento.extorna(Constante.LANCAMENTO_CONDOMINIO,vencimento);
+			apartamento.extorna(Constante.LANCAMENTO_FUNDO_REVERSA,vencimento);
+			
+			apartamento.extorna(Constante.COTA_EXTRA,vencimento);
+			apartamento.extorna(Constante.AGUA,vencimento);
+			apartamento.extorna(Constante.TAXA_BANCARIA,vencimento);
+			
+			apartamento.fazerLancamento(vencimento, taxa, Constante.TAXA_BANCARIA);
+			apartamento.fazerLancamento(vencimento, contaagua.multiply(apartamento.area), Constante.AGUA);
+			
+			if( cotaextra != null && !cotaextra.equals(BigDecimal.ZERO) ){
+				apartamento.fazerLancamento(vencimento, cotaextra, Constante.COTA_EXTRA);
+			}
+			
+			
+			
+			if (!apartamento.getMorador().isSindico()) {
+				if (!apartamento.getMorador().isSubSindico()) {
+										
 					apartamento
 							.fazerLancamento(vencimento,
 									condominio.multiply(apartamento.area),
-									"CONDOMÍNIO");
+									Constante.LANCAMENTO_CONDOMINIO);
 				} else {
 					apartamento.fazerLancamento(vencimento,
 							condominio.divide(new BigDecimal(2)).multiply(
-									apartamento.area), "CONDOMÍNIO");
+									apartamento.area), Constante.LANCAMENTO_CONDOMINIO);
 				}
 			}
-			apartamento.fazerLancamento(vencimento, fundoReserva,
-					"FUNDO DE RESERVA");
-
+			apartamento.fazerLancamento(vencimento, fundoReserva.multiply(apartamento.area),
+					Constante.LANCAMENTO_FUNDO_REVERSA);
+			apartamento.save();
 		}
 	}
 

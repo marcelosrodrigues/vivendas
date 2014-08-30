@@ -44,8 +44,8 @@
 		<tr>
 			<td>${apartamento.bloco.bloco}</td>
 			<td id="apartamento" apartamento="${apartamento.id}">${apartamento.numero}</td>
-			<td id="morador" #{secure.check "ADMINISTRACAO"}cpf="${apartamento.getMorador().cpf}" #{/secure.check}>${apartamento.getMorador().nomeCompleto}</td>
-			<td id="morador" #{secure.check "ADMINISTRACAO"}cpf="${apartamento.getProprietario().cpf}" #{/secure.check}>${apartamento.getProprietario().nomeCompleto}</td>
+			<td id="morador" #{secure.check "ADMINISTRACAO"} cpf="${apartamento.getMorador().cpf}" #{/secure.check}>${apartamento.getMorador().nomeCompleto}</td>
+			<td id="morador" #{secure.check "ADMINISTRACAO"} cpf="${apartamento.getProprietario().cpf}" #{/secure.check}>${apartamento.getProprietario().nomeCompleto}</td>
 			<td><a id="open" href="@{Moradores.abrir(apartamento.id)}" class="btn btn-success btn-sm">Editar</a></td>	
 	#{/list}
 #{/else}

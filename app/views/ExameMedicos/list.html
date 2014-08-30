@@ -8,41 +8,11 @@
 				<a href="@{Moradores.index()}" class="btn btn-link">Voltar</a>				
 			</div>		
 		</legend>
-			<div class="form-group">
-				<label for="bloco" class="col-lg-2 control-label">Bloco</label>
-				<div class="col-lg-3">
-					#{field 'bloco' }
-					<select id="bloco" name="bloco" class="${field.errorClass} input-lg form-control">
-						<option value="" />
-						#{list items:blocos, as:'bloco'}
-							#{if bloco.id.toString() == params.bloco.toString()}
-								<option value="${bloco.id}" selected="selected">${bloco.bloco}</option>
-							#{/if}
-							#{else}
-								<option value="${bloco.id}">${bloco.bloco}</option>
-							#{/else}
-						#{/list}
-					</select>
-					#{/field}
-				</div>
-			</div>
-			
-			<div class="form-group">				
-				<label for="apartamento" class="col-lg-2 control-label">Apartamento</label>
-				<div class="col-lg-3">
-						<select id="apartamento" name="apartamento" class="input-lg form-control">
-							<option value="" />
-							#{list items:apartamentos, as:'apartamento'}
-								#{if apartamento.id.toString() == params.apartamento.toString() }
-									<option value="${apartamento.id}" selected="selected">${apartamento.numero}</option>
-								#{/if}
-								#{else}
-									<option value="${apartamento.id}">${apartamento.numero}</option>
-								#{/else}
-							#{/list}
-						</select>
-				</div>
-			</div>
+		
+		#{select fieldname:'bloco', target:'bloco.id', list:blocos, label:"Bloco", value: bloco?.id, labelfield: 'bloco' /}
+
+        #{select fieldname:'apartamento', target:'apartamento.id', list:apartamentos, label:"Apartamento", value: apartamento?.id, labelfield: 'numero' /}
+
 			
 		<div class="form-group">
 			<div class="col-lg-offset-2 col-lg-10">
@@ -78,7 +48,7 @@
 				<td id="morador" cpf="${morador.cpf}">${morador.nomeCompleto}</td>
 			#{/else}			
 			<td id="exame" exame="${morador.exameMedico?.id}">${morador.exameMedico?.dataExame?.format("dd-MM-yyyy")}</td>						
-			<td>
+			<td align="right">
 				<a href="@{ExameMedicos.novo(morador.id)}" class="btn btn-success btn-sm">Novo</a>
 			</td>	
 	#{/list}

@@ -9,16 +9,14 @@
 			</div>		
 		</legend>
 
-		<div class="form-group">
-			<label for="despesa" class="col-lg-3 control-label">Despesa</label>
-			<div class="col-lg-3">
-					<input type="text" name="despesa" id="despesa" value="" class="input-lg form-control #{ifError 'despesa'}hasError#{/ifError}"  />
-					#{ifError 'despesa'}
-	        			 <span class="error">#{error 'despesa'/}</span>
-	    			#{/ifError}
-			</div>
-		</div>
-
+		 #{edittext fieldid:"despesa", fieldname:"despesa", value:'' /}
+		 
+		 #{edittext fieldid:"agua", fieldname:"agua", value:'' /}
+		 
+		 #{edittext fieldid:"cotaextra", fieldname:"cotaextra", value:'' /}
+		 
+		 #{edittext fieldid:"taxa", fieldname:"taxa", value:'' /}
+		 
 		<div class="form-group">
 			<label for="areaTotal" class="col-lg-3 control-label">Area Total</label>
 			<div class="col-lg-3">

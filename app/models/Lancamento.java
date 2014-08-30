@@ -3,13 +3,12 @@ package models;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
@@ -17,17 +16,13 @@ import javax.persistence.TemporalType;
 
 import org.joda.time.DateTime;
 
-import controllers.LoginController;
-
 import play.data.binding.As;
 import play.data.validation.Required;
 import play.db.jpa.Model;
+import controllers.LoginController;
 
 @Entity
-@NamedQueries({
-	@NamedQuery(name="Lancamento.FindLancamentoByApartamentoAndMonth",query="SELECT L FROM Lancamento L join L.apartamento WHERE L.apartamento = :apartamento AND MONTH(L.dataLancamento) = :mes"),
-	@NamedQuery(name="Lancamento.FindLancamentoByMonth",query="SELECT L FROM Lancamento L join L.apartamento WHERE MONTH(L.dataLancamento) = :mes")
-})
+@org.hibernate.annotations.Entity(dynamicUpdate=true)
 public class Lancamento extends Model implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -67,14 +62,19 @@ public class Lancamento extends Model implements Serializable{
 	
 	@PrePersist
 	public void preInsert() {
-		this.dataCriacao = DateTime.now().toDate();
-		this.dataAlteracao = DateTime.now().toDate();
-		this.criadoPor = LoginController.getUserAuthenticated();
-		this.alteradoPor = LoginController.getUserAuthenticated();
+		
+		final Date dataCriacao = DateTime.now().toDate();
+		final Usuario criadoPor = LoginController.getUserAuthenticated();
+		
+		this.dataCriacao = dataCriacao;
+		this.dataAlteracao = dataCriacao;
+		this.criadoPor = criadoPor;
+		this.alteradoPor = criadoPor;
 	}
 
 	@PreUpdate
 	public void preUpdate() {
+		
 		this.dataAlteracao = DateTime.now().toDate();
 		this.alteradoPor = LoginController.getUserAuthenticated();
 	}
@@ -93,6 +93,32 @@ public class Lancamento extends Model implements Serializable{
 
 	public BigDecimal getValor() {
 		return this.valor;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		
+		if( other instanceof Lancamento ){
+			
+			Lancamento lancamento = (Lancamento) other;
+			DateTime dataLancamento = new DateTime(this.dataLancamento.getTime());
+			DateTime dataNovoLancamento = new DateTime(lancamento.dataLancamento.getTime());
+			
+			return lancamento.historico.equalsIgnoreCase(this.historico) && 
+				   dataLancamento.getMonthOfYear() == dataNovoLancamento.getMonthOfYear() && 
+				   dataLancamento.getYear() == dataNovoLancamento.getYear() &&
+				   lancamento.apartamento.equals(this.apartamento);
+			
+		}
+		return false;
+	}
+		
+	public static List<Lancamento> findLancamentoPorData(DateTime dataLancamento) {	
+		return Lancamento.find("SELECT L from Lancamento L inner join fetch L.apartamento A inner join fetch a.bloco B left join A.escritura left join A.contratoLocacao WHERE MONTH(dataLancamento) = ? AND YEAR(dataLancamento) = ? ORDER BY B.bloco , A.numero",  dataLancamento.getMonthOfYear(), dataLancamento.getYear() ).fetch();		
+	}
+	
+	public static List<Lancamento> findLancamentoPorData(DateTime dataLancamento, Apartamento apartamento) {		
+		return Lancamento.find("MONTH(dataLancamento) = ? AND YEAR(dataLancamento) = ? AND apartamento = ?",  dataLancamento.getMonthOfYear(), dataLancamento.getYear(), apartamento ).fetch();		
 	}
 
 }

@@ -140,11 +140,21 @@ public class Usuario extends Model implements Serializable {
 	}
 	
 	public static Usuario getByEmail(final String email) {
-		return Usuario.find("email = ?", email).first();
+		return Usuario.find("SELECT u FROM Usuario u where u.email = ?", email).first();
 	}
 	
 	public static boolean exists(final String email) {
 		return Usuario.count("email = ?" , email) > 0;
+	}
+	
+	@Override
+	public boolean equals(final Object other) {
+		if( other instanceof Usuario ){
+			Usuario usuario = (Usuario) other;
+			return ((Usuario) other).id == usuario.id;
+		} else {
+			return false;
+		}
 	}
 		
 }

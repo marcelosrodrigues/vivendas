@@ -29,6 +29,7 @@ dataemissao=Data de Emissão
 telefoneComercial=Telefone Comercial
 telefoneResidencial=Telefone Residencial
 dataEntradaImovel=Data de Entrada
+dataSaidaImovel=Data de Saída
 dataVencimento=Data de Vencimento
 
 object.area=Área
@@ -45,6 +46,13 @@ object.apartamento=Apartamento
 object.valor=Valor
 object.historico=Histórico
 object.dataLancamento=Data de Lançamento
+object.dataPagamento=Data do Pagamento
+
+
+despesa=Receita Atual
+agua=Taxa de Agua
+cotaextra=Cota Extra
+taxa=Taxa Bancária
 
 secure.username=E-mail
 secure.password=Senha

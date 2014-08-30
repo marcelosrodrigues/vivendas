@@ -4,17 +4,15 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import models.Apartamento;
-import models.Bloco;
 import models.Boleto;
 import models.Lancamento;
-
-import org.apache.commons.lang.StringUtils;
-
 import play.data.binding.Binder;
 import play.exceptions.TemplateNotFoundException;
 import play.mvc.Before;
 import play.mvc.Scope;
 import play.mvc.With;
+import utils.CommandFactory;
+import utils.Constante;
 
 @CRUD.For(Lancamento.class)
 @With(Secure.class)
@@ -22,19 +20,10 @@ public class Lancamentos extends CRUD {
 
 	@Before(unless="novo")
     static void listBlocos() {
-		List<Bloco> blocos = Bloco.find("order by bloco").fetch();
-		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
-        templateBinding.data.put("blocos", blocos);
-        
-        String id = params.get("object.apartamento.id");
-        String bloco_id = params.get("bloco");
-        if( !StringUtils.isBlank(id) ) {
-        	Apartamento apartamento = Apartamento.findById(Long.parseLong(id));
-        	params.put("bloco", apartamento.bloco.id.toString());
-        	templateBinding.data.put("apartamentos", Apartamento.find(" bloco = ? order by numero ", apartamento.bloco).fetch());
-        } else if( !StringUtils.isBlank(bloco_id) ) {
-        	templateBinding.data.put("apartamentos", Apartamento.find(" bloco.id = ? order by numero ", Long.parseLong(bloco_id) ).fetch());
-        }
+		 final Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
+	        CommandFactory.getInstance()
+	                      .get(Constante.BLOCOS,params,templateBinding)
+	                      .execute();
     }
 	
 	@Check("FINANCEIRO")

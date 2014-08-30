@@ -68,7 +68,7 @@ public class Boletos extends Controller {
 	}
 
 	public static void calcularCondominio(
-			@Required @As(format = "#,##",lang={"pt"}) BigDecimal despesa) {
+			@Required @As(format = "#,##",lang={"pt"}) BigDecimal despesa, @Required  @As(format = "#,##",lang={"pt"}) BigDecimal agua,  @As(format = "#,##",lang={"pt"}) BigDecimal cotaextra, @Required  @As(format = "#,##",lang={"pt"}) BigDecimal taxa) {
 
 		BigDecimal areaTotal = Apartamento.getAreaTotal();		
 		
@@ -85,8 +85,8 @@ public class Boletos extends Controller {
 		} else {
 
 			BoletoService service = new BoletoService();
-			service.calcularCondominio(DateTime.now().minusMonths(1).toDate(),
-					areaTotal, despesa);
+			service.calcularCondominio(DateTime.now().toDate(),
+					areaTotal, despesa,agua,cotaextra,taxa);
 		}
 
 		render("Boletos/condominio.html", areaTotal);
@@ -142,6 +142,9 @@ public class Boletos extends Controller {
 		Long count = resultlist.getCount();
 		resultlist.setPage(page);
 		List<Boleto> boletos = resultlist.list();
+		
+		page = page == null ? 1L : page;
+		
 		render("Boletos/pesquisar.html",boletos,count,page);
 	}
 	
