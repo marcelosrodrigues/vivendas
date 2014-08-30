@@ -157,6 +157,16 @@ public class Apartamento extends Model implements Serializable {
 		
 		this.lancamento.add(conta);
 	}
+	
+	public void fazerLancamento(Date dataLancamento, BigDecimal valor,
+			String historico,
+			Acordo acordo) {
+		Lancamento conta = new Lancamento(dataLancamento, valor, historico,
+				this,acordo);
+		
+		this.lancamento.add(conta);
+		
+	}
 
 	public void fazerLancamento(BigDecimal valor) {
 		this.fazerLancamento(DateTime.now().toDate(), valor, null);
@@ -268,5 +278,7 @@ public class Apartamento extends Model implements Serializable {
 		}
 		
 	}
+
+	
 
 }

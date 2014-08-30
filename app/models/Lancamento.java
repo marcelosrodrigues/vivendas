@@ -59,6 +59,9 @@ public class Lancamento extends Model implements Serializable{
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date dataAlteracao = DateTime.now().toDate();
+
+	@ManyToOne(optional=true)
+	public Acordo acordo;
 	
 	@PrePersist
 	public void preInsert() {
@@ -89,6 +92,12 @@ public class Lancamento extends Model implements Serializable{
 	
 	public Lancamento() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public Lancamento(Date dataLancamento, BigDecimal valor,String historico,
+			Apartamento apartamento, Acordo acordo) {
+		this(dataLancamento,valor,historico,apartamento);
+		this.acordo = acordo;
 	}
 
 	public BigDecimal getValor() {

@@ -45,17 +45,18 @@ public class Financeiro extends Controller {
 		Binder.bindBean(params.getRootParamNode(),"object", object);
 		DateTime dataLancamento = DateTime.now().plusMonths(1);
 		object.dataInicio = dataLancamento.toDate();
+		object.dataTermino = DateTime.now().plusMonths(object.quantidade).toDate();
+		object.save();
 		Apartamento apartamento = Apartamento.findById(object.apartamento.id);
 		for( long i = 0 ; i < object.quantidade ; i++ ) {
 			
-			apartamento.fazerLancamento(dataLancamento.toDate(), object.valor.divide(new BigDecimal(object.quantidade),RoundingMode.HALF_UP), String.format("ACORDO %s de %s",i + 1,object.quantidade));
+			apartamento.fazerLancamento(dataLancamento.toDate(), object.valor.divide(new BigDecimal(object.quantidade),RoundingMode.HALF_UP), String.format("ACORDO %s de %s",i + 1,object.quantidade) , object);
 			dataLancamento = dataLancamento.plusMonths(1);
 			
 		}
 		apartamento.save();
 		
-		object.dataTermino = DateTime.now().plusMonths(object.quantidade).toDate();
-		object.save();
+		
 		
 		flash.success("Lançamento referente ao acordo gerado com sucesso");
 		redirect("Financeiro.pesquisar");		
