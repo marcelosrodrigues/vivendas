@@ -83,22 +83,9 @@ public class BoletoService {
 			
 			for (Lancamento lancamento : lancamentos) {
 
-				if (apartamento == null
-						|| apartamento.equals(lancamento.apartamento)) {
+				if (apartamento != null
+						&& !apartamento.equals(lancamento.apartamento)) {
 
-					LOGGER.debug(String.format(
-							"Lancamento %s [%s] para o apartamento %s",
-							lancamento.historico, lancamento.getValor(),
-							lancamento.apartamento));
-
-					if( boleto == null){
-						boleto = new Boleto(lancamento.apartamento, dataVencimento);
-					}
-					
-					boleto.adicionarLancamento(lancamento);					
-					
-				} else {
-					
 					boletos.add(boleto);
 					apartamento.adicionarBoleto(boleto);
 					boleto.save();
@@ -107,10 +94,21 @@ public class BoletoService {
 					
 					LOGGER.info(String
 							.format("Gerado boleto para o apartamento %s com vencimento para %tD",
-									apartamento, dataVencimento));
+									apartamento, dataVencimento));					
 					
 				}
+				
 				apartamento = lancamento.apartamento;
+				LOGGER.debug(String.format(
+						"Lancamento %s [%s] para o apartamento %s",
+						lancamento.historico, lancamento.getValor(),
+						lancamento.apartamento));
+
+				if( boleto == null){
+					boleto = new Boleto(lancamento.apartamento, dataVencimento);
+				}
+				
+				boleto.adicionarLancamento(lancamento);
 
 			}
 			if( boleto != null ) {
@@ -155,6 +153,8 @@ public class BoletoService {
 				apartamento.fazerLancamento(vencimento, cotaextra, Constante.COTA_EXTRA);
 			}
 			
+			apartamento.fazerLancamento(vencimento, fundoReserva.multiply(apartamento.area),
+					Constante.LANCAMENTO_FUNDO_REVERSA);
 			
 			
 			if (!apartamento.getMorador().isSindico()) {
@@ -169,9 +169,7 @@ public class BoletoService {
 							condominio.divide(new BigDecimal(2)).multiply(
 									apartamento.area), Constante.LANCAMENTO_CONDOMINIO);
 				}
-			}
-			apartamento.fazerLancamento(vencimento, fundoReserva.multiply(apartamento.area),
-					Constante.LANCAMENTO_FUNDO_REVERSA);
+			}			
 			apartamento.save();
 		}
 	}

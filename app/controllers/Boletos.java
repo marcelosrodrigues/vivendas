@@ -67,7 +67,7 @@ public class Boletos extends Controller {
 		render("Boletos/condominio.html", areaTotal);
 	}
 
-	public static void calcularCondominio(
+	public static void calcularCondominio(@As(format = "dd-MM-yyyy") @Required Date dataVencimento,
 			@Required @As(format = "#,##",lang={"pt"}) BigDecimal despesa, @Required  @As(format = "#,##",lang={"pt"}) BigDecimal agua,  @As(format = "#,##",lang={"pt"}) BigDecimal cotaextra, @Required  @As(format = "#,##",lang={"pt"}) BigDecimal taxa) {
 
 		BigDecimal areaTotal = Apartamento.getAreaTotal();		
@@ -87,9 +87,12 @@ public class Boletos extends Controller {
 			BoletoService service = new BoletoService();
 			service.calcularCondominio(DateTime.now().toDate(),
 					areaTotal, despesa,agua,cotaextra,taxa);
+			
+			Collection<Boleto> boletos = service.gerarBoletos(dataVencimento);
+			render("Boletos/gerarBoleto.html",boletos);
 		}
 
-		render("Boletos/condominio.html", areaTotal);
+		
 
 	}
 
