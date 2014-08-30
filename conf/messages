@@ -47,7 +47,7 @@ object.valor=Valor
 object.historico=Histórico
 object.dataLancamento=Data de Lançamento
 object.dataPagamento=Data do Pagamento
-
+object.quantidade=Quantidade de Parcelas
 
 despesa=Receita Atual
 agua=Taxa de Agua

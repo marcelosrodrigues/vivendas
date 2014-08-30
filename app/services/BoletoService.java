@@ -17,10 +17,12 @@ import org.joda.time.DateTime;
 
 import play.db.jpa.Transactional;
 import utils.Constante;
+import utils.NumberUtilities;
 import br.com.caelum.stella.boleto.Banco;
+import br.com.caelum.stella.boleto.Beneficiario;
 import br.com.caelum.stella.boleto.Datas;
-import br.com.caelum.stella.boleto.Emissor;
-import br.com.caelum.stella.boleto.Sacado;
+import br.com.caelum.stella.boleto.Endereco;
+import br.com.caelum.stella.boleto.Pagador;
 import br.com.caelum.stella.boleto.transformer.GeradorDeBoleto;
 
 
@@ -184,34 +186,64 @@ public class BoletoService {
 		Datas datas = Datas.novasDatas().comProcessamento(dataGeracao.getDayOfMonth() , dataGeracao.getMonthOfYear(),dataGeracao.getYear())
 										.comVencimento(dataVencimento.getDayOfMonth() , dataVencimento.getMonthOfYear(),dataVencimento.getYear());
 		
-		Emissor emissor = Emissor.novoEmissor()
+		Beneficiario emissor = Beneficiario.novoBeneficiario()
 				.comAgencia(configuracao.agencia)
-				.comCedente(configuracao.cedente)
-				.comCarteira(Integer.parseInt(configuracao.carteira))
-				.comNossoNumero(Long.parseLong(configuracao.nossoNumero))
-				.comDigitoNossoNumero(configuracao.digitoNossoNumero)
-				.comContaCorrente(Integer.parseInt(configuracao.contacorrente))
-				.comDigitoContaCorrente(
-						configuracao.digitoContaCorrente.charAt(0));
+				.comDigitoAgencia("")
+				.comNomeBeneficiario(configuracao.cedente)
+				.comCarteira(configuracao.carteira)
+				.comCodigoBeneficiario(configuracao.contacorrente)
+				.comDigitoCodigoBeneficiario(configuracao.digitoContaCorrente)
+				.comNossoNumero(configuracao.nossoNumero)
+				.comDigitoNossoNumero(configuracao.digitoNossoNumero);
 		
-		Sacado sacado = Sacado.novoSacado()
+		Endereco enderecoBeneficiario = Endereco.novoEndereco()
+					.comBairro("Engenho Novo")
+					.comCidade("Rio de Janeiro")
+					.comUf("RJ")
+					.comCep("")
+					.comLogradouro("Rua Araújo Leitão, 545");
+		
+		emissor.comEndereco(enderecoBeneficiario);
+		
+		
+		Pagador sacado = Pagador.novoPagador()
 							  .comNome(boleto.apartamento.getMorador().nomeCompleto)
-							  .comCpf(boleto.apartamento.getMorador().cpf);
+							  .comDocumento(boleto.apartamento.getMorador().cpf);
+		
+		
+		Endereco enderecoSacado = Endereco.novoEndereco()
+				.comBairro("Engenho Novo")
+				.comCidade("Rio de Janeiro")
+				.comUf("RJ")
+				.comCep("")
+				.comLogradouro(String.format("Rua Araújo Leitão, 545 apto %s , bloco %s" , boleto.apartamento.numero , boleto.apartamento.bloco.bloco));
 		
 							  
+		sacado.comEndereco(enderecoSacado);
 		Banco banco = (Banco) Class.forName(configuracao.banco).newInstance();
+		
+		List<String> instrucoes = new ArrayList<String>();
+
+		instrucoes.add(String.format("MORA: %s => AO MES APOS O VENCIMENTO",NumberUtilities.format(boleto.valor.multiply(new BigDecimal("0.01")))));
+		instrucoes.add(String.format("MULTA: %s => APOS 30 DIAS DO VENCIMENTO",NumberUtilities.format(boleto.valor.multiply(new BigDecimal("0.02")))));
 		
 		br.com.caelum.stella.boleto.Boleto pagamento = br.com.caelum.stella.boleto.Boleto.novoBoleto()
 					.comBanco(banco)
 					.comDatas(datas)
-					.comEmissor(emissor)
-					.comSacado(sacado)
+					.comBeneficiario(emissor)
+					.comPagador(sacado)
 					.comNumeroDoDocumento(boleto.id.toString())
-					.comValorBoleto(boleto.valor);
+					.comValorBoleto(boleto.valor)
+					.comInstrucoes(instrucoes.toArray(new String[0]));
+					
+		
+		pagamento.getLinhaDigitavel();
 		
 		GeradorDeBoleto gerador = new GeradorDeBoleto(pagamento);
+		
 		return gerador.geraPDF();
 					
 		
 	}
 }
+

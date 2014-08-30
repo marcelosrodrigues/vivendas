@@ -181,7 +181,7 @@ public class Boleto extends Model implements Serializable {
 	
 	public static List<Map> findInadimplentes() {
 		
-		final String QUERY = "select a.numero , bl.bloco , sum(valor) from boleto b " +
+		final String QUERY = "select a.numero , bl.bloco , sum(valor) , apartamento_id from boleto b " +
 							 " inner join apartamento a on apartamento_id = a.id " +
 							 " inner join bloco bl on bl.id = a.bloco_id " +
 							 " where dataPagamento is null " +
@@ -189,7 +189,7 @@ public class Boleto extends Model implements Serializable {
 							 "   and datediff( current_date , dataVencimento ) > 30 " +
 							 " group by a.numero , bl.bloco  " +
 							 " having sum(valor) > 0 " +
-							 " order by bl.bloco , a.numero ";	
+							 " order by a.id , bl.bloco , a.numero ";	
 		
 		
 		return em().createNativeQuery(QUERY).getResultList();

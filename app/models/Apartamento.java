@@ -75,7 +75,7 @@ public class Apartamento extends Model implements Serializable {
 	@OneToMany(orphanRemoval = true, cascade = { CascadeType.ALL }, mappedBy = "alugadoPara", fetch = FetchType.LAZY)
 	public Collection<Vaga> vagasAlugadas = new HashSet<Vaga>();
 
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "apartamento")
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "apartamento", orphanRemoval = true)
 	@OrderBy("dataLancamento desc")
 	public Collection<Lancamento> lancamento = new HashSet<Lancamento>();
 

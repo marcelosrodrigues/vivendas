@@ -31,6 +31,7 @@
 				<td >${inadimplente[0]}</td>
 				<td>${inadimplente[2].format("#,## 0.00")}</td>
 				<td align="right" width="25%">
+					<a href="@{Financeiro.abrirAcordo(inadimplente[2],inadimplente[3])}" class="btn btn-success btn-sm">Realizar acordo</a>
 					<a href="@{Relatorios.detalharInadimplentes(inadimplente[0],inadimplente[1])}" class="btn btn-success btn-sm">Detalhar</a>
 				</td>	
 			</tr>

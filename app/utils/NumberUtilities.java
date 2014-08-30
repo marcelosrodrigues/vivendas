@@ -1,6 +1,8 @@
 package utils;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 
 import play.Logger;
@@ -21,5 +23,9 @@ public class NumberUtilities {
 			Logger.debug(String.format("erro ao converter o numero %s", value),e);
 			return null;
 		}
+	}
+
+	public static String format(BigDecimal number) {
+		return NumberFormat.getCurrencyInstance().format(number);
 	}
 }

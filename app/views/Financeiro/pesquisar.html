@@ -1,0 +1,60 @@
+#{extends 'main.html' /}
+#{ set title:'Acordo de Pagamento' /}
+
+#{form @Financeiro.pesquisar() ,class:'form-horizontal'}
+	<fieldset>
+		<legend>Acordo de Pagamento		
+			<div class="voltar">
+				<a href="@{Moradores.index()}" class="btn btn-link">Voltar</a>				
+			</div>		
+		</legend>
+
+        #{select fieldname:'bloco', target:'bloco.id', list:blocos, label:"Bloco", value: object.apartamento.bloco.id, labelfield: 'bloco' /}
+
+        #{select fieldname:'apartamento', target:'object.apartamento.id', list:apartamentos, label:"Apartamento", value: object.apartamento.id, labelfield: 'numero' /}
+
+		<div class="form-group">
+			<div class="col-lg-offset-2 col-lg-10">
+				<input type="submit" name="pesquisar" value="Pesquisar" class="btn btn-primary" />
+			</div>	
+		</div>
+		
+	</fieldset>
+#{/form}
+
+<table class="table table-striped">
+<thead>
+	<tr>
+		<th>Bloco</th>
+		<th>Apartamento</th>
+		<th>Morador</th>
+		<th>Data de Inicio</th>
+		<th>Data de Termino</th>
+		<th>Quantidade de Parcela</th>
+		<th>Valor</th>		
+	</tr>
+</thead>
+<tbody>
+	#{if acordos.size() == 0}
+		<tr>
+			<td colspan="8">Nenhum Acordos foi encontrado.</td>
+		</tr>
+	#{/if}
+	#{else}
+		#{list items:acordos, as:'boleto'}
+			<tr>
+				<td>${boleto.apartamento.bloco.bloco}</td>
+				<td>${boleto.apartamento.numero}</td>
+				<td id="morador" cpf="${boleto.apartamento.getProprietario().cpf}">${boleto.apartamento.getMorador().nomeCompleto}</td>
+				<td>${boleto.dataInicio.format("dd-MM-yyyy")}</td>
+				<td>${boleto.dataTermino.format("dd-MM-yyyy")}</td>
+				<td>${boleto.quantidade}</td>
+				<td>${boleto.valor.format("#,## 0.00")}</td>				
+			</tr>
+		#{/list}
+	#{/else}
+</tbody>
+
+</table>
+
+<a href="@{Financeiro.index}" class="btn btn-primary bottom">Criar Acordo</a>

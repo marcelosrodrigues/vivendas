@@ -2,7 +2,9 @@ package utils;
 
 import models.Apartamento;
 import models.Bloco;
+
 import org.apache.commons.lang.StringUtils;
+
 import play.mvc.Scope;
 
 /**
@@ -18,7 +20,7 @@ class RecuperarBlocoPeloIdCommand extends AbstractCommand {
     public void execute() {
 
         String id = params.get("bloco.id");
-
+        
         if( !StringUtils.isBlank(id) ) {
 
             Bloco bloco = Bloco.findById(Long.parseLong(id));
@@ -26,7 +28,7 @@ class RecuperarBlocoPeloIdCommand extends AbstractCommand {
             templateBinding.data.put(Constante.APARTAMENTOS, Apartamento.listByBloco(bloco));
 
             new RecuperarApartamentoCommand(params,templateBinding).execute();
-        }
+        } 
 
     }
 }

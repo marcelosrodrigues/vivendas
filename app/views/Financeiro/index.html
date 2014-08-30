@@ -1,0 +1,28 @@
+#{extends 'main.html' /}
+#{ set title:'Acordo de Pagamento' /}
+
+#{form @Financeiro.salvar() ,class:'form-horizontal'}
+	<fieldset>
+		<legend>Acordo de Pagamento		
+			<div class="voltar">
+				<a href="@{Moradores.index()}" class="btn btn-link">Voltar</a>				
+			</div>		
+		</legend>
+
+        #{select fieldname:'bloco', target:'bloco.id', list:blocos, label:"Bloco", value: object.apartamento.bloco.id, labelfield: 'bloco' /}
+
+        #{select fieldname:'apartamento', target:'object.apartamento.id', list:apartamentos, label:"Apartamento", value: object.apartamento.id, labelfield: 'numero' /}
+
+		#{edittext fieldid:"valor", fieldname:"object.valor", label:"Saldo devedor",value:object.valor?.format("#,## 0.00") /}
+		
+		#{edittext fieldid:"quantidade", fieldname:"object.quantidade", label:"Quantidade de Parcelas",value:object.quantidade /}
+        
+
+		<div class="form-group">
+			<div class="col-lg-offset-2 col-lg-10">
+				<input type="submit" name="pesquisar" value="Salvar" class="btn btn-primary" />
+			</div>	
+		</div>
+		
+	</fieldset>
+#{/form}
